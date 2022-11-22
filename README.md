@@ -31,7 +31,7 @@ Our team consists of the following members, listed in the table below (the team 
 | Student ID | Student Name | GitHub Account (in Email)  |
 | ---------- | ------------ | -------------------------  |
 | 120090590  | 陈飞飏 🚩    | chenfeiyang852@163.com     |
-| 120010042  | 陶震         | 1072149188@qq.com          |
+| 120010042  | 陶震         | sili@outlook.com           |
 | 120090460  | 朱骆锴       | 120090460@link.cuhk.edu.cn |
 | 120090582  | 陈宣文       | 1548622359@qq.com          |
 <<<<<<< HEAD
