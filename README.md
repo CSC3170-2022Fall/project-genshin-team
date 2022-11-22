@@ -16,6 +16,7 @@ Our team consists of the following members, listed in the table below (the team 
 
 <!-- change the info below to be the real case -->
 
+<<<<<<< Updated upstream
 | Student ID | Student Name | GitHub Account (in Email)     |
 | ---------- | ------------ | -------------------------     |
 | 123010245  | 张三 🚩      | sanzhang@gmail.com            |
@@ -23,6 +24,18 @@ Our team consists of the following members, listed in the table below (the team 
 | 120090460  | 朱骆锴       | 120090460@link.cuhk.edu.cn    |
 | 120010042  | 陶震         | 1072149188@qq.com             |
 | 123010249  | 朱九         | jiuzhu@163.com                |
+=======
+| Student ID | Student Name | GitHub Account (in Email)  |
+| ---------- | ------------ | -------------------------  |
+| 120090590  | 陈飞飏 🚩    | chenfeiyang852@163.com     |
+| 120010042  | 陶震         | 1072149188@qq.com          |
+| 120090460  | 朱骆锴       | 120090460@link.cuhk.edu.cn |
+| 120090582  | 陈宣文       | 1548622359@qq.com          |
+| 119010166  | 李卓毅       | jiuzhu@163.com             |
+| 120090447  | 王奕文       | 120090447@link.cuhk.edu.cn |
+| 120090089  | 王雨奇       | 120090089@link.cuhk.edu.cn |
+| 120090588  | 肖玮钊       | 1003669366@qq.com          |
+>>>>>>> Stashed changes
 
 ## Project Specification
 
