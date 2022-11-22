@@ -16,13 +16,13 @@ Our team consists of the following members, listed in the table below (the team 
 
 <!-- change the info below to be the real case -->
 
-| Student ID | Student Name | GitHub Account (in Email) |
-| ---------- | ------------ | ------------------------- |
-| 123010245  | 张三 🚩      | sanzhang@gmail.com        |
-| 123010345  | 李四         | sili@outlook.com          |
-| 120090460  | 朱骆锴       | 120090460@link.cuhk.edu.cn |
-| 123020245  | 陈六         | liuchen@qq.com            |
-| 123010249  | 朱九         | jiuzhu@163.com            |
+| Student ID | Student Name | GitHub Account (in Email)     |
+| ---------- | ------------ | -------------------------     |
+| 123010245  | 张三 🚩      | sanzhang@gmail.com            |
+| 123010345  | 李四         | sili@outlook.com              |
+| 120090460  | 朱骆锴       | 120090460@link.cuhk.edu.cn    |
+| 120010042  | 陶震         | 1072149188@qq.com             |
+| 123010249  | 朱九         | jiuzhu@163.com                |
 
 ## Project Specification
 
@@ -30,9 +30,9 @@ Our team consists of the following members, listed in the table below (the team 
 
 After thorough discussion, our team made the choice and the specification information is listed below:
 
-- Our option choice is: **Option 1**
-- Our branch choice is: **Branch 1**
-- The difficulty level is: **Normal**
+- Our option choice is: **Option 3**
+- Our branch choice is: **None**
+- The difficulty level is: **None**
 
 As for Option 2, our topic background specification can be found in [background-specification.md](background-specification.md).
 
