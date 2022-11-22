@@ -24,7 +24,7 @@ Note that the description file could be still gradually updated, so please pay a
 - Suppose the ratio of grading got in the **Presentation** part is $x$, $0 \leq x \leq 1$, and that in the **Report** part is $y$, $0 \leq y \leq 1$. Also denotes the boolean variable $i=$ 𝟙 $_{\text{The project is complete with enough work}}$, i.e. $i=1$ means that the project is at least complete (according to the requirement of the option picked) with acceptable work carried out by the team members, and contrariwise $i=0$, which is designed to decide whether the **Pre-allocated** marks can be granted. Then, we should have the following scoring formula for the overall grade of the project $g$:
 
   $$
-  g = \alpha i + \beta x + \gamma y
+    g = \alpha i + \beta x + \gamma y
   $$
 
 - **All options & branches with pre-allocated points are of the presentation part**, and in such step, all groups should provide **real-time program execution** (but it's allowed to deploy your service on your PC linked with wired network cable to the campus LAN or some server you hold in WAN; you may even utilize the GitHub Action and register your own server, if you have any, as a [self-hosted](https://docs.github.com/en/actions/hosting-your-own-runners/adding-self-hosted-runners) GitHub Action Runner), and the functionality will be the key factor in deciding the completeness of the project, as well as whether the pre-allocated points can be granted. The conclusion will be carried out by the course instructor, but the feedback of students present will also be considered -- that is to say, if the completeness of some project is commonly denied, the pre-allocated points can not be granted.
