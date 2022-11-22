@@ -7,7 +7,7 @@ This is our implementation for the course project of CSC3170, 2022 Fall, CUHK(SZ
 
 <!-- Please fill in "x" to replace the blank space between "[]" to tick the todo item; it's ticked on the first one by default. -->
 
-- [] **Application with Database System(s)**
+- [ ] **Application with Database System(s)**
 - [x] **Implementation of a Database System**
 
 ## Team Members
@@ -16,36 +16,16 @@ Our team consists of the following members, listed in the table below (the team 
 
 <!-- change the info below to be the real case -->
 
-<<<<<<< HEAD
-<<<<<<< Updated upstream
-| Student ID | Student Name | GitHub Account (in Email)     |
-| ---------- | ------------ | -------------------------     |
-| 123010245  | 张三 🚩      | sanzhang@gmail.com            |
-| 123010345  | 李四         | sili@outlook.com              |
-| 120090460  | 朱骆锴       | 120090460@link.cuhk.edu.cn    |
-| 120010042  | 陶震         | 1072149188@qq.com             |
-| 123010249  | 朱九         | jiuzhu@163.com                |
-=======
-=======
->>>>>>> fff0c1f0300ced0eedde8136f92d5ca33cc47e20
 | Student ID | Student Name | GitHub Account (in Email)  |
 | ---------- | ------------ | -------------------------  |
 | 120090590  | 陈飞飏 🚩    | chenfeiyang852@163.com     |
-| 120010042  | 陶震         | sili@outlook.com           |
+| 120010042  | 陶震         | 1072149188@qq.com          |
 | 120090460  | 朱骆锴       | 120090460@link.cuhk.edu.cn |
 | 120090582  | 陈宣文       | 1548622359@qq.com          |
-<<<<<<< HEAD
-| 119010166  | 李卓毅       | jiuzhu@163.com             |
-| 120090447  | 王奕文       | 120090447@link.cuhk.edu.cn |
-| 120090089  | 王雨奇       | 120090089@link.cuhk.edu.cn |
-| 120090588  | 肖玮钊       | 1003669366@qq.com          |
->>>>>>> Stashed changes
-=======
 | 119010166  | 李卓毅       | 463776850@qq.com           |
 | 120090447  | 王奕文       | 120090447@link.cuhk.edu.cn |
 | 120090089  | 王雨奇       | 120090089@link.cuhk.edu.cn |
 | 120090588  | 肖玮钊       | 1003669366@qq.com          |
->>>>>>> fff0c1f0300ced0eedde8136f92d5ca33cc47e20
 
 ## Project Specification
 
