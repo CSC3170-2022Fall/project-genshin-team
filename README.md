@@ -20,7 +20,7 @@ Our team consists of the following members, listed in the table below (the team 
 | ---------- | ------------ | -------------------------  |
 | 120090590  | 陈飞飏 🚩    | chenfeiyang852@163.com     |
 | 120010042  | 陶震         | 1072149188@qq.com          |
-| 120090460  | 朱骆锴  test git     | 120090460@link.cuhk.edu.cn |
+| 120090460  | 朱骆锴       | 120090460@link.cuhk.edu.cn |
 | 120090582  | 陈宣文       | 1548622359@qq.com          |
 | 119010166  | 李卓毅       | 463776850@qq.com           |
 | 120090447  | 王奕文       | 120090447@link.cuhk.edu.cn |
