@@ -167,6 +167,7 @@ class CommandInterpreter {
         String name = name();
         Table table = tableDefinition();
         // FILL IN CODE TO EXECUTE THE STATEMENT
+//        TODO
         _input.next(";");
     }
 
@@ -199,6 +200,7 @@ class CommandInterpreter {
     /** Parse and execute a load statement from the token stream. */
     void loadStatement() {
         // FILL THIS IN
+//        TODO
     }
 
     /** Parse and execute a store statement from the token stream. */
@@ -207,6 +209,7 @@ class CommandInterpreter {
         String name = _input.peek();
         Table table = tableName();
         // FILL THIS IN
+//        TODO
         System.out.printf("Stored %s.db%n", name);
         _input.next(";");
     }
@@ -214,11 +217,13 @@ class CommandInterpreter {
     /** Parse and execute a print statement from the token stream. */
     void printStatement() {
         // FILL THIS IN
+//        TODO
     }
 
     /** Parse and execute a select statement from the token stream. */
     void selectStatement() {
         // FILL THIS IN
+//        TODO
     }
 
     /** Parse and execute a table definition, returning the specified
@@ -227,9 +232,11 @@ class CommandInterpreter {
         Table table;
         if (_input.nextIf("(")) {
             // REPLACE WITH SOLUTION
+//            TODO
             table = null;
         } else {
             // REPLACE WITH SOLUTION
+//            TODO
             table = null;
         }
         return table;
@@ -238,6 +245,7 @@ class CommandInterpreter {
     /** Parse and execute a select clause from the token stream, returning the
      *  resulting table. */
     Table selectClause() {
+//        TODO
         return null;         // REPLACE WITH SOLUTION
 
     }
@@ -276,12 +284,14 @@ class CommandInterpreter {
      *  token stream.  This denotes the conjunction (`and') zero
      *  or more Conditions. */
     ArrayList<Condition> conditionClause(Table... tables) {
+//        TODO
         return null;        // REPLACE WITH SOLUTION
     }
 
     /** Parse and return a Condition that applies to TABLES from the
      *  token stream. */
     Condition condition(Table... tables) {
+//        TODO
         return null;        // REPLACE WITH SOLUTION
     }
 

@@ -7,6 +7,7 @@
 // solutions.
 package db61b;
 
+// TODO
 // FILL IN (WITH IMPORTS)?
 
 /** A collection of Tables, indexed by name.
@@ -15,11 +16,13 @@ class Database {
     /** An empty database. */
     public Database() {
         // FILL IN
+//        TODO
     }
 
     /** Return the Table whose name is NAME stored in this database, or null
      *  if there is no such table. */
     public Table get(String name) {
+//        TODO
         return null;             // REPLACE WITH SOLUTION
     }
 
@@ -30,7 +33,9 @@ class Database {
             throw new IllegalArgumentException("null argument");
         }
         // FILL IN
+//        TODO
     }
 
     // FILL IN?
+//    TODO
 }
