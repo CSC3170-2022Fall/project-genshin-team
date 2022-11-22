@@ -45,7 +45,7 @@ class Row {
 
     /** Return my number of columns. */
     int size() {
-        return 0;  // REPLACE WITH SOLUTION
+        return _data.length;  // REPLACE WITH SOLUTION
     }
 
     /** Return the value of my Kth column.  Requires that 0 <= K < size(). */
