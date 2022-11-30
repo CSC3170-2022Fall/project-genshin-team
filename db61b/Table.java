@@ -18,7 +18,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 
-import static db61b.Utils.*;
+import static source.Utils.*;
 
 /** A single table in a database.
  *  @author P. N. Hilfinger
