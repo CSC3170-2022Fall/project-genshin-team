@@ -36,6 +36,7 @@ class Table implements Iterable<Row> {
             }
         }
         // FILL IN
+//        TODO
     }
 
     /** A new Table whose columns are give by COLUMNTITLES. */
@@ -45,22 +46,26 @@ class Table implements Iterable<Row> {
 
     /** Return the number of columns in this table. */
     public int columns() {
+//        TODO
         return 0;  // REPLACE WITH SOLUTION
     }
 
     /** Return the title of the Kth column.  Requires 0 <= K < columns(). */
     public String getTitle(int k) {
+//        TODO
         return null;  // REPLACE WITH SOLUTION
     }
 
     /** Return the number of the column whose title is TITLE, or -1 if
      *  there isn't one. */
     public int findColumn(String title) {
+//        TODO
         return -1;  // REPLACE WITH SOLUTION
     }
 
     /** Return the number of Rows in this table. */
     public int size() {
+//        TODO
         return 0;  // REPLACE WITH SOLUTION
     }
 
@@ -73,6 +78,7 @@ class Table implements Iterable<Row> {
     /** Add ROW to THIS if no equal row already exists.  Return true if anything
      *  was added, false otherwise. */
     public boolean add(Row row) {
+//        TODO
         return false;   // REPLACE WITH SOLUTION
     }
 
@@ -91,6 +97,7 @@ class Table implements Iterable<Row> {
             }
             String[] columnNames = header.split(",");
             // FILL IN
+//            TODO
         } catch (FileNotFoundException e) {
             throw error("could not find %s.db", name);
         } catch (IOException e) {
@@ -117,6 +124,7 @@ class Table implements Iterable<Row> {
             sep = "";
             output = new PrintStream(name + ".db");
             // FILL THIS IN
+//            TODO
         } catch (IOException e) {
             throw error("trouble writing to %s.db", name);
         } finally {
@@ -128,6 +136,7 @@ class Table implements Iterable<Row> {
 
     /** Print my contents on the standard output. */
     void print() {
+//        TODO
         // FILL IN
     }
 
@@ -135,6 +144,7 @@ class Table implements Iterable<Row> {
      *  rows of this table that satisfy CONDITIONS. */
     Table select(List<String> columnNames, List<Condition> conditions) {
         Table result = new Table(columnNames);
+//        TODO
         // FILL IN
         return result;
     }
@@ -146,6 +156,7 @@ class Table implements Iterable<Row> {
                  List<Condition> conditions) {
         Table result = new Table(columnNames);
         // FILL IN
+//        TODO
         return result;
     }
 
@@ -157,11 +168,13 @@ class Table implements Iterable<Row> {
      *  from those tables. */
     private static boolean equijoin(List<Column> common1, List<Column> common2,
                                     Row row1, Row row2) {
+//        TODO
         return true; // REPLACE WITH SOLUTION
     }
 
     /** My rows. */
     private HashSet<Row> _rows = new HashSet<>();
     // FILL IN
+//    TODO
 }
 
