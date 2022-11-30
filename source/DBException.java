@@ -1,4 +1,4 @@
-package db61b;
+package source;
 
 /** Indicates some kind of user error.
  *  @author P. N. Hilfinger */
