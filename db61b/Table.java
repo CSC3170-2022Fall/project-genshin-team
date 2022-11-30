@@ -5,7 +5,7 @@
 
 // Comments that start with "//" are intended to be removed from your
 // solutions.
-package source;
+package db61b;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
@@ -18,7 +18,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 
-import static source.Utils.*;
+import static db61b.Utils.*;
 
 /** A single table in a database.
  *  @author P. N. Hilfinger

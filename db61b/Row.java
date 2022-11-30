@@ -5,7 +5,7 @@
 
 // Comments that start with "//" are intended to be removed from your
 // solutions.
-package source;
+package db61b;
 
 import java.util.Arrays;
 import java.util.List;
@@ -52,7 +52,7 @@ class Row {
     String get(int k) {
         
         if (k < 0 || k > size()) {
-            println("The index is out of range");
+            System.out.println("The index is out of range");
             return null;
         }
 
