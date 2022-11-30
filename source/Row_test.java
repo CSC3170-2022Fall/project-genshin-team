@@ -12,6 +12,6 @@ public class Row_test {
     }
     
     public static void main(String[] args){
-        System.exit();
+        System.exit(0);
     }
 }
