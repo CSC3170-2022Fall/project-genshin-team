@@ -19,13 +19,16 @@ import java.util.Iterator;
 import java.util.List;
 
 import static db61b.Utils.*;
+import db61b.Row;
+import db61b.Condition;
+import db61b.DBException;
 
 /** A single table in a database.
  *  @author P. N. Hilfinger
  */
 class Table implements Iterable<Row> {
     /** A new Table whose columns are given by COLUMNTITLES, which may
-     *  not contain dupliace names. */
+     *  not contain duplicate names. */
     Table(String[] columnTitles) {
         for (int i = columnTitles.length - 1; i >= 1; i -= 1) {
             for (int j = i - 1; j >= 0; j -= 1) {
@@ -36,7 +39,8 @@ class Table implements Iterable<Row> {
             }
         }
         // FILL IN
-//        TODO
+//        TODO FINISH
+        _columnTitle = columnTitles;
     }
 
     /** A new Table whose columns are give by COLUMNTITLES. */
@@ -46,30 +50,41 @@ class Table implements Iterable<Row> {
 
     /** Return the number of columns in this table. */
     public int columns() {
-//        TODO
-        return 0;  // REPLACE WITH SOLUTION
+//        TODO FINISH
+        return _columnTitle.length;
+        // REPLACE WITH SOLUTION
     }
 
     /** Return the title of the Kth column.  Requires 0 <= K < columns(). */
     public String getTitle(int k) {
-//        TODO
-        return null;  // REPLACE WITH SOLUTION
+//        TODO FINISH
+        if (k < 0 || k >= this.columns()) {
+            throw error("The index : %d is out of range", k);
+        }
+
+        return _columnTitle[k];
+        // REPLACE WITH SOLUTION
     }
 
     /** Return the number of the column whose title is TITLE, or -1 if
      *  there isn't one. */
     public int findColumn(String title) {
-//        TODO
+//        TODO FINISH
+        for (String element: _columnTitle) {
+            if (title.equals(element)) {
+                return 1;
+            }
+        }
         return -1;  // REPLACE WITH SOLUTION
     }
 
     /** Return the number of Rows in this table. */
     public int size() {
-//        TODO
-        return 0;  // REPLACE WITH SOLUTION
+//        TODO FINISH
+        return _rows.size();  // REPLACE WITH SOLUTION
     }
 
-    /** Returns an iterator that returns my rows in an unspecfied order. */
+    /** Returns an iterator that returns my rows in an unspecified order. */
     @Override
     public Iterator<Row> iterator() {
         return _rows.iterator();
@@ -78,7 +93,11 @@ class Table implements Iterable<Row> {
     /** Add ROW to THIS if no equal row already exists.  Return true if anything
      *  was added, false otherwise. */
     public boolean add(Row row) {
-//        TODO
+//        TODO FINISH
+        if (!_rows.contains(row)) {
+            _rows.add(row);
+            return true;
+        }
         return false;   // REPLACE WITH SOLUTION
     }
 
@@ -176,5 +195,6 @@ class Table implements Iterable<Row> {
     private HashSet<Row> _rows = new HashSet<>();
     // FILL IN
 //    TODO
+    private String[] _columnTitle;
 }
 
