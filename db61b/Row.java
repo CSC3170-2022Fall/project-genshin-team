@@ -8,7 +8,10 @@
 package db61b;
 
 import java.util.Arrays;
+import java.io.IOException;
 import java.util.List;
+
+import static db61b.Utils.*;
 
 /** A single row of a database.
  *  @author
@@ -56,11 +59,12 @@ class Row {
     /** Return the value of my Kth column.  Requires that 0 <= K < size(). */
     String get(int k) {
         
-        if (k < 0 || k > size()) {
-            System.out.println("The index is out of range");
-            return null;
-        }
 //      TODO FINISH
+        if (k < 0 || k >= this.size()) {
+//            System.out.println("The index is out of range");
+//            return null;
+            throw error("The index : %d is out of range", k);
+        }
         return _data[k]; // REPLACE WITH SOLUTION
     }
 
