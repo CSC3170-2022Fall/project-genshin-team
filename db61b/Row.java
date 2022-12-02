@@ -41,10 +41,15 @@ class Row {
      */
     Row(List<Column> columns, Row... rows) {
         // FILL IN
+//        TODO WORKING LATER
+//        for (int _row = 0; _row < rows.length; _row++) {
+//
+//        }
     }
 
     /** Return my number of columns. */
     int size() {
+//      TODO FINISH
         return _data.length;  // REPLACE WITH SOLUTION
     }
 
@@ -55,13 +60,33 @@ class Row {
             System.out.println("The index is out of range");
             return null;
         }
-
+//      TODO FINISH
         return _data[k]; // REPLACE WITH SOLUTION
     }
 
     @Override
     public boolean equals(Object obj) {
-        return false; // REPLACE WITH SOLUTION
+//      TODO FINISH
+        // REPLACE WITH SOLUTION
+        if (!(obj instanceof Row objRow)) {
+            return false;
+        }
+
+        if (this.hashCode() != objRow.hashCode()) {
+            return false;
+        }
+
+        if (_data.length != objRow.size()) {
+            return false;
+        }
+
+        for (int i = 0; i < this.size(); i++) {
+            if (!_data[i].equals(objRow.get(i))) {
+                return false;
+            }
+        }
+        return true;
+
     }
 
     /* NOTE: Whenever you override the .equals() method for a class, you
