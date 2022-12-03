@@ -20,6 +20,7 @@ import java.util.List;
 
 import static db61b.Utils.*;
 import db61b.Row;
+import db61b.Column;
 import db61b.Condition;
 import db61b.DBException;
 
@@ -33,7 +34,7 @@ class Table implements Iterable<Row> {
         for (int i = columnTitles.length - 1; i >= 1; i -= 1) {
             for (int j = i - 1; j >= 0; j -= 1) {
                 if (columnTitles[i].equals(columnTitles[j])) {
-                    throw error("duplicate column name: %s",
+                    throw db61b.Utils.error("duplicate column name: %s",
                                 columnTitles[i]);
                 }
             }
@@ -59,7 +60,7 @@ class Table implements Iterable<Row> {
     public String getTitle(int k) {
 //        TODO FINISH
         if (k < 0 || k >= this.columns()) {
-            throw error("The index : %d is out of range", k);
+            throw db61b.Utils.error("The index : %d is out of range", k);
         }
 
         return _columnTitle[k];
@@ -112,15 +113,22 @@ class Table implements Iterable<Row> {
             input = new BufferedReader(new FileReader(name + ".db"));
             String header = input.readLine();
             if (header == null) {
-                throw error("missing header in DB file");
+                throw db61b.Utils.error("missing header in DB file");
             }
             String[] columnNames = header.split(",");
             // FILL IN
-//            TODO
+//            TODO FINISH
+            table = new Table(columnNames);
+
+            String data = input.readLine();
+            while (data != null) {
+                table.add(new Row(data.split(",")));
+                data = input.readLine();
+            }
         } catch (FileNotFoundException e) {
-            throw error("could not find %s.db", name);
+            throw db61b.Utils.error("could not find %s.db", name);
         } catch (IOException e) {
-            throw error("problem reading from %s.db", name);
+            throw db61b.Utils.error("problem reading from %s.db", name);
         } finally {
             if (input != null) {
                 try {
@@ -144,8 +152,22 @@ class Table implements Iterable<Row> {
             output = new PrintStream(name + ".db");
             // FILL THIS IN
 //            TODO
+            for (int i = 0; i < this.columns() - 1; i++) {
+                output.print(this.getTitle(i));
+                output.print(',');
+            }
+
+            output.print(this.getTitle(this.columns() - 1) + '\n');
+
+            for (Row eachRow : _rows) {
+                for (int i = 0; i < this.columns() - 1; i++) {
+                    output.print(eachRow.get(i));
+                    output.print(',');
+                }
+                output.print(eachRow.get(this.columns() - 1) + '\n');
+            }
         } catch (IOException e) {
-            throw error("trouble writing to %s.db", name);
+            throw db61b.Utils.error("trouble writing to %s.db", name);
         } finally {
             if (output != null) {
                 output.close();
@@ -194,7 +216,7 @@ class Table implements Iterable<Row> {
     /** My rows. */
     private HashSet<Row> _rows = new HashSet<>();
     // FILL IN
-//    TODO
+//    TODO FINISH
     private String[] _columnTitle;
 }
 

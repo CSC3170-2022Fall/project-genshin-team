@@ -63,7 +63,7 @@ class Row {
         if (k < 0 || k >= this.size()) {
 //            System.out.println("The index is out of range");
 //            return null;
-            throw error("The index : %d is out of range", k);
+            throw db61b.Utils.error("The index : %d is out of range", k);
         }
         return _data[k]; // REPLACE WITH SOLUTION
     }
