@@ -8,7 +8,10 @@
 package db61b;
 
 import java.util.Arrays;
+import java.io.IOException;
 import java.util.List;
+
+import static db61b.Utils.*;
 
 /** A single row of a database.
  *  @author
@@ -41,27 +44,53 @@ class Row {
      */
     Row(List<Column> columns, Row... rows) {
         // FILL IN
+//        TODO WORKING LATER
+//        for (int _row = 0; _row < rows.length; _row++) {
+//
+//        }
     }
 
     /** Return my number of columns. */
     int size() {
+//      TODO FINISH
         return _data.length;  // REPLACE WITH SOLUTION
     }
 
     /** Return the value of my Kth column.  Requires that 0 <= K < size(). */
     String get(int k) {
         
-        if (k < 0 || k > size()) {
-            System.out.println("The index is out of range");
-            return null;
+//      TODO FINISH
+        if (k < 0 || k >= this.size()) {
+//            System.out.println("The index is out of range");
+//            return null;
+            throw db61b.Utils.error("The index : %d is out of range", k);
         }
-
         return _data[k]; // REPLACE WITH SOLUTION
     }
 
     @Override
     public boolean equals(Object obj) {
-        return false; // REPLACE WITH SOLUTION
+//      TODO FINISH
+        // REPLACE WITH SOLUTION
+        if (!(obj instanceof Row objRow)) {
+            return false;
+        }
+
+        if (this.hashCode() != objRow.hashCode()) {
+            return false;
+        }
+
+        if (_data.length != objRow.size()) {
+            return false;
+        }
+
+        for (int i = 0; i < this.size(); i++) {
+            if (!_data[i].equals(objRow.get(i))) {
+                return false;
+            }
+        }
+        return true;
+
     }
 
     /* NOTE: Whenever you override the .equals() method for a class, you
