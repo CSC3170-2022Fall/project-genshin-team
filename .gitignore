@@ -6,3 +6,4 @@ db61b/*.class
 db61b/sentinel
 /out
 /TestResult/*
+!TestResult/README
