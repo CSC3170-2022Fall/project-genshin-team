@@ -2,9 +2,6 @@ package db61b;
 
 import org.junit.Test;
 import static org.junit.Assert.*;
-import db61b.Table;
-import db61b.Row;
-import db61b.DBException;
 
 public class Table_test {
     @Test

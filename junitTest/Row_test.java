@@ -1,8 +1,8 @@
 package db61b;
 
 import org.junit.Test;
+
 import static org.junit.Assert.*;
-import db61b.Row;
 
 
 public class Row_test {
