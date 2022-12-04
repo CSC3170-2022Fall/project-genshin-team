@@ -11,5 +11,6 @@
         "SPTF",
         "Stackoverflow",
         "unitization"
-    ]
+    ],
+    "java.debug.settings.onBuildFailureProceed": true
 }
