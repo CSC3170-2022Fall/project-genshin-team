@@ -177,7 +177,7 @@ class Table implements Iterable<Row> {
 
     /** Print my contents on the standard output. */
     void print() {
-//        TODO Finish
+//        TODO FINISH
         for (int i = 0; i < this.columns() - 1; i++) {
             System.out.print(this.getTitle(i));
             System.out.print(',');
