@@ -7,11 +7,11 @@
 // solutions.
 package db61b;
 
-// TODO
+// TODO FINISH
 // FILL IN (WITH IMPORTS)?
 
 import java.util.HashMap;
-import java.util.HashSet;
+import db61b.Table;
 
 /** A collection of Tables, indexed by name.
  *  @author */
@@ -21,15 +21,17 @@ class Database {
     //private String[] _tableName;
     public Database() {
         // FILL IN
-//        TODO
+//        TODO FINISH
         _database = new HashMap<String,Table>();
 
     }
 
-    /** Return the Table whose name is NAME stored in this database, or null
-     *  if there is no such table. */
+    /**
+     * Return the Table whose name is NAME stored in this database, or null
+     * if there is no such table.
+     */
     public Table get(String name) {
-//        TODO
+//        TODO FINISH
         if ( _database.containsKey(name) ){
             return _database.get(name);
         }
@@ -43,7 +45,7 @@ class Database {
             throw new IllegalArgumentException("null argument");
         }
         // FILL IN
-//        TODO
+//        TODO FINISH
 // add some constraints of table name?
 
         _database.put(name,table);
@@ -51,5 +53,5 @@ class Database {
     }
 
     // FILL IN?
-//    TODO
+//    TODO FINISH
 }
