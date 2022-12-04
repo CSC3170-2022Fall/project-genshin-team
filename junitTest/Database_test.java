@@ -16,7 +16,7 @@ public class Database_test {
         db61b.Table table = new db61b.Table(new String[] { "student", "id", "college", "school", "Year" });
         db61b.Database db = new db61b.Database();
         //db.put("Students",null);
-        db61b.DBException thrown = assertThrows(db61b.DBException.class, () -> db.put("Students",null));
+        IllegalArgumentException thrown = assertThrows(IllegalArgumentException.class, () -> db.put("Students",null));
         assertEquals("null argument", thrown.getMessage());
     }
 
