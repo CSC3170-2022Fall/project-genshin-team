@@ -33,7 +33,7 @@ public class Row_test {
         assertNotEquals(r1, r2);
         assertFalse(r1.equals(r3));
 //    * The junit test will stop at the next line if next line is not commented
-//        assertNotEquals(r1, r4);
+//      assertNotEquals(r1, r4);
         assertFalse(r1.equals(rowContent));
         assertEquals(r1, r4);
     }
