@@ -177,16 +177,46 @@ class Table implements Iterable<Row> {
 
     /** Print my contents on the standard output. */
     void print() {
-//        TODO
-        // FILL IN
+//        TODO Finish
+        for (int i = 0; i < this.columns() - 1; i++) {
+            System.out.print(this.getTitle(i));
+            System.out.print(',');
+        }
+
+        System.out.print(this.getTitle(this.columns() - 1) + '\n');
+
+        for (Row eachRow : _rows) {
+            for (int i = 0; i < this.columns() - 1; i++) {
+                System.out.print(eachRow.get(i));
+                System.out.print(',');
+            }
+            System.out.print(eachRow.get(this.columns() - 1) + '\n');
+        }
     }
 
     /** Return a new Table whose columns are COLUMNNAMES, selected from
      *  rows of this table that satisfy CONDITIONS. */
     Table select(List<String> columnNames, List<Condition> conditions) {
         Table result = new Table(columnNames);
-//        TODO
-        // FILL IN
+//        TODO Working (Finished for now, needs further checking )
+
+        // create List<Column> variable
+        List<Column> temp_columns = new ArrayList<Column>();
+        Iterator<String> it_columnNames = columnNames.iterator();
+        while(it_columnNames.hasNext()){
+            String temp_name = it_columnNames.next();
+            temp_columns.add(new Column(temp_name, this));
+        }
+
+        Iterator<Row> it_rows = this.iterator();
+        while(it_rows.hasNext()){
+            /* if the content of certain row achieve the requirement,
+             * add it into the result*/
+            Row temp_row = it_rows.next();
+            if(Condition.test(conditions, temp_row)){
+                result.add(new Row(temp_columns, temp_row));
+            }
+        }
         return result;
     }
 

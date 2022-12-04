@@ -11,5 +11,10 @@
         "SPTF",
         "Stackoverflow",
         "unitization"
+    ],
+    "java.debug.settings.onBuildFailureProceed": true,
+    "java.dependency.packagePresentation": "hierarchical",
+    "java.project.sourcePaths": [
+        "."
     ]
 }

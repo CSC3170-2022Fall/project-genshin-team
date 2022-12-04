@@ -1,10 +1,13 @@
 package db61b;
 
 import org.junit.Test;
+
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+
 import static org.junit.Assert.*;
-import db61b.Table;
-import db61b.Row;
-import db61b.DBException;
 
 public class Table_test {
     @Test
@@ -59,6 +62,13 @@ public class Table_test {
     public void test_read_Table() {
         db61b.Table table = db61b.Table.readTable("./testing/enrolled");
         table.writeTable("./TestResult/outputTable2");
+    }
+
+    @Test
+    public void test_print() throws IOException {
+        db61b.Table table = db61b.Table.readTable("./testing/enrolled");
+        table.print();
+        // assert???
     }
 
 }

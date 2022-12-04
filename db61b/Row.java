@@ -89,8 +89,8 @@ class Row {
                 return false;
             }
         }
-        return true;
 
+        return true;
     }
 
     /* NOTE: Whenever you override the .equals() method for a class, you
