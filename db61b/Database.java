@@ -10,20 +10,30 @@ package db61b;
 // TODO
 // FILL IN (WITH IMPORTS)?
 
+import java.util.HashMap;
+import java.util.HashSet;
+
 /** A collection of Tables, indexed by name.
  *  @author */
 class Database {
     /** An empty database. */
+    private HashMap<String,Table> _database;
+    //private String[] _tableName;
     public Database() {
         // FILL IN
 //        TODO
+        _database = new HashMap<String,Table>();
+
     }
 
     /** Return the Table whose name is NAME stored in this database, or null
      *  if there is no such table. */
     public Table get(String name) {
 //        TODO
-        return null;             // REPLACE WITH SOLUTION
+        if ( _database.containsKey(name) ){
+            return _database.get(name);
+        }
+        return null;
     }
 
     /** Set or replace the table named NAME in THIS to TABLE.  TABLE and
@@ -34,6 +44,10 @@ class Database {
         }
         // FILL IN
 //        TODO
+// add some constraints of table name?
+
+        _database.put(name,table);
+
     }
 
     // FILL IN?
