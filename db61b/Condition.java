@@ -8,6 +8,8 @@
 package db61b;
 
 import java.util.List;
+import db61b.Column;
+import db61b.Row;
 
 /** Represents a single 'where' condition in a 'select' command.
  *  @author */
