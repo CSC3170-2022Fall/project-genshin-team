@@ -151,7 +151,7 @@ class Table implements Iterable<Row> {
             sep = "";
             output = new PrintStream(name + ".db");
             // FILL THIS IN
-//            TODO
+//            TODO FINISH
             for (int i = 0; i < this.columns() - 1; i++) {
                 output.print(this.getTitle(i));
                 output.print(',');
