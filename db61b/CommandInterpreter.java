@@ -16,6 +16,13 @@ import java.util.Scanner;
 import static db61b.Utils.*;
 import static db61b.Tokenizer.*;
 
+import db61b.Tokenizer;
+import db61b.Database;
+import db61b.Table;
+import db61b.Row;
+import db61b.Condition;
+import db61b.DBException;
+
 /** An object that reads and interprets a sequence of commands from an
  *  input source.
  *  @author */
@@ -310,7 +317,7 @@ class CommandInterpreter {
     }
 
     /** The command input source. */
-    private Tokenizer _input;
+    private db61b.Tokenizer _input;
     /** Database containing all tables. */
-    private Database _database;
+    private db61b.Database _database;
 }
