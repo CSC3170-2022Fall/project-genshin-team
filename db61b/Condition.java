@@ -21,6 +21,10 @@ class Condition {
     Condition(Column col1, String relation, Column col2) {
 //        TODO
         // YOUR CODE HERE
+        _col1 = col1;
+        _relation = relation;
+        _col2 = col2;
+
     }
 
     /** A Condition representing COL1 RELATION 'VAL2', where COL1 is
@@ -59,4 +63,5 @@ class Condition {
     private String _val2;
     // ADD ADDITIONAL FIELDS HERE
 //    TODO
+    private String _relation;
 }
