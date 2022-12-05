@@ -68,11 +68,7 @@ public class Row_test {
         column_list.add(column_1);
         column_list.add(column_2);
         Row r1 = new Row(column_list, r);
-        System.out.print(r1.get(0));
-        System.out.print(r1.get(1));
         Row r2 = new Row(new String[] {"Luca", "460"});
-        System.out.print(r2.get(0));
-        System.out.print(r2.get(1));
         assertEquals(r1, r2);
 
     }

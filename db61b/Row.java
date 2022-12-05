@@ -52,7 +52,6 @@ class Row {
         Iterator<Column> it = columns.iterator();
         while(it.hasNext()){
             new_data.add(it.next().getFrom(rows));
-            System.out.print(new_data.get(0));
         }
 
         _data = (String[])new_data.toArray(new String[rows.length]);
