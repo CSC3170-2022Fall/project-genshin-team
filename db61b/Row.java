@@ -7,8 +7,10 @@
 // solutions.
 package db61b;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.io.IOException;
+import java.util.Iterator;
 import java.util.List;
 
 import static db61b.Utils.*;
@@ -44,10 +46,16 @@ class Row {
      */
     Row(List<Column> columns, Row... rows) {
         // FILL IN
-//        TODO WORKING LATER
-//        for (int _row = 0; _row < rows.length; _row++) {
-//
-//        }
+//        TODO FINISH
+        // String[] new_data = new String[rows.length];
+        ArrayList<String> new_data = new ArrayList<String>();
+        Iterator<Column> it = columns.iterator();
+        while(it.hasNext()){
+            new_data.add(it.next().getFrom(rows));
+            System.out.print(new_data.get(0));
+        }
+
+        _data = (String[])new_data.toArray(new String[rows.length]);
     }
 
     /** Return my number of columns. */

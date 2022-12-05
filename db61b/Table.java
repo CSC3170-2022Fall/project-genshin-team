@@ -67,14 +67,16 @@ class Table implements Iterable<Row> {
         // REPLACE WITH SOLUTION
     }
 
-    /** Return the number of the column whose title is TITLE, or -1 if
+    /** Return the index of the intended title of certain column, or -1 if
      *  there isn't one. */
     public int findColumn(String title) {
 //        TODO FINISH
+        int count = 0;
         for (String element: _columnTitle) {
             if (title.equals(element)) {
-                return 1;
+                return count;
             }
+            count += 1;
         }
         return -1;  // REPLACE WITH SOLUTION
     }
