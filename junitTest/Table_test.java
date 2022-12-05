@@ -65,10 +65,15 @@ public class Table_test {
     }
 
     @Test
-    public void test_print() throws IOException {
+    public void test_print() {
         db61b.Table table = db61b.Table.readTable("./testing/enrolled");
         table.print();
         // assert???
+    }
+
+    @Test
+    public void test_select_1(){
+
     }
 
 }
