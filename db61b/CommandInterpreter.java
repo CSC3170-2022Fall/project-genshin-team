@@ -254,12 +254,11 @@ class CommandInterpreter {
     Table tableDefinition() {
         Table table;
         if (_input.nextIf("(")) {
-            // REPLACE WITH SOLUTION
 //            TODO FINISH
             ArrayList<String> array0=new ArrayList<String>();
-            do {
+            while (_input.nextIf(",")) {
                 array0.add(columnName());
-            } while (_input.nextIf(","));
+            }
             _input.next(")");
             table=new Table(array0);
         } else {
@@ -277,9 +276,9 @@ class CommandInterpreter {
 //        TODO FINISH
         _input.next("select");
         ArrayList<String> array1=new ArrayList<String>();
-        do {
+        while (_input.nextIf(",")) {
             array1.add(columnName());
-        } while (_input.nextIf(","));
+        }
         _input.next("from");
         Table original_table=tableName();
         Table new_table=null;
@@ -335,9 +334,9 @@ class CommandInterpreter {
             return null;
         }
         _input.next("where");
-        do {
+        while (_input.nextIf("and")) {
             array0.add(condition(tables));
-        } while (_input.nextIf("and"));
+        }
         return array0;
     }
 
