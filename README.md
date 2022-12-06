@@ -41,3 +41,45 @@ As for Option 2, our topic background specification can be found in [background-
 ## Project Abstract
 
 <!-- TODO -->
+1. Project Background 
+   In this project, we will attempt to create a database management system (DBMS) using static programming language (Java). We will give the database the basic functions required, while adding more convenient and eﬀicient instructions based on our technology and ideas.
+
+   
+
+   ---
+
+   
+
+2. Project Overview
+   1. Basic Contents:
+      Our project object is a miniature relational database management system (DBMS) that stores tables of data in which we will set some number of labeled columns of data information. Our system will include a very simple query language for extracting information from these tables.
+
+      
+
+   2. Basic Functions:
+      We will prepare the following basic functions under the framework of the database system built in the project.
+   
+      1. **Database** The function first creates an empty database. Then we can use the get function to enter the table name to quickly find the return table or null, or use the put function to legally change the table name.
+      2. **Row** We will create a class named row. Users can set and update the value of the row through the function, and return the relevant information of the row (e.g.number,value). We also added equals function to judge by hashcode.
+      3. **Table** This function contains the basic functions associated with Table. Users can find and return labels, values, and so on for specified rows and columns. We set up the function of reading and output table, and print the search results in standard form; At the same time, the filter table function is set to filter the tables that meet the requirements based on the row and column values.
+      4. **Interpreter** We create an interpreter that uses the recursive descent principle, converts the bnf syntax, unties the input side, and uses tokens to create statements from the remaining sequences and perform operations, returning values. Specifically, we will prepare table(eg.create, exit, insert, load, store, print, select) for the statement.
+      5. **Condition** We will set the corresponding relation for different conditions (e.g.val2,col2). We also added a test program to judge if rows satisfies all conditions.
+   
+   
+   
+   ---
+
+   
+
+3. Project Extensions
+   We would like to add some extensions of our own ideas to the features required by the project.
+
+   + **Basic Mathematical Functions** We will add ”Max”, ”Min”, ”Avg” and other basic mathematical functions to calculate the statistical information of rows and columns
+
+   + **More Information** We will set more signature information(e.g.primary key) for the table, make it easier for the user to find. We will also try to add sort to rows and columns. In addition, we will also try to incorporate group statistics features such as group by.
+
+   + **Multi-Select** In order to get the table with the required information step by step, we will expand on the basis of select so that the value returned by the lookup can be multi-tiered and step-by-step.
+
+   + **Join of Tables** We will use different connection modes to connect the required information according to user requirements (e.g.left join, right join).
+
+   + **GUI** We will try to create a fancy and user-friendly GUI that makes it easy for users to select the features they need, with helpful tips（e.g. Show possible paths as users type).
