@@ -138,31 +138,31 @@ class CommandInterpreter {
      *  iff the command is something other than quit or exit. */
     boolean statement() {
         switch (_input.peek()) {
-        case "create":
-            createStatement();
-            break;
-        case "load":
-            loadStatement();
-            break;
-        case "exit": case "quit":
-            exitStatement();
-            return false;
-        case "*EOF*":
-            return false;
-        case "insert":
-            insertStatement();
-            break;
-        case "print":
-            printStatement();
-            break;
-        case "select":
-            selectStatement();
-            break;
-        case "store":
-            storeStatement();
-            break;
-        default:
-            throw error("unrecognizable command");
+            case "create":
+                createStatement();
+                break;
+            case "load":
+                loadStatement();
+                break;
+            case "exit": case "quit":
+                exitStatement();
+                return false;
+            case "*EOF*":
+                return false;
+            case "insert":
+                insertStatement();
+                break;
+            case "print":
+                printStatement();
+                break;
+            case "select":
+                selectStatement();
+                break;
+            case "store":
+                storeStatement();
+                break;
+            default:
+                throw error("unrecognizable command");
         }
         return true;
     }
@@ -171,10 +171,11 @@ class CommandInterpreter {
     void createStatement() {
         _input.next("create");
         _input.next("table");
-        String name = name();
-        Table table = tableDefinition();
+        String name = name();//name of the newly created table
+        Table table = tableDefinition();//the newly created table
         // FILL IN CODE TO EXECUTE THE STATEMENT
-//        TODO
+//        TODO FINISH
+        _database.put(name, table);
         _input.next(";");
     }
 
@@ -207,7 +208,13 @@ class CommandInterpreter {
     /** Parse and execute a load statement from the token stream. */
     void loadStatement() {
         // FILL THIS IN
-//        TODO
+//        TODO FINISH
+        _input.next("load");
+        String name_buffer=name();
+        Table table_buffer=Table.readTable(name_buffer);
+        _database.put(name_buffer,table_buffer);
+        System.out.printf("Loaded %s.db%n",name_buffer);
+        _input.next(";");
     }
 
     /** Parse and execute a store statement from the token stream. */
@@ -216,7 +223,8 @@ class CommandInterpreter {
         String name = _input.peek();
         Table table = tableName();
         // FILL THIS IN
-//        TODO
+//        TODO FINISH
+        table.writeTable(name);
         System.out.printf("Stored %s.db%n", name);
         _input.next(";");
     }
@@ -224,13 +232,21 @@ class CommandInterpreter {
     /** Parse and execute a print statement from the token stream. */
     void printStatement() {
         // FILL THIS IN
-//        TODO
+//        TODO FINISH
+        _input.next("print");
+        Table table_buffer=tableName();
+        _input.next(";");
+        System.out.printf("contents of %s:%n", _input.peek());
+        table_buffer.print();
     }
 
     /** Parse and execute a select statement from the token stream. */
     void selectStatement() {
         // FILL THIS IN
-//        TODO
+//        TODO FINISH
+        System.out.println("Search results:");
+        selectClause().print();
+        _input.next(";");
     }
 
     /** Parse and execute a table definition, returning the specified
@@ -238,13 +254,18 @@ class CommandInterpreter {
     Table tableDefinition() {
         Table table;
         if (_input.nextIf("(")) {
-            // REPLACE WITH SOLUTION
-//            TODO
-            table = null;
+//            TODO FINISH
+            ArrayList<String> array0=new ArrayList<String>();
+            while (_input.nextIf(",")) {
+                array0.add(columnName());
+            }
+            _input.next(")");
+            table=new Table(array0);
         } else {
             // REPLACE WITH SOLUTION
-//            TODO
-            table = null;
+//            TODO FINISH
+            _input.next("as");
+            table=selectClause();
         }
         return table;
     }
@@ -252,9 +273,25 @@ class CommandInterpreter {
     /** Parse and execute a select clause from the token stream, returning the
      *  resulting table. */
     Table selectClause() {
-//        TODO
-        return null;         // REPLACE WITH SOLUTION
-
+//        TODO FINISH
+        _input.next("select");
+        ArrayList<String> array1=new ArrayList<String>();
+        while (_input.nextIf(",")) {
+            array1.add(columnName());
+        }
+        _input.next("from");
+        Table original_table=tableName();
+        Table new_table=null;
+        if (_input.nextIf(",")) {
+            new_table = tableName();
+        }
+        ArrayList<Condition> array2;
+        if (new_table == null) {
+            array2=conditionClause(original_table);
+        } else {
+            array2=conditionClause(original_table, new_table);
+        }
+        return original_table.select(new_table,array1,array2);
     }
 
     /** Parse and return a valid name (identifier) from the token stream. */
@@ -291,15 +328,29 @@ class CommandInterpreter {
      *  token stream.  This denotes the conjunction (`and') zero
      *  or more Conditions. */
     ArrayList<Condition> conditionClause(Table... tables) {
-//        TODO
-        return null;        // REPLACE WITH SOLUTION
+//        TODO FINISH
+        ArrayList<Condition> array0 = new ArrayList<Condition>();
+        if (_input.peek().equals(";")) {
+            return null;
+        }
+        _input.next("where");
+        while (_input.nextIf("and")) {
+            array0.add(condition(tables));
+        }
+        return array0;
     }
 
     /** Parse and return a Condition that applies to TABLES from the
      *  token stream. */
     Condition condition(Table... tables) {
-//        TODO
-        return null;        // REPLACE WITH SOLUTION
+//        TODO FINISH
+        Column column_object=new Column(columnName(), tables);
+        String r0 = _input.next(Tokenizer.RELATION);
+        try {
+            return new Condition(column_object,r0,literal());
+        } catch (DBException e) {
+            return new Condition(column_object,r0,new Column(columnName(),tables));
+        }
     }
 
     /** Advance the input past the next semicolon. */
