@@ -2,9 +2,6 @@ package db61b;
 
 import java.util.Scanner;
 
-import db61b.CommandInterpreter;
-import db61b.DBException;
-
 /** The main program for db61b.
  *  @author P. N. Hilfinger
  */
