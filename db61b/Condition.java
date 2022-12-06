@@ -44,7 +44,7 @@ class Condition {
         // REPLACE WITH SOLUTION
         String c1, c2;
         c1 = _col1.getFrom(rows);
-        if (_col2 == null) {
+        if (_col2 != null) {
             c2 = _col2.getFrom(rows);
         }
         else{
