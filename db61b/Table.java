@@ -200,7 +200,7 @@ class Table implements Iterable<Row> {
      *  rows of this table that satisfy CONDITIONS. */
     Table select(List<String> columnNames, List<Condition> conditions) {
         Table result = new Table(columnNames);
-//        TODO Working (Finished for now, needs further checking )
+//        TODO FINISH
 
         // create List<Column> variable
         List<Column> temp_columns = new ArrayList<Column>();
@@ -228,8 +228,27 @@ class Table implements Iterable<Row> {
     Table select(Table table2, List<String> columnNames,
                  List<Condition> conditions) {
         Table result = new Table(columnNames);
-        // FILL IN
-//        TODO
+//        TODO FINISH
+        // create List<Column> variable
+        List<Column> temp_columns = new ArrayList<Column>();
+        Iterator<String> it_columnNames = columnNames.iterator();
+        while(it_columnNames.hasNext()){
+            String temp_name = it_columnNames.next();
+            temp_columns.add(new Column(temp_name, this, table2));
+        }
+
+        Iterator<Row> it_rows_1 = this.iterator();
+        while(it_rows_1.hasNext()){
+            Iterator<Row> it_rows_2 = table2.iterator();
+            Row temp_row_1 = it_rows_1.next();
+            while(it_rows_2.hasNext()){
+                Row temp_row_2 = it_rows_2.next();
+                if(Condition.test(conditions, temp_row_1, temp_row_2)){
+                    result.add(new Row(temp_columns, temp_row_1, temp_row_2));
+                    break;
+                }
+            }
+        }
         return result;
     }
 
