@@ -22,6 +22,7 @@ import db61b.Table;
 import db61b.Row;
 import db61b.Condition;
 import db61b.DBException;
+import db61b.Column;
 
 /** An object that reads and interprets a sequence of commands from an
  *  input source.

@@ -36,8 +36,6 @@ After thorough discussion, our team made the choice and the specification inform
 - Our option choice is: **Option 3**
 - The difficulty level is: **None**
 
-As for Option 2, our topic background specification can be found in [background-specification.md](background-specification.md).
-
 ## Project Abstract
 
 <!-- TODO -->
