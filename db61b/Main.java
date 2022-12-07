@@ -17,15 +17,15 @@ public class Main {
         System.out.printf("DB61B System.  Version %s.%n", VERSION);
 
         Scanner input = new Scanner(System.in);
-        CommandInterpreter interpreter =
-            new CommandInterpreter(input, System.out);
+        db61b.CommandInterpreter interpreter =
+            new db61b.CommandInterpreter(input, System.out);
 
         while (true) {
             try {
                 if (!interpreter.statement()) {
                     break;
                 }
-            } catch (DBException e) {
+            } catch (db61b.DBException e) {
                 System.out.printf("Error: %s%n", e.getMessage());
                 interpreter.skipCommand();
             }
