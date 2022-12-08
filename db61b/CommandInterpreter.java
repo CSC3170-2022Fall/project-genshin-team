@@ -214,11 +214,17 @@ class CommandInterpreter {
         // FILL THIS IN
 //        TODO FINISH
         _input.next("load");
-        String name_buffer=this.name();
-        Table table_buffer=Table.readTable(name_buffer);
-        _database.put(name_buffer,table_buffer);
-        System.out.printf("Loaded %s.db%n",name_buffer);
-        _input.next(";");
+        String nameOfTable = "";
+        String name_buffer = null;
+        String lastNext = _input.peek();
+        while (!_input.nextIf(";")) {
+            lastNext = _input.peek();
+            nameOfTable = nameOfTable + _input.next();
+        }
+        name_buffer = lastNext;
+        Table table_buffer = Table.readTable(nameOfTable);
+        _database.put(name_buffer, table_buffer);
+        System.out.printf("Loaded %s.db%n", name_buffer);
     }
 
     /** Parse and execute a store statement from the token stream. */
