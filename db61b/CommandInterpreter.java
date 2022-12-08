@@ -281,53 +281,33 @@ class CommandInterpreter {
 
     /** Parse and execute a select clause from the token stream, returning the
      *  resulting table. */
-    Table selectClause() {
-////        TODO FINISH
-//        _input.next("select");
-//        ArrayList<String> array1=new ArrayList<String>();
-////        TODO The first column should not be started with ","
-//        /*
-//        * The example is
-//        * select SID, Firstname from students where Lastname ="Chan";
-//        * The program will warn that cannot find SID
-//        * */
-//        array1.add(columnName());
-//        while (_input.nextIf(",")) {
-//            array1.add(columnName());
-//        }
-//        _input.next("from");
-//        Table original_table = this.tableName();
-//        Table new_table = null;
-//        if (_input.nextIf(",")) {
-//            new_table = this.tableName();
-//        }
-//        ArrayList<Condition> array2;
-//        if (new_table == null) {
-//            array2=conditionClause(original_table);
-//        } else {
-//            array2=conditionClause(original_table, new_table);
-//        }
-//        return original_table.select(new_table,array1,array2);
+    Table selectClause() {//没问题，问题在于conditionClause()!
+//        TODO
         _input.next("select");
-        Table result;
-        ArrayList<String> cols = new ArrayList<String>();
-        do {
-            cols.add(columnName());
-        } while (_input.nextIf(","));
+        ArrayList<String> array1=new ArrayList<String>();
+//        TODO The first column should not be started with ","
+        /*
+         * The example is
+         * select SID, Firstname from students where Lastname ="Chan";
+         * */
+        array1.add(this.columnName());    //列的名字的array
+        while (_input.nextIf(",")) {
+            array1.add(this.columnName());
+        }
         _input.next("from");
-        Table table1 = tableName();
-        Table table2 = null;
-        if (_input.nextIf(",")) {
-            table2 = tableName();
+        Table table0 = this.tableName(); //第一个table
+        Table table1 = null;
+        if (_input.nextIf(",")) {//如果有“，” 则有table1
+            table1=this.tableName();
         }
-        ArrayList<Condition> conds;
-        if (table2 != null) {
-            conds = conditionClause(table1, table2);
+        ArrayList<Condition> array2;//
+        if (table1 == null) {
+            array2=conditionClause(table0);
+            return table0.select(array1,array2);
         } else {
-            conds = conditionClause(table1);
+            array2=conditionClause(table0, table1);
         }
-        return table1.select(table2, cols, conds);
-
+        return table0.select(table1,array1,array2);//table0值得考量，先默认是对的，array1是属性名列表，array2是条件
     }
 
     /** Parse and return a valid name (identifier) from the token stream. */
@@ -363,29 +343,32 @@ class CommandInterpreter {
     /** Parse and return a list of Conditions that apply to TABLES from the
      *  token stream.  This denotes the conjunction (`and') zero
      *  or more Conditions. */
-    ArrayList<Condition> conditionClause(Table... tables) {
-//        TODO FINISH
-        ArrayList<Condition> array0 = new ArrayList<Condition>();
-        if (_input.peek().equals(";")) {
-            return null;
+    ArrayList<Condition> conditionClause(Table... tables) {//对输入的table根据后面的conditionClauses进行
+//        TODO
+        ArrayList<Condition> result = new ArrayList<Condition>();//结果
+        if (_input.nextIf("where")) {
+            result.add(condition(tables));
+
+            while (_input.nextIf("and")) {
+                result.add(condition(tables));
+            }
+        } else {
+            //do nothing, so that the result is empty.
         }
-        _input.next("where");
-        while (_input.nextIf("and")) {
-            array0.add(condition(tables));
-        }
-        return array0;
+        return result;
     }
 
     /** Parse and return a Condition that applies to TABLES from the
      *  token stream. */
     Condition condition(Table... tables) {
-//        TODO FINISH
+//        TODO
         Column column_object=new Column(columnName(), tables);
         String r0 = _input.next(Tokenizer.RELATION);
-        try {
-            return new Condition(column_object,r0,literal());
-        } catch (DBException e) {
-            return new Condition(column_object,r0,new Column(columnName(),tables));
+        if (_input.nextIs(Tokenizer.LITERAL)) {
+            return new Condition(column_object, r0, literal());
+        } else {
+            Column col2 = new Column(columnName(), tables);
+            return new Condition(column_object, r0, col2);
         }
     }
 

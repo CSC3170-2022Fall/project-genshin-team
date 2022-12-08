@@ -37,6 +37,9 @@ since it is hard to write junit for CommandInterpreter.java. We use a markdown f
      at db61b.CommandInterpreter.selectStatement(CommandInterpreter.java:253)
      at db61b.CommandInterpreter.statement(CommandInterpreter.java:160)
      at db61b.Main.main(Main.java:25))
+  + **select Firstname, Lastname, Grade from students, enrolled where CCN = '21001' and SID = SID;**
+  + Exception in thread "main" java.lang.ArrayIndexOutOfBoundsException: Index 1 out of bounds for length 1
+  + Row and condition have bugs.
 
   + ~~**load testing/students**~~
   + ~~**quit;**~~
