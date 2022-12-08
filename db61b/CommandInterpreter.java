@@ -194,16 +194,21 @@ class CommandInterpreter {
     void insertStatement() {
         _input.next("insert");
         _input.next("into");
-        Table table = tableName();
+        Table table = this.tableName();
         _input.next("values");
 
         ArrayList<String> values = new ArrayList<>();
-        values.add(literal());
+        values.add(this.literal());
         while (_input.nextIf(",")) {
-            values.add(literal());
+            values.add(this.literal());
         }
 
-        table.add(new Row(values.toArray(new String[values.size()])));
+        if (values.size() == table.columns()) {
+            table.add(new Row(values.toArray(new String[values.size()])));
+        } else {
+            throw error("the input size should be the same as the column number which is %d", table.columns());
+        }
+
         _input.next(";");
     }
 
