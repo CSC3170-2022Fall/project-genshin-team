@@ -175,6 +175,10 @@ class Tokenizer {
         return _buffer.get(_k);
     }
 
+    String getLastTokenForTable() {
+        return _buffer.get(_k - 1);
+    }
+
     /** Return THIS to its position just after the last flush or flushToSemi
      *  operation(or its initial position if there have been no flush...
      *  operations).  */

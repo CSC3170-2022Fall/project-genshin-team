@@ -10,6 +10,8 @@ since it is hard to write junit for CommandInterpreter.java. We use a markdown f
   + create table test (col1, col2);
   + insert into test values '1', '2';
   + insert into test values 'A', 'B', 'C';
+  + store students;
+  + store TestResult/students;
 
 ## Test failed:
   + **select SID, Lastname, from students;** (Error: unexpected token: 'students')

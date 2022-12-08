@@ -218,13 +218,12 @@ class CommandInterpreter {
 //        TODO FINISH
         _input.next("load");
         String nameOfTable = "";
-        String name_buffer = null;
         String lastNext = _input.peek();
         while (!_input.nextIf(";")) {
             lastNext = _input.peek();
             nameOfTable = nameOfTable + _input.next();
         }
-        name_buffer = lastNext;
+        String name_buffer = lastNext;
         Table table_buffer = Table.readTable(nameOfTable);
         _database.put(name_buffer, table_buffer);
         System.out.printf("Loaded %s.db%n", name_buffer);
@@ -233,11 +232,22 @@ class CommandInterpreter {
     /** Parse and execute a store statement from the token stream. */
     void storeStatement() {
         _input.next("store");
-        String name = _input.peek();
-        Table table = tableName();
+        String lastNext = _input.peek();
+        String nameOfTable = "";
+        Table table;
+        while (true) {
+            if (!_input.nextIs(";")) {
+                lastNext = _input.peek();
+                nameOfTable = nameOfTable + _input.next();
+            } else {
+                table = this.prevTokenTable();
+                break;
+            }
+        }
         // FILL THIS IN
 //        TODO FINISH
-        table.writeTable(name);
+        String name = lastNext;
+        table.writeTable(nameOfTable);
         System.out.printf("Stored %s.db%n", name);
         _input.next(";");
     }
@@ -331,6 +341,15 @@ class CommandInterpreter {
      *  that it designates, which must be loaded. */
     Table tableName() {
         String name = this.name();
+        Table table = _database.get(name);
+        if (table == null) {
+            throw error("unknown table: %s", name);
+        }
+        return table;
+    }
+
+    Table prevTokenTable() {
+        String name = _input.getLastTokenForTable();
         Table table = _database.get(name);
         if (table == null) {
             throw error("unknown table: %s", name);
