@@ -186,10 +186,12 @@ class CommandInterpreter {
     /** Parse and execute an exit or quit statement. Actually does nothing
      *  except check syntax, since statement() handles the actual exiting. */
     void exitStatement() {
-        if (!_input.nextIf("quit")) {
-            _input.next("exit");
+        _input.next();
+        if (!_input.nextIf(";")) {
+//            _input.next("exit");
+            throw error ("the exit statement should be 'quit;' or 'exit;'");
         }
-        _input.next(";");
+//        _input.next(";");
     }
 
     /** Parse and execute an insert statement from the token stream. */
