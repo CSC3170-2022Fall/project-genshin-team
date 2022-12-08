@@ -85,9 +85,9 @@ public class Table_test {
         List<String> ColumnName1 = new ArrayList<String>();
         ColumnName1.add("student");
         Column col1 = new Column("student", table);
-        Condition condition1 = new Condition(col1, "=", col1);
+        // Condition condition1 = new Condition(col1, "=", col1);
         List<Condition> conditionList = new ArrayList<Condition>();
-        conditionList.add(condition1);
+        // conditionList.add(condition1);
         Table table3 = table.select(ColumnName1, conditionList);
         table3.print();
     }
@@ -135,5 +135,36 @@ public class Table_test {
             }
             System.out.println();
         }
+    }
+
+    @Test
+    public void test_equijoin(){
+        Table table_sample_1 = new Table(new String[] { "student", "id", "college", "school", "Year" });
+        Table table_sample_2 = new Table(new String[] { "id", "grade" });
+
+        Row r1 = new Row(new String[] { "Luca", "460", "Muse", "SDS", "2020" });
+        Row r2 = new Row(new String[] { "Philip", "590", "Muse", "SSE", "2020" });
+        table_sample_1.add(r1);
+        table_sample_1.add(r2);
+
+        Row r3 = new Row(new String[] { "460", "A"});
+        Row r4 = new Row(new String[] { "590", "B"});
+        table_sample_2.add(r4);
+        table_sample_2.add(r3);
+
+        Column col1 = new Column("id", table_sample_1);
+        Column col2 = new Column("id", table_sample_2);
+        Column col3 = new Column("student", table_sample_1);
+
+        List<Column> colList1 = new ArrayList<Column>();
+        List<Column> colList2 = new ArrayList<Column>();
+        List<Column> colList3 = new ArrayList<Column>();
+
+        colList1.add(col1);
+        colList2.add(col2);
+
+        assertEquals(true, Table.equijoin_test(colList1, colList2, r1, r3));
+        assertEquals(false, Table.equijoin_test(colList1, colList2, r1, r4));
+
     }
 }

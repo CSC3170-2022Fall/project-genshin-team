@@ -261,7 +261,25 @@ class Table implements Iterable<Row> {
     private static boolean equijoin(List<Column> common1, List<Column> common2,
                                     Row row1, Row row2) {
 //        TODO
-        return true; // REPLACE WITH SOLUTION
+        Iterator<Column> it1 = common1.iterator();
+        Iterator<Column> it2 = common2.iterator();
+        while(it1.hasNext()){
+            Column col1 = it1.next();
+            while(it2.hasNext()){
+                Column col2 = it2.next();
+                System.out.println(col1.getFrom(row1));
+                System.out.println(col2.getFrom(row2));
+                if(!col1.getFrom(row1).equals(col2.getFrom(row2))){
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    public static boolean equijoin_test(List<Column> common1, List<Column> common2,
+                                Row row1, Row row2){
+        return equijoin(common1, common2, row1, row2);
     }
 
     /** My rows. */
