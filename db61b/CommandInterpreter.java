@@ -142,18 +142,18 @@ class CommandInterpreter {
             case "create":
                 createStatement();
                 break;
-            case "load":
+            case "load":             //no problem
                 loadStatement();
                 break;
-            case "exit": case "quit":
+            case "exit": case "quit"://no problem
                 exitStatement();
                 return false;
-            case "*EOF*":
+            case "*EOF*":            //no problem
                 return false;
             case "insert":
                 insertStatement();
                 break;
-            case "print":
+            case "print":            //no problem
                 printStatement();
                 break;
             case "select":
@@ -174,11 +174,7 @@ class CommandInterpreter {
         _input.next("table");
         String name = this.name();//name of the newly created table
         Table table = tableDefinition();//the newly created table
-        // FILL IN CODE TO EXECUTE THE STATEMENT
-//        TODO PLEASE Consider YOUR CODE MORE !!!
-//        ! there is another case you should to do
-//        ! When we input the column title into it
-//        ! Please read the line from 73 to 127
+//        TODO FINISH
         _database.put(name, table);
         _input.next(";");
     }
@@ -186,10 +182,12 @@ class CommandInterpreter {
     /** Parse and execute an exit or quit statement. Actually does nothing
      *  except check syntax, since statement() handles the actual exiting. */
     void exitStatement() {
-        if (!_input.nextIf("quit")) {
-            _input.next("exit");
+        _input.next();
+        if (!_input.nextIf(";")) {
+//            _input.next("exit");
+            throw error ("the exit statement should be 'quit;' or 'exit;'");
         }
-        _input.next(";");
+//        _input.next(";");
     }
 
     /** Parse and execute an insert statement from the token stream. */
@@ -214,11 +212,17 @@ class CommandInterpreter {
         // FILL THIS IN
 //        TODO FINISH
         _input.next("load");
-        String name_buffer=this.name();
-        Table table_buffer=Table.readTable(name_buffer);
-        _database.put(name_buffer,table_buffer);
-        System.out.printf("Loaded %s.db%n",name_buffer);
-        _input.next(";");
+        String nameOfTable = "";
+        String name_buffer = null;
+        String lastNext = _input.peek();
+        while (!_input.nextIf(";")) {
+            lastNext = _input.peek();
+            nameOfTable = nameOfTable + _input.next();
+        }
+        name_buffer = lastNext;
+        Table table_buffer = Table.readTable(nameOfTable);
+        _database.put(name_buffer, table_buffer);
+        System.out.printf("Loaded %s.db%n", name_buffer);
     }
 
     /** Parse and execute a store statement from the token stream. */
@@ -246,7 +250,7 @@ class CommandInterpreter {
     }
 
     /** Parse and execute a select statement from the token stream. */
-    void selectStatement() {
+    void selectStatement() {//no problem, problem is in selectClause()!
         // FILL THIS IN
 //        TODO FINISH
         System.out.println("Search results:");
@@ -256,18 +260,18 @@ class CommandInterpreter {
 
     /** Parse and execute a table definition, returning the specified
      *  table. */
-    Table tableDefinition() {
+    Table tableDefinition() {//
         Table table;
         if (_input.nextIf("(")) {
 //            TODO FINISH
             ArrayList<String> array0=new ArrayList<String>();
+            array0.add(columnName());
             while (_input.nextIf(",")) {
                 array0.add(this.columnName());
             }
             _input.next(")");
             table=new Table(array0);
         } else {
-            // REPLACE WITH SOLUTION
 //            TODO FINISH
             _input.next("as");
             table=selectClause();
@@ -278,32 +282,52 @@ class CommandInterpreter {
     /** Parse and execute a select clause from the token stream, returning the
      *  resulting table. */
     Table selectClause() {
-//        TODO FINISH
+////        TODO FINISH
+//        _input.next("select");
+//        ArrayList<String> array1=new ArrayList<String>();
+////        TODO The first column should not be started with ","
+//        /*
+//        * The example is
+//        * select SID, Firstname from students where Lastname ="Chan";
+//        * The program will warn that cannot find SID
+//        * */
+//        array1.add(columnName());
+//        while (_input.nextIf(",")) {
+//            array1.add(columnName());
+//        }
+//        _input.next("from");
+//        Table original_table = this.tableName();
+//        Table new_table = null;
+//        if (_input.nextIf(",")) {
+//            new_table = this.tableName();
+//        }
+//        ArrayList<Condition> array2;
+//        if (new_table == null) {
+//            array2=conditionClause(original_table);
+//        } else {
+//            array2=conditionClause(original_table, new_table);
+//        }
+//        return original_table.select(new_table,array1,array2);
         _input.next("select");
-        ArrayList<String> array1=new ArrayList<String>();
-//        TODO The first column should not be started with ","
-        /*
-        * The example is
-        * select SID, Firstname from students where Lastname ="Chan";
-        * The program will warn that cannot find SID
-        * */
-        array1.add(this.columnName());
-        while (_input.nextIf(",")) {
-            array1.add(this.columnName());
-        }
+        Table result;
+        ArrayList<String> cols = new ArrayList<String>();
+        do {
+            cols.add(columnName());
+        } while (_input.nextIf(","));
         _input.next("from");
-        Table original_table = this.tableName();
-        Table new_table = null;
+        Table table1 = tableName();
+        Table table2 = null;
         if (_input.nextIf(",")) {
-            new_table = this.tableName();
+            table2 = tableName();
         }
-        ArrayList<Condition> array2;
-        if (new_table == null) {
-            array2=conditionClause(original_table);
+        ArrayList<Condition> conds;
+        if (table2 != null) {
+            conds = conditionClause(table1, table2);
         } else {
-            array2=conditionClause(original_table, new_table);
+            conds = conditionClause(table1);
         }
-        return original_table.select(new_table,array1,array2);
+        return table1.select(table2, cols, conds);
+
     }
 
     /** Parse and return a valid name (identifier) from the token stream. */
@@ -384,3 +408,18 @@ class CommandInterpreter {
     /** Database containing all tables. */
     private db61b.Database _database;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
