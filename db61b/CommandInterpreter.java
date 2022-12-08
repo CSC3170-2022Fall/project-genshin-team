@@ -172,10 +172,13 @@ class CommandInterpreter {
     void createStatement() {
         _input.next("create");
         _input.next("table");
-        String name = name();//name of the newly created table
+        String name = this.name();//name of the newly created table
         Table table = tableDefinition();//the newly created table
         // FILL IN CODE TO EXECUTE THE STATEMENT
-//        TODO FINISH
+//        TODO PLEASE Consider YOUR CODE MORE !!!
+//        ! there is another case you should to do
+//        ! When we input the column title into it
+//        ! Please read the line from 73 to 127
         _database.put(name, table);
         _input.next(";");
     }
@@ -211,7 +214,7 @@ class CommandInterpreter {
         // FILL THIS IN
 //        TODO FINISH
         _input.next("load");
-        String name_buffer=name();
+        String name_buffer=this.name();
         Table table_buffer=Table.readTable(name_buffer);
         _database.put(name_buffer,table_buffer);
         System.out.printf("Loaded %s.db%n",name_buffer);
@@ -235,9 +238,10 @@ class CommandInterpreter {
         // FILL THIS IN
 //        TODO FINISH
         _input.next("print");
+        String tableName = _input.peek();
         Table table_buffer=tableName();
         _input.next(";");
-        System.out.printf("contents of %s:%n", _input.peek());
+        System.out.printf("Contents test of %s:%n", tableName);
         table_buffer.print();
     }
 
@@ -258,7 +262,7 @@ class CommandInterpreter {
 //            TODO FINISH
             ArrayList<String> array0=new ArrayList<String>();
             while (_input.nextIf(",")) {
-                array0.add(columnName());
+                array0.add(this.columnName());
             }
             _input.next(")");
             table=new Table(array0);
@@ -277,14 +281,21 @@ class CommandInterpreter {
 //        TODO FINISH
         _input.next("select");
         ArrayList<String> array1=new ArrayList<String>();
+//        TODO The first column should not be started with ","
+        /*
+        * The example is
+        * select SID, Firstname from students where Lastname ="Chan";
+        * The program will warn that cannot find SID
+        * */
+        array1.add(this.columnName());
         while (_input.nextIf(",")) {
-            array1.add(columnName());
+            array1.add(this.columnName());
         }
         _input.next("from");
-        Table original_table=tableName();
-        Table new_table=null;
+        Table original_table = this.tableName();
+        Table new_table = null;
         if (_input.nextIf(",")) {
-            new_table = tableName();
+            new_table = this.tableName();
         }
         ArrayList<Condition> array2;
         if (new_table == null) {
@@ -304,13 +315,13 @@ class CommandInterpreter {
      *  names are simply names; we use a different method name to clarify
      *  the intent of the code. */
     String columnName() {
-        return name();
+        return this.name();
     }
 
     /** Parse a valid table name from the token stream, and return the Table
      *  that it designates, which must be loaded. */
     Table tableName() {
-        String name = name();
+        String name = this.name();
         Table table = _database.get(name);
         if (table == null) {
             throw error("unknown table: %s", name);
