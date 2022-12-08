@@ -262,7 +262,7 @@ class CommandInterpreter {
 //            TODO FINISH
             ArrayList<String> array0=new ArrayList<String>();
             while (_input.nextIf(",")) {
-                array0.add(columnName());
+                array0.add(this.columnName());
             }
             _input.next(")");
             table=new Table(array0);
@@ -287,14 +287,15 @@ class CommandInterpreter {
         * select SID, Firstname from students where Lastname ="Chan";
         * The program will warn that cannot find SID
         * */
+        array1.add(this.columnName());
         while (_input.nextIf(",")) {
-            array1.add(columnName());
+            array1.add(this.columnName());
         }
         _input.next("from");
-        Table original_table=tableName();
-        Table new_table=null;
+        Table original_table = this.tableName();
+        Table new_table = null;
         if (_input.nextIf(",")) {
-            new_table = tableName();
+            new_table = this.tableName();
         }
         ArrayList<Condition> array2;
         if (new_table == null) {
