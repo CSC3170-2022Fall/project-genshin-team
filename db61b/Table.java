@@ -242,7 +242,14 @@ class Table implements Iterable<Row> {
         Iterator<String> it_columnNames = columnNames.iterator();
         while(it_columnNames.hasNext()){
             String temp_name = it_columnNames.next();
-            temp_columns.add(new Column(temp_name, this, table2));
+            if (conditions.size() == 0){
+                // natural join situation
+                temp_columns.add(new Column(temp_name, this));
+            }
+            else{
+                temp_columns.add(new Column(temp_name, this, table2));
+            }
+
         }
 
         Iterator<Row> it_rows_1 = this.iterator();
