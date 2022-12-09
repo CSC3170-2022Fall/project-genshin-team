@@ -11,9 +11,9 @@ import static db61b.Utils.*;
 */
 class Column {
     /** Selects column named NAME from a row of one of the given TABLES. */
-    Column(String name, Table... tables) {
+    Column(String name, db61b.Table tables) {
         _name = name;
-        for (_table = 0; _table < tables.length; _table += 1) {
+        for (_table = 0; _table < tables.size(); _table += 1) {
             _column = tables[_table].findColumn(name);
             if (_column != -1) {
                 return;
@@ -27,8 +27,12 @@ class Column {
         return _name;
     }
 
-    int get_table() {return _table;};
-    int get_column() {return _column;};
+    int get_table() {
+        return _table;
+    };
+    int get_column() {
+        return _column;
+    };
 
 
     /** Returns the value of this Column from ROWS[_table]. Assumes that
@@ -40,7 +44,7 @@ class Column {
      *  Despite the fact that many rows are passed to this function, this
      *  function returns only one value.
      */
-    String getFrom(Row... rows) {
+    String getFrom(db61b.Row... rows) {
         return rows[_table].get(_column);
     }
 

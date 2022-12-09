@@ -234,6 +234,7 @@ class Table implements Iterable<Row> {
         Iterator<String> it_columnNames = columnNames.iterator();
         while(it_columnNames.hasNext()){
             String temp_name = it_columnNames.next();
+//            * here the constructor is wrong
             temp_columns.add(new Column(temp_name, this, table2));
         }
 
@@ -243,6 +244,7 @@ class Table implements Iterable<Row> {
             Row temp_row_1 = it_rows_1.next();
             while(it_rows_2.hasNext()){
                 Row temp_row_2 = it_rows_2.next();
+//                * here we should check whether they can join???
                 if(Condition.test(conditions, temp_row_1, temp_row_2)){
                     result.add(new Row(temp_columns, temp_row_1, temp_row_2));
                     break;

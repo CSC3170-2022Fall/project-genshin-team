@@ -299,15 +299,15 @@ class CommandInterpreter {
     Table selectClause() {//没问题，问题在于conditionClause()!
 //        TODO
         _input.next("select");
-        ArrayList<String> array1=new ArrayList<String>();
+        ArrayList<String> arrayColumn=new ArrayList<String>();
 //        TODO The first column should not be started with ","
         /*
          * The example is
          * select SID, Firstname from students where Lastname ="Chan";
          * */
-        array1.add(this.columnName());    //列的名字的array
+        arrayColumn.add(this.columnName());    //列的名字的array
         while (_input.nextIf(",")) {
-            array1.add(this.columnName());
+            arrayColumn.add(this.columnName());
         }
         _input.next("from");
         Table table0 = this.tableName(); //第一个table
@@ -315,14 +315,14 @@ class CommandInterpreter {
         if (_input.nextIf(",")) {//如果有“，” 则有table1
             table1=this.tableName();
         }
-        ArrayList<Condition> array2;//
+        ArrayList<Condition> arrayCondition;//
         if (table1 == null) {
-            array2=conditionClause(table0);
-            return table0.select(array1,array2);
+            arrayCondition = conditionClause(table0);
+            return table0.select(arrayColumn, arrayCondition);
         } else {
-            array2=conditionClause(table0, table1);
+            arrayCondition = conditionClause(table0, table1);
         }
-        return table0.select(table1,array1,array2);//table0值得考量，先默认是对的，array1是属性名列表，array2是条件
+        return table0.select(table1,arrayColumn, arrayCondition);//table0值得考量，先默认是对的，array1是属性名列表，array2是条件
     }
 
     /** Parse and return a valid name (identifier) from the token stream. */
