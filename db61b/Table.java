@@ -215,9 +215,17 @@ class Table implements Iterable<Row> {
             /* if the content of certain row achieve the requirement,
              * add it into the result*/
             Row temp_row = it_rows.next();
-            if(Condition.test(conditions, temp_row)){
+
+            // if nothing after "where", add all rows of column in result
+            if (conditions.size() == 0){
                 result.add(new Row(temp_columns, temp_row));
             }
+            else{
+                if(Condition.test(conditions, temp_row)){
+                    result.add(new Row(temp_columns, temp_row));
+                }
+            }
+
         }
         return result;
     }
@@ -234,7 +242,6 @@ class Table implements Iterable<Row> {
         Iterator<String> it_columnNames = columnNames.iterator();
         while(it_columnNames.hasNext()){
             String temp_name = it_columnNames.next();
-//            * here the constructor is wrong
             temp_columns.add(new Column(temp_name, this, table2));
         }
 
@@ -244,10 +251,37 @@ class Table implements Iterable<Row> {
             Row temp_row_1 = it_rows_1.next();
             while(it_rows_2.hasNext()){
                 Row temp_row_2 = it_rows_2.next();
-//                * here we should check whether they can join???
-                if(Condition.test(conditions, temp_row_1, temp_row_2)){
-                    result.add(new Row(temp_columns, temp_row_1, temp_row_2));
-                    break;
+
+                // if nothing after "where", take equijoin as the condition
+                if(conditions.size() == 0){
+                    String colName = "";
+                    boolean flag = false;
+                    for(int i = 0; i < this.columns(); i++){
+                        for(int j = 0; j < table2.columns(); j++){
+                            if (this.getTitle(i).equals(table2.getTitle(j))){
+                                colName = this.getTitle(i);
+                                flag = true;
+                                break;
+                            }
+                        }
+                        if (flag){
+                            break;
+                        }
+                    }
+                    Column col1 = new Column(colName, this);
+                    Column col2 = new Column(colName, table2);
+                    List<Column> common1 = new ArrayList<Column>();
+                    List<Column> common2 = new ArrayList<Column>();
+                    common1.add(col1);
+                    common2.add(col2);
+                    if(equijoin(common1, common2, temp_row_1, temp_row_2)){
+                        result.add(new Row(temp_columns, temp_row_1, temp_row_2));
+                    }
+                }
+                else{
+                    if(Condition.test(conditions, temp_row_1, temp_row_2)){
+                        result.add(new Row(temp_columns, temp_row_1, temp_row_2));
+                    }
                 }
             }
         }
@@ -269,8 +303,6 @@ class Table implements Iterable<Row> {
             Column col1 = it1.next();
             while(it2.hasNext()){
                 Column col2 = it2.next();
-                System.out.println(col1.getFrom(row1));
-                System.out.println(col2.getFrom(row2));
                 if(!col1.getFrom(row1).equals(col2.getFrom(row2))){
                     return false;
                 }
