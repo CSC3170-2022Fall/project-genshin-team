@@ -37,18 +37,7 @@ since it is hard to write junit for CommandInterpreter.java. We use a markdown f
      Row and condition have bugs.)
   + **create table enrolled2 as select SID from enrolled, schedule where Dept = 'EECS' and Num = '61A';**
 
-    (Exception in thread "main" java.lang.NullPointerException: Cannot invoke "String.equals(Object)" because "this._data[i]" is null
-    at db61b.Row.equals(Row.java:95)
-    at java.base/java.util.HashMap.getNode(HashMap.java:570)
-    at java.base/java.util.HashMap.containsKey(HashMap.java:594)
-    at java.base/java.util.HashSet.contains(HashSet.java:205)
-    at db61b.Table.add(Table.java:100)
-    at db61b.Table.select(Table.java:283)
-    at db61b.CommandInterpreter.selectClause(CommandInterpreter.java:325)
-    at db61b.CommandInterpreter.tableDefinition(CommandInterpreter.java:292)
-    at db61b.CommandInterpreter.createStatement(CommandInterpreter.java:176)
-    at db61b.CommandInterpreter.statement(CommandInterpreter.java:143)
-    at db61b.Main.main(Main.java:25))
+    (The print result should be 101 102 104 105 106 but ours is 101 102 103 104 105 106)
   + ~~**load testing/students**~~
   + ~~**quit;**~~
   + ~~**insert into test values '1', '2', '3';**~~
