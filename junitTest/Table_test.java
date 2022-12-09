@@ -204,23 +204,22 @@ public class Table_test {
         Table table_enrolled = Table.readTable("./testing/enrolled");
         Table table_schedule = Table.readTable("./testing/schedule");
 
-        Column col1 = new Column("CCN", table_enrolled);
-        Column col2 = new Column("CCN", table_schedule);
-        Column col3 = new Column("Dept", table_schedule);
-        Column col4 = new Column("Num", table_schedule);
+        Column col1 = new Column("CCN", table_enrolled, table_schedule);
+        Column col3 = new Column("Dept", table_enrolled, table_schedule);
+        Column col4 = new Column("Num", table_enrolled, table_schedule);
 
         List<String> columnNames = new ArrayList<String>();
         columnNames.add("SID");
 
         List<Condition> conditionList = new ArrayList<Condition>();
-        Condition cond1 = new Condition(col1, "=", col2);
+        // Condition cond1 = new Condition(col1, "=", col1);
         Condition cond2 = new Condition(col3, "=", "EECS");
         Condition cond3 = new Condition(col4, "=", "61A");
-        conditionList.add(cond1);
+        // conditionList.add(cond1);
         conditionList.add(cond2);
         conditionList.add(cond3);
 
         Table result = table_enrolled.select(table_schedule, columnNames, conditionList);
-        // result.print();
+        result.print();
     }
 }

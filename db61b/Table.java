@@ -250,7 +250,6 @@ class Table implements Iterable<Row> {
             }
             else{
                 temp_columns.add(new Column(temp_name, this, table2));
-                System.out.println(temp_columns.get(0).getName());
             }
 
         }
@@ -263,46 +262,41 @@ class Table implements Iterable<Row> {
                 Row temp_row_2 = it_rows_2.next();
 
                 // if nothing after "where", take equijoin as the condition
-                if(conditions.size() == 0){
-                    String colName = "";
-                    boolean flag = false;
-                    for(int i = 0; i < this.columns(); i++){
-                        for(int j = 0; j < table2.columns(); j++){
-                            if (this.getTitle(i).equals(table2.getTitle(j))){
-                                colName = this.getTitle(i);
-                                flag = true;
-                                break;
-                            }
-                        }
-                        if (flag){
+                String colName = "";
+                boolean flag = false;
+                for(int i = 0; i < this.columns(); i++){
+                    for(int j = 0; j < table2.columns(); j++){
+                        if (this.getTitle(i).compareTo((table2.getTitle(j))) == 0){
+                            colName = this.getTitle(i);
+                            flag = true;
                             break;
                         }
                     }
-                    Column col1 = new Column(colName, this);
-                    Column col2 = new Column(colName, table2);
-                    List<Column> common1 = new ArrayList<Column>();
-                    List<Column> common2 = new ArrayList<Column>();
-                    common1.add(col1);
-                    common2.add(col2);
-                    if(equijoin(common1, common2, temp_row_1, temp_row_2)){
-                        result.add(new Row(temp_columns, temp_row_1, temp_row_2));
+                    if (flag){
+                        break;
                     }
                 }
-                else{
-                    if (temp_row_1.get(1).compareTo(temp_row_2.get(0)) == 0){
-                        if(temp_row_2.get(2).compareTo("EECS") == 0){
-                            if(temp_row_2.get(1).compareTo("61A") == 0){
-                                System.out.printf("%s, %s :: %s\n", temp_row_1.get(0), temp_row_1.get(1), temp_row_2.get(0));
-                                assertEquals(true, Condition.test(conditions, temp_row_1, temp_row_2));
-                            }
+
+                Column col1 = new Column(colName, this);
+                Column col2 = new Column(colName, table2);
+                List<Column> common1 = new ArrayList<Column>();
+                List<Column> common2 = new ArrayList<Column>();
+                common1.add(col1);
+                common2.add(col2);
+                if(equijoin(common1, common2, temp_row_1, temp_row_2)){
+                    if (conditions.size() == 0){
+                        result.add(new Row(temp_columns, temp_row_1, temp_row_2));
+                    }
+                    else{
+//                        System.out.printf("%s, %s :: %s\n", temp_row_1.get(0), temp_row_1.get(1), temp_row_2.get(0));
+//                        assertEquals(true, Condition.test(conditions, temp_row_1, temp_row_2));
+                        if(Condition.test(conditions, temp_row_1, temp_row_2)){
+                            // System.out.println("Ever reach here");
+                            result.add(new Row(temp_columns, temp_row_1, temp_row_2));
                         }
                     }
-                    // System.out.printf("%s, %s :: %s\n", temp_row_1.get(0), temp_row_1.get(1), temp_row_2.get(0));
-                    if(Condition.test(conditions, temp_row_1, temp_row_2)){
-                        System.out.println("Ever reach here");
-                        result.add(new Row(temp_columns, temp_row_1, temp_row_2));
-                    }
                 }
+
             }
         }
         return result;
