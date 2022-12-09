@@ -10,12 +10,9 @@ select Num, Dept, Time, Room from schedule, enrolled where SID = '102' and Sem =
 
 /* Delete a student */
 
-create table enrolled as select SID, CCN, Grade from enrolled
-       where SID != '103';
+create table enrolled as select SID, CCN, Grade from enrolled where SID != '103';
 
-create table students 
-   as select SID, Lastname, Firstname, SemEnter, YearEnter, Major 
-      from students where SID != '103';
+create table students as select SID, Lastname, Firstname, SemEnter, YearEnter, Major from students where SID != '103';
 
 /* And print the SIDs of those remaining. */
 select SID from enrolled;
