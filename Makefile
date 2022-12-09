@@ -34,7 +34,7 @@ style:
 
 # 'make clean' will clean up stuff you can reconstruct.
 clean:
-	$(RM) *~ 
+	$(RM) *~
 	$(MAKE) -C $(PACKAGE) clean
 	$(MAKE) -C testing clean
 
