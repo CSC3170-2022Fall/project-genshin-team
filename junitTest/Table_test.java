@@ -111,7 +111,7 @@ public class Table_test {
         Column col1 = new Column("student", table_sample_1, table_sample_2);
         Column col2 = new Column("grade", table_sample_1, table_sample_2);
         Column col3 = new Column("school", table_sample_1);
-        Column col4 = new Column("id", table_sample_2);
+        // Column col4 = new Column("id", table_sample_2);
         List<Column> columnList = new ArrayList<Column>();
         columnList.add(col1);
         columnList.add(col2);
@@ -197,5 +197,29 @@ public class Table_test {
         assertEquals(true, Condition.test(condList, r1, r4));
 //        assertEquals(true, Condition.test(condList, r2, r5));
 //        assertEquals(false, Condition.test(condList, r1, r5));
+    }
+
+    @Test
+    public void test_main_function(){
+        Table table_enrolled = Table.readTable("./testing/enrolled");
+        Table table_schedule = Table.readTable("./testing/schedule");
+
+        Column col1 = new Column("CCN", table_enrolled, table_schedule);
+        Column col3 = new Column("Dept", table_enrolled, table_schedule);
+        Column col4 = new Column("Num", table_enrolled, table_schedule);
+
+        List<String> columnNames = new ArrayList<String>();
+        columnNames.add("SID");
+
+        List<Condition> conditionList = new ArrayList<Condition>();
+        // Condition cond1 = new Condition(col1, "=", col1);
+        Condition cond2 = new Condition(col3, "=", "EECS");
+        Condition cond3 = new Condition(col4, "=", "61A");
+        // conditionList.add(cond1);
+        conditionList.add(cond2);
+        conditionList.add(cond3);
+
+        Table result = table_enrolled.select(table_schedule, columnNames, conditionList);
+        result.print();
     }
 }
