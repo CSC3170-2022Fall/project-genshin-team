@@ -10,8 +10,7 @@ package db61b;
 
 import java.io.PrintStream;
 
-import java.util.ArrayList;
-import java.util.Scanner;
+import java.util.*;
 
 import static db61b.Utils.*;
 import static db61b.Tokenizer.*;
@@ -269,7 +268,39 @@ class CommandInterpreter {
         // FILL THIS IN
 //        TODO FINISH
         System.out.println("Search results:");
-        selectClause().print();
+//        selectClause().print();
+        Table table = selectClause();
+        if (_input.nextIf("order")){
+            if (_input.nextIf("by")) {
+//                String base = _input.next();
+                int columnNumber = table.findColumn(_input.next());
+
+//                TODO FINISH
+//                * first output the column title
+                for (int i = 0; i < table.columns() - 1; i++) {
+                    System.out.print(table.getTitle(i));
+                    System.out.print(',');
+                }
+                System.out.print(table.getTitle(table.columns() - 1) + '\n');
+
+//                * sort the rows
+                ArrayList<Row> rows = new ArrayList<>(){};
+                for (Row element :table) {
+                    rows.add(element);
+                }
+                rows.sort(Comparator.comparing(row -> row.get(columnNumber)));
+
+//                * print the sorted rows
+                if (_input.nextIf("desc")) {
+                    Collections.reverse(rows);
+                }
+                printArray(rows);
+            } else {
+                throw error("The correct syntax should order by <attr>");
+            }
+        } else {
+            table.print();
+        }
         _input.next(";");
     }
 
@@ -408,6 +439,18 @@ class CommandInterpreter {
                 /* No action */
             }
         }
+    }
+
+    void printArray(ArrayList<Row> sortedTable) {
+
+        for (Row eachRow : sortedTable) {
+            for (int i = 0; i < eachRow.size() - 1; i++) {
+                System.out.print(eachRow.get(i));
+                System.out.print(',');
+            }
+            System.out.print(eachRow.get(eachRow.size() - 1) + '\n');
+        }
+
     }
 
     /** The command input source. */
