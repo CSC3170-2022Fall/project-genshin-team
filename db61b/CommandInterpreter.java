@@ -296,7 +296,7 @@ class CommandInterpreter {
 
     /** Parse and execute a select clause from the token stream, returning the
      *  resulting table. */
-    Table selectClause() {//没问题，问题在于conditionClause()!
+    Table selectClause() {
 //        TODO
         _input.next("select");
         ArrayList<String> arrayColumn=new ArrayList<String>();
@@ -315,14 +315,14 @@ class CommandInterpreter {
         if (_input.nextIf(",")) {//如果有“，” 则有table1
             table1=this.tableName();
         }
-        ArrayList<Condition> arrayCondition;//
+        ArrayList<Condition> arrayCondition;
         if (table1 == null) {
             arrayCondition = conditionClause(table0);
             return table0.select(arrayColumn, arrayCondition);
         } else {
             arrayCondition = conditionClause(table0, table1);
+            return table0.select(table1,arrayColumn, arrayCondition);//array1是属性名列表，array2是条件
         }
-        return table0.select(table1,arrayColumn, arrayCondition);//table0值得考量，先默认是对的，array1是属性名列表，array2是条件
     }
 
     /** Parse and return a valid name (identifier) from the token stream. */
@@ -372,7 +372,6 @@ class CommandInterpreter {
         ArrayList<Condition> result = new ArrayList<Condition>();//结果
         if (_input.nextIf("where")) {
             result.add(condition(tables));
-
             while (_input.nextIf("and")) {
                 result.add(condition(tables));
             }
