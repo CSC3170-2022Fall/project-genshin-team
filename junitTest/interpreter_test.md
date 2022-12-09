@@ -48,3 +48,5 @@ since it is hard to write junit for CommandInterpreter.java. We use a markdown f
   + ~~**load testing/students**~~
   + ~~**quit;**~~
   + ~~**insert into test values '1', '2', '3';**~~
+  + select SID from students ... ;
+  + "search result" come out and "..." come next
