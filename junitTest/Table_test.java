@@ -167,4 +167,34 @@ public class Table_test {
         assertEquals(false, Table.equijoin_test(colList1, colList2, r1, r4));
 
     }
+
+    // Test for condition.test()
+    @Test
+    public void test_test(){
+        Table table_sample_1 = new Table(new String[] { "student", "id", "college", "school", "Year" });
+        Table table_sample_2 = new Table(new String[] { "id", "grade" });
+
+        Row r1 = new Row(new String[] { "Luca", "460", "Muse", "SDS", "2020" });
+        Row r2 = new Row(new String[] { "Philip", "590", "Muse", "SSE", "2020" });
+        Row r3 = new Row(new String[] { "ffffffklj", "111", "Muse", "SSE", "2020" });
+//        table_sample_1.add(r1);
+//        table_sample_1.add(r2);
+//        table_sample_1.add(r3);
+
+        Row r4 = new Row(new String[] { "460", "A"});
+        Row r5 = new Row(new String[] { "590", "B"});
+//        table_sample_2.add(r4);
+//        table_sample_2.add(r5);
+//
+        Column col1 = new Column("id", table_sample_1);
+        Column col2 = new Column("id", table_sample_2);
+
+        Condition cond1 = new Condition(col1, "=", col2);
+        List<Condition> condList = new ArrayList<Condition>();
+        condList.add(cond1);
+
+        assertEquals(true, Condition.test(condList, r1, r4));
+//        assertEquals(true, Condition.test(condList, r2, r5));
+//        assertEquals(false, Condition.test(condList, r1, r5));
+    }
 }
