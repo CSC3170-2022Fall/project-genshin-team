@@ -248,6 +248,7 @@ class Table implements Iterable<Row> {
             }
             else{
                 temp_columns.add(new Column(temp_name, this, table2));
+                System.out.println(temp_columns.get(0).getName());
             }
 
         }
@@ -286,7 +287,16 @@ class Table implements Iterable<Row> {
                     }
                 }
                 else{
+                    if (temp_row_1.get(1).compareTo(temp_row_2.get(0)) == 0){
+                        if(temp_row_2.get(2).compareTo("EECS") == 0){
+                            if(temp_row_2.get(1).compareTo("61A") == 0){
+                                System.out.printf("%s, %s :: %s\n", temp_row_1.get(0), temp_row_1.get(1), temp_row_2.get(0));
+                            }
+                        }
+                    }
+                    // System.out.printf("%s, %s :: %s\n", temp_row_1.get(0), temp_row_1.get(1), temp_row_2.get(0));
                     if(Condition.test(conditions, temp_row_1, temp_row_2)){
+                        System.out.println("Ever reach here");
                         result.add(new Row(temp_columns, temp_row_1, temp_row_2));
                     }
                 }
