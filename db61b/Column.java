@@ -11,7 +11,8 @@ import static db61b.Utils.*;
 */
 class Column {
     /** Selects column named NAME from a row of one of the given TABLES. */
-    Column(String name, Table... tables) {
+    Column(String name, db61b.Table... tables) {
+
         _name = name;
         for (_table = 0; _table < tables.length; _table += 1) {
             _column = tables[_table].findColumn(name);
