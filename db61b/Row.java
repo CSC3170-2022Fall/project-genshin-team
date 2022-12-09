@@ -7,6 +7,7 @@
 // solutions.
 package db61b;
 
+import javax.lang.model.type.NullType;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.io.IOException;
@@ -47,14 +48,16 @@ class Row {
     Row(List<Column> columns, Row... rows) {
         // FILL IN
 //        TODO FINISH
-        // String[] new_data = new String[rows.length];
         ArrayList<String> new_data = new ArrayList<String>();
         Iterator<Column> it = columns.iterator();
         while(it.hasNext()){
-            new_data.add(it.next().getFrom(rows));
+            String temp_value = it.next().getFrom(rows);
+            if (temp_value != null){
+                new_data.add(temp_value);
+            }
         }
 
-        _data = (String[])new_data.toArray(new String[rows.length]);
+        _data = (String[])new_data.toArray(new String[new_data.size()]);
     }
 
     /** Return my number of columns. */
