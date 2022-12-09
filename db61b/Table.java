@@ -19,6 +19,8 @@ import java.util.Iterator;
 import java.util.List;
 
 import static db61b.Utils.*;
+import static org.junit.Assert.assertEquals;
+
 import db61b.Row;
 import db61b.Column;
 import db61b.Condition;
@@ -291,6 +293,7 @@ class Table implements Iterable<Row> {
                         if(temp_row_2.get(2).compareTo("EECS") == 0){
                             if(temp_row_2.get(1).compareTo("61A") == 0){
                                 System.out.printf("%s, %s :: %s\n", temp_row_1.get(0), temp_row_1.get(1), temp_row_2.get(0));
+                                assertEquals(true, Condition.test(conditions, temp_row_1, temp_row_2));
                             }
                         }
                     }
