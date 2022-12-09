@@ -65,7 +65,7 @@ class Row {
 
     /** Return the value of my Kth column.  Requires that 0 <= K < size(). */
     String get(int k) {
-        
+
 //      TODO FINISH
         if (k < 0 || k >= this.size()) {
 //            System.out.println("The index is out of range");
@@ -116,3 +116,4 @@ class Row {
     /** Contents of this row. */
     private String[] _data;
 }
+

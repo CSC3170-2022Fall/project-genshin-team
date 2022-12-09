@@ -16,16 +16,16 @@ Our team consists of the following members, listed in the table below (the team 
 
 <!-- change the info below to be the real case -->
 
-| Student ID | Student Name | GitHub Account (in Email)  |
-| ---------- | ------------ | -------------------------  |
-| 120090590  | 陈飞飏 🚩    | chenfeiyang852@163.com     |
-| 120010042  | 陶震         | 1072149188@qq.com          |
-| 120090460  | 朱骆锴       | 120090460@link.cuhk.edu.cn |
-| 120090582  | 陈宣文       | 1548622359@qq.com          |
-| 119010166  | 李卓毅       | 463776850@qq.com           |
-| 120090447  | 王奕文       | 120090447@link.cuhk.edu.cn |
-| 120090089  | 王雨奇       | 120090089@link.cuhk.edu.cn |
-| 120090588  | 肖玮钊       | 1003669366@qq.com          |
+| Student ID | Student Name | GitHub Account (in Email)  | GitHub User |
+| ---------- | ------------ | -------------------------  | ---------- |
+| 120090590  | 陈飞飏 🚩    | chenfeiyang852@163.com     |  |
+| 120010042  | 陶震         | 1072149188@qq.com          |  [ffffffklj](https://github.com/ffffffklj)|
+| 120090460  | 朱骆锴       | 120090460@link.cuhk.edu.cn | [LucaZhu0219](https://github.com/LucaZhu0219) |
+| 120090582  | 陈宣文       | 1548622359@qq.com          |  |
+| 119010166  | 李卓毅       | 463776850@qq.com           |  |
+| 120090447  | 王奕文       | 120090447@link.cuhk.edu.cn |  |
+| 120090089  | 王雨奇       | 120090089@link.cuhk.edu.cn |  |
+| 120090588  | 肖玮钊       | 1003669366@qq.com          |  |
 
 ## Project Specification
 
