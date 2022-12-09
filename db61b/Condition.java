@@ -45,7 +45,13 @@ class Condition {
         String c1, c2;
         c1 = _col1.getFrom(rows);
         if (_col2 != null) {
-            c2 = _col2.getFrom(rows);
+            if (rows.length == 2){
+                c2 = _col2.getFrom(rows[1]);
+            }
+            else{
+                c2 = _col2.getFrom(rows[0]);
+            }
+
         }
         else{
             c2 = _val2;
