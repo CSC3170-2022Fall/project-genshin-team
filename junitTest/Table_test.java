@@ -120,7 +120,7 @@ public class Table_test {
         colNames.add("grade");
         Condition cond3 = new Condition(col3, "=", col4);
         List<Condition> conditionList = new ArrayList<Condition>();
-        conditionList.add(cond3);
+        // conditionList.add(cond3);
         Table table_result = table_sample_1.select(table_sample_2, colNames, conditionList);
         for (int i = 0; i < table_result.columns(); i++){
             System.out.printf("%s\t", table_result.getTitle(i));
