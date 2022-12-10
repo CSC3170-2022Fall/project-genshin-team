@@ -320,19 +320,44 @@ class CommandInterpreter {
      *  resulting table. */
     Table selectClause() {
 //        TODO
+        ArrayList<String> funcCall = null;
         _input.next("select");
-        ArrayList<String> arrayColumn=new ArrayList<String>();
-//        TODO The first column should not be started with ","
-        /*
-         * The example is
-         * select SID, Firstname from students where Lastname ="Chan";
-         * */
-        arrayColumn.add(this.columnName());    //列的名字的array
-        while (_input.nextIf(",")) {
-            arrayColumn.add(this.columnName());
+        ArrayList<String> arrayColumn = null;
+        if (_input.nextIf("max")){    // detect function call
+            if (_input.nextIf("(")){   // call the max function
+                funcCall.add("max");
+                readColNames();
+                if (_input.nextIf("from")){
+
+                }else{
+
+                    throw error ("a function call should be followed by 'from' ");
+                }
+            }else if (_input.nextIf(",")){    // max is the name of a column
+                arrayColumn =  readColNames();
+                arrayColumn.add(0,"max");
+            }else{
+                throw error("unknown column name syntax");
+            }
+
+        }else{    // normal select, no functions
+            arrayColumn = readColNames();
         }
-        _input.next("from");
-        Table table0 = this.tableName(); //第一个table
+//        ArrayList<String> arrayColumn=new ArrayList<String>();   // array contains column names
+//        TODO The first column should not be started with ","
+//        /*
+//         * The example is
+//         * select SID, Firstname from students where Lastname ="Chan";
+//         * */
+//        arrayColumn.add(this.columnName());    // read next substring conform to pattern identifier and add it to array
+//        while (_input.nextIf(",")) {    //  if detect ",", perform last row
+//            arrayColumn.add(this.columnName());
+//        }
+//        _input.next("from");  // check if  next token is "from"
+
+
+
+        Table table0 = this.tableName();  //   read first table name
         Table table1 = null;
         if (_input.nextIf(",")) {//如果有“，” 则有table1
             table1=this.tableName();
@@ -340,10 +365,23 @@ class CommandInterpreter {
         ArrayList<Condition> arrayCondition;
         if (table1 == null) {
             arrayCondition = conditionClause(table0);
-            return table0.select(arrayColumn, arrayCondition);
+            if (funcCall != null){     // there is at least one function call
+                return table0.select(funcCall, arrayColumn, arrayCondition);   // only select maximum value of the attribute
+
+            }else{   // no function call
+                return table0.select(arrayColumn, arrayCondition);
+            }
+//            return table0.select(arrayColumn, arrayCondition);
         } else {
             arrayCondition = conditionClause(table0, table1);
-            return table0.select(table1,arrayColumn, arrayCondition);//array1是属性名列表，array2是条件
+            if (funcCall != null){  // there is at least one function call
+                return table0.select(funcCall,table1,arrayColumn, arrayCondition);
+
+            }else{    // no function call
+
+                return table0.select(table1,arrayColumn, arrayCondition);//array1是属性名列表，array2是条件
+            }
+
         }
     }
 
@@ -435,7 +473,29 @@ class CommandInterpreter {
     private db61b.Tokenizer _input;
     /** Database containing all tables. */
     private db61b.Database _database;
+
+    ArrayList<String> readColNames(){
+        ArrayList<String> arrayColumn=new ArrayList<String>();   // array contains column names
+        arrayColumn.add(this.columnName());    // read next substring conform to pattern identifier and add it to array
+        while (_input.nextIf(",")) {    //  if detect ",", perform last row
+            arrayColumn.add(this.columnName());
+        }
+
+        if (_input.nextIf("from")){    // situation1, the column names end with "from"
+
+
+        }else if (_input.nextIf(")")){    // situation 2, end with ")", meaning it is inside a function call
+
+        }else{
+            throw error ("unexpected end of column names");
+        }
+        //_input.next("from");  // check if  next token is "from"
+        return arrayColumn;
+
+    }
 }
+
+
 
 
 

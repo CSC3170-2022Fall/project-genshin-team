@@ -203,7 +203,7 @@ class Table implements Iterable<Row> {
         int columnNumber = this.findColumn(columnName);
         if (columnNumber == -1) {
             throw error("cannot order by an non-existing column %s\n", columnName);
-            return;
+            //return;
         }
         rows.sort(Comparator.comparing(row -> row.get(columnNumber)));
 
@@ -335,6 +335,45 @@ class Table implements Iterable<Row> {
         return result;
     }
 
+    Table select(ArrayList<String> funcCall, List<String> columnNames, List<Condition> conditions) {    // call max, min or avg
+
+        Table result = new Table(columnNames);
+//        TODO FINISH
+
+        // create List<Column> variable
+        List<Column> temp_columns = new ArrayList<Column>();
+        Iterator<String> it_columnNames = columnNames.iterator();
+        while(it_columnNames.hasNext()){
+            String temp_name = it_columnNames.next();
+            temp_columns.add(new Column(temp_name, this));
+        }
+
+        Iterator<Row> it_rows = this.iterator();
+        while(it_rows.hasNext()){
+            /* if the content of certain row achieve the requirement,
+             * add it into the result*/
+            Row temp_row = it_rows.next();
+
+            // if nothing after "where", add all rows of column in result
+            if (conditions.size() == 0){
+                result.add(new Row(temp_columns, temp_row));
+            }
+            else{
+                if(Condition.test(conditions, temp_row)){
+                    result.add(new Row(temp_columns, temp_row));
+                }
+            }
+
+        }
+        return result;
+    }
+
+    Table select(ArrayList<String> funcCall ,Table table2, List<String> columnNames,
+                 List<Condition> conditions){
+        Table result = new Table(columnNames);
+        return  result;
+
+    }
     ArrayList<HashSet<Row>> group(String groupColumnName) {
         ArrayList<HashSet<Row>> groupRow = new ArrayList<HashSet<Row>>();
 
@@ -343,7 +382,7 @@ class Table implements Iterable<Row> {
             throw error("cannot group by an non-existing column %s\n", groupColumnName);
         }
 
-        HashMap<String, Integer> columnValue = new HashSet<>();
+        HashMap<String, Integer> columnValue = new HashMap<>();
 
         for (Row rowElement : this._rows) {
             if (columnValue.containsKey(rowElement.get(column))) {
