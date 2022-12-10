@@ -203,7 +203,6 @@ class Table implements Iterable<Row> {
         int columnNumber = this.findColumn(columnName);
         if (columnNumber == -1) {
             throw error("cannot order by an non-existing column %s\n", columnName);
-            return;
         }
         rows.sort(Comparator.comparing(row -> row.get(columnNumber)));
 
@@ -343,7 +342,7 @@ class Table implements Iterable<Row> {
             throw error("cannot group by an non-existing column %s\n", groupColumnName);
         }
 
-        HashMap<String, Integer> columnValue = new HashSet<>();
+        HashMap<String, Integer> columnValue = new HashMap<>();
 
         for (Row rowElement : this._rows) {
             if (columnValue.containsKey(rowElement.get(column))) {
