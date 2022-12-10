@@ -12,11 +12,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintStream;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 import static db61b.Utils.*;
 import static org.junit.Assert.assertEquals;
@@ -43,7 +39,7 @@ class Table implements Iterable<Row> {
         }
         // FILL IN
 //        TODO FINISH
-        _columnTitle = columnTitles;
+        this._columnTitle = columnTitles;
     }
 
     /** A new Table whose columns are give by COLUMNTITLES. */
@@ -54,7 +50,7 @@ class Table implements Iterable<Row> {
     /** Return the number of columns in this table. */
     public int columns() {
 //        TODO FINISH
-        return _columnTitle.length;
+        return this._columnTitle.length;
         // REPLACE WITH SOLUTION
     }
 
@@ -65,7 +61,7 @@ class Table implements Iterable<Row> {
             throw db61b.Utils.error("The index : %d is out of range", k);
         }
 
-        return _columnTitle[k];
+        return this._columnTitle[k];
         // REPLACE WITH SOLUTION
     }
 
@@ -74,7 +70,7 @@ class Table implements Iterable<Row> {
     public int findColumn(String title) {
 //        TODO FINISH
         int count = 0;
-        for (String element: _columnTitle) {
+        for (String element: this._columnTitle) {
             if (title.equals(element)) {
                 return count;
             }
@@ -86,21 +82,21 @@ class Table implements Iterable<Row> {
     /** Return the number of Rows in this table. */
     public int size() {
 //        TODO FINISH
-        return _rows.size();  // REPLACE WITH SOLUTION
+        return this._rows.size();  // REPLACE WITH SOLUTION
     }
 
     /** Returns an iterator that returns my rows in an unspecified order. */
     @Override
     public Iterator<Row> iterator() {
-        return _rows.iterator();
+        return this._rows.iterator();
     }
 
     /** Add ROW to THIS if no equal row already exists.  Return true if anything
      *  was added, false otherwise. */
     public boolean add(Row row) {
 //        TODO FINISH
-        if (!_rows.contains(row)) {
-            _rows.add(row);
+        if (!this._rows.contains(row)) {
+            this._rows.add(row);
             return true;
         }
         return false;   // REPLACE WITH SOLUTION
@@ -163,7 +159,7 @@ class Table implements Iterable<Row> {
 
             output.print(this.getTitle(this.columns() - 1) + '\n');
 
-            for (Row eachRow : _rows) {
+            for (Row eachRow : this._rows) {
                 for (int i = 0; i < this.columns() - 1; i++) {
                     output.print(eachRow.get(i));
                     output.print(',');
@@ -189,12 +185,49 @@ class Table implements Iterable<Row> {
 
         System.out.print(this.getTitle(this.columns() - 1) + '\n');
 
-        for (Row eachRow : _rows) {
+        for (Row eachRow : this._rows) {
             for (int i = 0; i < this.columns() - 1; i++) {
                 System.out.print(eachRow.get(i));
                 System.out.print(',');
             }
             System.out.print(eachRow.get(this.columns() - 1) + '\n');
+        }
+    }
+
+    void sortAndPrint(String columnName, boolean order) {
+//                TODO FINISH
+//      * sort the rows
+        ArrayList<Row> rows = new ArrayList<>(){};
+        rows.addAll(this._rows);
+
+        int columnNumber = this.findColumn(columnName);
+        if (columnNumber == -1) {
+            throw error("cannot order by an non-existing column %s\n", columnName);
+            return;
+        }
+        rows.sort(Comparator.comparing(row -> row.get(columnNumber)));
+
+        if (!order) {
+            Collections.reverse(rows);
+        }
+//      * print the sorted rows
+        this.printArray(rows);
+    }
+
+    void printArray(ArrayList<Row> sortedTable) {
+//      * first output the column title
+        for (int i = 0; i < this.columns() - 1; i++) {
+            System.out.print(this.getTitle(i));
+            System.out.print(',');
+        }
+        System.out.print(this.getTitle(this.columns() - 1) + '\n');
+
+        for (Row eachRow : sortedTable) {
+            for (int i = 0; i < eachRow.size() - 1; i++) {
+                System.out.print(eachRow.get(i));
+                System.out.print(',');
+            }
+            System.out.print(eachRow.get(eachRow.size() - 1) + '\n');
         }
     }
 
@@ -300,6 +333,29 @@ class Table implements Iterable<Row> {
             }
         }
         return result;
+    }
+
+    ArrayList<HashSet<Row>> group(String groupColumnName) {
+        ArrayList<HashSet<Row>> groupRow = new ArrayList<HashSet<Row>>();
+
+        int column = this.findColumn(groupColumnName);
+        if (column == -1) {
+            throw error("cannot group by an non-existing column %s\n", groupColumnName);
+        }
+
+        HashMap<String, Integer> columnValue = new HashSet<>();
+
+        for (Row rowElement : this._rows) {
+            if (columnValue.containsKey(rowElement.get(column))) {
+                groupRow.get(columnValue.get(rowElement.get(column))).add(rowElement);
+            } else {
+                columnValue.put(rowElement.get(column), groupRow.size());
+                HashSet<Row> sameValueRow = new HashSet<>();
+                sameValueRow.add(rowElement);
+                groupRow.add(sameValueRow);
+            }
+        }
+        return groupRow;
     }
 
     /** Return true if the columns COMMON1 from ROW1 and COMMON2 from

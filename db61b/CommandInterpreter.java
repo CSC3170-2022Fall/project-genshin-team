@@ -270,31 +270,21 @@ class CommandInterpreter {
         System.out.println("Search results:");
 //        selectClause().print();
         Table table = selectClause();
+        ArrayList<HashSet<Row>> groupRow = new ArrayList<HashSet<Row>>();
+        if (_input.nextIf("group")) {
+            if (_input.nextIf("by")) {
+                String groupColumnName = _input.next();
+                groupRow = table.group(groupColumnName);
+            } else {
+                throw error("The correct syntax should order by <attr>");
+            }
+        }
+
         if (_input.nextIf("order")){
             if (_input.nextIf("by")) {
-//                String base = _input.next();
-                int columnNumber = table.findColumn(_input.next());
-
-//                TODO FINISH
-//                * first output the column title
-                for (int i = 0; i < table.columns() - 1; i++) {
-                    System.out.print(table.getTitle(i));
-                    System.out.print(',');
-                }
-                System.out.print(table.getTitle(table.columns() - 1) + '\n');
-
-//                * sort the rows
-                ArrayList<Row> rows = new ArrayList<>(){};
-                for (Row element :table) {
-                    rows.add(element);
-                }
-                rows.sort(Comparator.comparing(row -> row.get(columnNumber)));
-
-//                * print the sorted rows
-                if (_input.nextIf("desc")) {
-                    Collections.reverse(rows);
-                }
-                printArray(rows);
+                String columnTitle = _input.next();
+                boolean order = !_input.nextIf("desc");
+                table.sortAndPrint(columnTitle, order);
             } else {
                 throw error("The correct syntax should order by <attr>");
             }
@@ -303,6 +293,7 @@ class CommandInterpreter {
         }
         _input.next(";");
     }
+
 
     /** Parse and execute a table definition, returning the specified
      *  table. */
@@ -438,18 +429,6 @@ class CommandInterpreter {
                 /* No action */
             }
         }
-    }
-
-    void printArray(ArrayList<Row> sortedTable) {
-
-        for (Row eachRow : sortedTable) {
-            for (int i = 0; i < eachRow.size() - 1; i++) {
-                System.out.print(eachRow.get(i));
-                System.out.print(',');
-            }
-            System.out.print(eachRow.get(eachRow.size() - 1) + '\n');
-        }
-
     }
 
     /** The command input source. */
