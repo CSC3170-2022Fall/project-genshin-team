@@ -17,6 +17,8 @@ since it is hard to write junit for CommandInterpreter.java. We use a markdown f
   + create table enrolled as select SID, CCN, Grade from enrolled where SID != '103';
   + select Firstname, Lastname, Grade from students, enrolled where CCN = '21001' and SID = SID;
   + select Firstname, Lastname from students, enrolled2;
+  + select Firstname, Lastname from students, enrolled order by Lastname;
+  + select Firstname, Lastname from students, enrolled order by Firstname desc;
 
 ## Test failed:
   + ~~**select SID, Lastname, from students;**~~ 
