@@ -81,3 +81,19 @@ After thorough discussion, our team made the choice and the specification inform
    + **Join of Tables** We will use different connection modes to connect the required information according to user requirements (e.g.left join, right join).
 
    + **GUI** We will try to create a fancy and user-friendly GUI that makes it easy for users to select the features they need, with helpful tips（e.g. Show possible paths as users type).
+
+<!-- This part will be deleted later-->
+## Presentation Format
+1. backgrounds     
+2. introduction divide into systems
+3. functions   - select load print ...
+4. extensions  - select & cmd interpreter
+5. 8 min  2(optional) 4 2  
+6. conclusions, problems and goals  1min
+
+## uncompleted works
+1. find bugs 
+2. fix them/ record them  test in the pre
+3. GUI of table.print()
+4. data preparation (.db) for pre
+5. 
