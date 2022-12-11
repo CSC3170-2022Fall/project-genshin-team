@@ -570,8 +570,8 @@ class Table implements Iterable<Row> {
         return result;
     }
 
-    ArrayList<HashSet<Row>> group(String groupColumnName) {
-        ArrayList<HashSet<Row>> groupRow = new ArrayList<HashSet<Row>>();
+    ArrayList<LinkedHashSet<Row>> group(String groupColumnName) {
+        ArrayList<LinkedHashSet<Row>> groupRow = new ArrayList<LinkedHashSet<Row>>();
 
         int column = this.findColumn(groupColumnName);
         if (column == -1) {

@@ -13,6 +13,7 @@ import java.io.PrintStream;
 import java.util.*;
 import java.util.regex.Pattern;
 
+
 import static db61b.Utils.*;
 import static db61b.Tokenizer.*;
 import java.util.regex.Matcher;
@@ -135,7 +136,7 @@ class CommandInterpreter {
     CommandInterpreter(Scanner inp, PrintStream prompter) {
         _input = new Tokenizer(inp, prompter);
         _database = new Database();
-        _funcCalls = null;
+        _funcCalls = new ArrayList<String>();
     }
 
     /** Parse and execute one statement from the token stream.  Return true
@@ -272,7 +273,6 @@ class CommandInterpreter {
         // FILL THIS IN
 //        TODO FINISH
         System.out.println("Search results:");
-//        selectClause().print();
         Table table = selectClause();
         ArrayList<LinkedHashSet<Row>> groupRow = new ArrayList<LinkedHashSet<Row>>();
         boolean whetherGroup = false;
@@ -286,19 +286,56 @@ class CommandInterpreter {
                 throw error("The correct syntax should group by <attr>");
             }
         }
-        if (_funcCalls != null){    // need perform function call
-            if (grouped){
-//                table = maxCall(groupedRows);
+        if (_funcCalls.size() != 0){    // need perform function call
+            if (whetherGroup){
+                switch (_funcCalls.get(0)
+                ){
+                    case "max":
+                        groupRow = maxCall(groupRow);
+                        break;
+                    case "min":
+                        groupRow = minCall(groupRow);
+                        break;
+                    case "avg":
+//                        groupRow = avgCall(groupRow);
+                        break;
+                    case "count":
+//                        groupRow = countCall(groupRow);
+                        break;
+                    default:
+                        throw error("unknown function name!");
+
+                }
+
+
+//                groupRow = maxCall(groupRow);          // return a arraylist
             }else {
-                table = maxCall(table);
+//                table = maxCall(table);            // return a Table
+                switch (_funcCalls.get(0)
+                ){
+                    case "max":
+                        groupRow = maxCall(groupRow);
+                        break;
+                    case "min":
+                        groupRow = minCall(groupRow);
+                        break;
+                    case "avg":
+//                        groupRow = avgCall(groupRow);
+                        break;
+                    case "count":
+//                        groupRow = countCall(groupRow);
+                        break;
+                    default:
+                        throw error("unknown function name!");
+
+                }
             }
         }
-
         if (_input.nextIf("order")){
             if (_input.nextIf("by")) {
                 String columnTitle = _input.next();
                 boolean order = !_input.nextIf("desc");
-                if (whetherGroup) {
+                if (whetherGroup) {            // grouped, deal with an arraylist
 //                    TODO if order and group
                     for (int i = 0; i < table.columns() - 1; i++) {
                         System.out.print(table.getTitle(i));
@@ -306,7 +343,7 @@ class CommandInterpreter {
                     }
                     System.out.print(table.getTitle(table.columns() - 1) + '\n');
                     this.sortAndPrint(groupRow, table.findColumn(columnTitle), order, table.findColumn(groupColumnName));
-                } else {
+                } else {        // not grouped, deal with a Table
                     table.sortAndPrint(columnTitle, order);
                 }
             } else {
@@ -396,18 +433,37 @@ class CommandInterpreter {
     Table selectClause() {
 //        TODO
         _input.next("select");
-        ArrayList<String> arrayColumn = null;
+        ArrayList<String> arrayColumn = new ArrayList<String>();
         if (_input.nextIf("max")){    // perform functions
-
+            if (!_input.nextIf("(")){
+                throw error("illegal column name!");
+            }
+            _funcCalls.add("max");
+            arrayColumn.addAll(readColsAndFunctions());
 
         }else if (_input.nextIf("min")){
-
+            if (!_input.nextIf("(")){
+                throw error("illegal column name!");
+            }
+            _funcCalls.add("min");
+            arrayColumn.addAll(readColsAndFunctions());
 
         }else if (_input.nextIf("avg")){
+            if (!_input.nextIf("(")){
+                throw error("illegal column name!");
+            }
+            _funcCalls.add("avg");
+            arrayColumn.addAll(readColsAndFunctions());
 
-
-        }else{    // no function call
-            arrayColumn = readColNames();
+        }else if (_input.nextIf("count")){
+            if (!_input.nextIf("(")){
+                throw error("illegal column name!");
+            }
+            _funcCalls.add("count");
+            arrayColumn.addAll(readColsAndFunctions());
+        }
+        else{    // no function call
+            arrayColumn.addAll(readColNames());
         }
 
 //        ArrayList<String> arrayColumn=new ArrayList<String>();   // array contains column names
@@ -433,20 +489,9 @@ class CommandInterpreter {
         if (table1 == null) {
             arrayCondition = conditionClause(table0);
             return table0.select(arrayColumn, arrayCondition);
-//            if (funcCall != null){     // there is at least one function call
-//                return table0.select(funcCall, arrayColumn, arrayCondition);   // perform the function call
-//            }else{   // no function call
-//                return table0.select(arrayColumn, arrayCondition);
-//            }
         } else {
             arrayCondition = conditionClause(table0, table1);
             return table0.select(table1,arrayColumn, arrayCondition);//array1是属性名列表，array2是条件
-//            if (funcCall != null){  // there is at least one function call
-//                return table0.select(funcCall,table1,arrayColumn, arrayCondition);
-//            }else{    // no function call
-//                return table0.select(table1,arrayColumn, arrayCondition);//array1是属性名列表，array2是条件
-//            }
-
         }
     }
 
@@ -691,68 +736,179 @@ class CommandInterpreter {
         while (_input.nextIf(",")) {    //  if detect ",", perform last row
             arrayColumn.add(this.columnName());
         }
-        if (_input.nextIf("from")){    // situation1, the column names end with "from"
+        _input.next("from");  // check if  next token is "from"
+        return arrayColumn;
 
-
-        }else if (_input.nextIf(")")){    // situation 2, end with ")", meaning it is inside a function call
-
-        }else{
-            throw error ("unexpected end of column names");
+    }
+    ArrayList<String> readColsAndFunctions(){
+        ArrayList<String> arrayColumn=new ArrayList<String>();   // array contains column names
+        arrayColumn.add(this.columnName());    // read next substring conform to pattern identifier and add it to array
+        while (_input.nextIf(",")) {    //  if detect ",", perform last row
+            arrayColumn.add(this.columnName());
         }
-//        _input.next("from");  // check if  next token is "from"
+        _input.next(")");
+        _input.next("from");  // check if  next token is "from"
         return arrayColumn;
 
     }
 
-    ArrayList<HashSet<Row>> maxCall(ArrayList<HashSet<Row>> groupedRows){
+    ArrayList<LinkedHashSet<Row>> maxCall(ArrayList<LinkedHashSet<Row>>  groupedRows){
 
-//        Table result = new Table();
+        ArrayList<LinkedHashSet<Row>> result = new ArrayList<LinkedHashSet<Row>>();
         // traverse groupedRows. replace each row group with a single row containing max, min or avg
-        Iterator<HashSet<Row>> it = groupedRows.iterator();
+        Iterator<LinkedHashSet<Row>> it = groupedRows.iterator();
         while(it.hasNext()){
-            HashSet<Row> presentRows = it.next();
-            List<String> funcField = null;     // allocate for function use, e.g. store temporary min or max values;
-            for (int i=0; i< _funcCalls.size();i++){    // initialize the field
-                funcField.add(" ");
-            }
-
-
+            LinkedHashSet<Row> presentRows = it.next();
+            String[] funcField = null;      // allocate for function use, e.g. store temporary min or max values;
             // traverse present row group and update the function field
             Iterator<Row> rowIt = presentRows.iterator();
-            while(rowIt.hasNext()){       // iterate the row
+            while(rowIt.hasNext()){       // iterate rows
                 Row presentRow = rowIt.next();
-                for (int k=0;k<funcField.size();k++){
+                if (funcField == null){
+                    funcField = new String[presentRow.size()];
+                    for (int i =0;i<presentRow.size();i++){    // initialize funcField
+                        funcField[i] = presentRow.get(i);
+                    }
+                    continue;
+                }
+                for (int k=0;k<presentRow.size();k++){      // traverse attributes in the row
                     String data = presentRow.get(k);
-                    funcField.set(k,selectString(funcField.get(k),data));
+                    funcField[k] = selectMax(funcField[k],data);
                 }
             }
-
-            // replace present row group with the data in function field
-//            pre
+            LinkedHashSet<Row> tempSet = new LinkedHashSet<>();
+            tempSet.add(new Row(funcField));
+            result.add(tempSet);
 
         }
-        return null;
+        return result;
 
     }
 
     Table maxCall(Table p_table){
-
-        return null;
-    }
-
-    String selectString(String s1, String s2){
-        if (s1.compareTo(s2)<0){
-            return s2;
-        }else{
-            return s1;
+        List<String> columnNames = new ArrayList<String>();
+        for (int i=0;i<p_table.columns();i++){         // get column names
+            columnNames.add(p_table.getTitle(i));
+        }
+        Table result = new Table(columnNames);        //create the output table, which will contain only 1 row
+        String[] funcField = null;      // allocate for function use, e.g. store temporary min or max values;
+        Iterator<Row> rowIt = p_table.iterator();
+        while(rowIt.hasNext()){
+            Row tempRow = rowIt.next();
+            if (funcField == null){
+                funcField = new String[tempRow.size()];
+                for (int k=0;k<tempRow.size();k++){      // initialize function field
+                    String data = tempRow.get(k);
+                    funcField[k] = data;
+                }
+                continue;
+            }
+            for (int k=0;k<tempRow.size();k++){      // traverse attributes in the row
+                String data = tempRow.get(k);
+                funcField[k] = selectMax(funcField[k],data);
+            }
         }
 
+        Row resultRow = new Row(funcField);
+        result.add(resultRow);
+        return result;
     }
 
-//    Table rowGroupsToTable(ArrayList<HashSet<Row>> groupdedRows, List<String> columnTitles){
-//        Iterator<Row> rowIt = presentRows.iterator();
-//        return null;
-//    }
+    String selectMax(String s1, String s2){
+        Pattern pattern = Pattern.compile("-?\\d+(\\.\\d+)?");
+        if (pattern.matcher(s1).matches()) {    // s1 is int
+            if (Integer.compare(Integer.parseInt(s1), Integer.parseInt(s2))<0){
+                return s2;
+            }else{
+                return s1;
+            }
+        } else {     // s1 is string
+            if (s1.compareTo(s2)<0){
+                return s2;
+            }else{
+                return s1;
+            }
+        }
+    }
+
+    String selectMin(String s1, String s2){
+        Pattern pattern = Pattern.compile("-?\\d+(\\.\\d+)?");
+        if (pattern.matcher(s1).matches()) {    // s1 is int
+            if (Integer.compare(Integer.parseInt(s1), Integer.parseInt(s2))<0){
+                return s1;
+            }else{
+                return s2;
+            }
+        } else {     // s1 is string
+            if (s1.compareTo(s2)<0){
+                return s1;
+            }else{
+                return s2;
+            }
+        }
+    }
+
+    ArrayList<LinkedHashSet<Row>> minCall(ArrayList<LinkedHashSet<Row>>  groupedRows){
+
+        ArrayList<LinkedHashSet<Row>> result = new ArrayList<LinkedHashSet<Row>>();
+        // traverse groupedRows. replace each row group with a single row containing max, min or avg
+        Iterator<LinkedHashSet<Row>> it = groupedRows.iterator();
+        while(it.hasNext()){
+            LinkedHashSet<Row> presentRows = it.next();
+            String[] funcField = null;      // allocate for function use, e.g. store temporary min or max values;
+            // traverse present row group and update the function field
+            Iterator<Row> rowIt = presentRows.iterator();
+            while(rowIt.hasNext()){       // iterate rows
+                Row presentRow = rowIt.next();
+                if (funcField == null){
+                    funcField = new String[presentRow.size()];
+                    for (int i =0;i<presentRow.size();i++){    // initialize funcField
+                        funcField[i] = presentRow.get(i);
+                    }
+                    continue;
+                }
+                for (int k=0;k<presentRow.size();k++){      // traverse attributes in the row
+                    String data = presentRow.get(k);
+                    funcField[k] = selectMin(funcField[k],data);
+                }
+            }
+            LinkedHashSet<Row> tempSet = new LinkedHashSet<>();
+            tempSet.add(new Row(funcField));
+            result.add(tempSet);
+
+        }
+        return result;
+
+    }
+
+    Table minCall(Table p_table){
+        List<String> columnNames = new ArrayList<String>();
+        for (int i=0;i<p_table.columns();i++){         // get column names
+            columnNames.add(p_table.getTitle(i));
+        }
+        Table result = new Table(columnNames);        //create the output table, which will contain only 1 row
+        String[] funcField = null;      // allocate for function use, e.g. store temporary min or max values;
+        Iterator<Row> rowIt = p_table.iterator();
+        while(rowIt.hasNext()){
+            Row tempRow = rowIt.next();
+            if (funcField == null){
+                funcField = new String[tempRow.size()];
+                for (int k=0;k<tempRow.size();k++){      // initialize function field
+                    String data = tempRow.get(k);
+                    funcField[k] = data;
+                }
+                continue;
+            }
+            for (int k=0;k<tempRow.size();k++){      // traverse attributes in the row
+                String data = tempRow.get(k);
+                funcField[k] = selectMin(funcField[k],data);
+            }
+        }
+
+        Row resultRow = new Row(funcField);
+        result.add(resultRow);
+        return result;
+    }
 }
 
 
