@@ -19,6 +19,12 @@ since it is hard to write junit for CommandInterpreter.java. We use a markdown f
   + select Firstname, Lastname from students, enrolled2;
   + select Firstname, Lastname from students, enrolled order by Lastname;
   + select Firstname, Lastname from students, enrolled order by Firstname desc;
+  + select SID,Lastname,Firstname,SemEnter,YearEnter,Major from students group by Major;
+  + select SID,Lastname,Firstname,SemEnter,YearEnter,Major from students group by YearEnter;
+  + select SID,Lastname,Firstname,SemEnter,YearEnter,Major from students group by Major order by SID;
+  + select SID,Lastname,Firstname,SemEnter,YearEnter,Major from students group by Major order by Major;
+  + create table schedule2 as select CCN, Num, Dept, Time, Room, Sem, Year from schedule where Dept != 'EECS';
+  + select Room, Sem, Year from schedule, schedule2 where CCN in CCN;
 
 ## Test failed:
   + ~~**select SID, Lastname, from students;**~~ 
@@ -43,5 +49,7 @@ since it is hard to write junit for CommandInterpreter.java. We use a markdown f
   + ~~**load testing/students**~~
   + ~~**quit;**~~
   + ~~**insert into test values '1', '2', '3';**~~
+  + select Room, Sem, Year from schedule, schedule2 where CCN not in CCN;
+  + select Room, Sem, Year from schedule, schedule2 where CCN != CCN;
   + select SID from students ... ;
   + "search result" come first and "..." come next

@@ -13,6 +13,8 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static db61b.Utils.*;
 import static org.junit.Assert.assertEquals;
@@ -178,20 +180,126 @@ class Table implements Iterable<Row> {
     /** Print my contents on the standard output. */
     void print() {
 //        TODO FINISH
-        for (int i = 0; i < this.columns() - 1; i++) {
-            System.out.print(this.getTitle(i));
-            System.out.print(',');
+
+        // row content, default block size = 8, extend if needed by 8
+        int max_length = 0;
+        int temp_length = 0;
+        int[] length_index = new int[this.columns()];
+
+        //get max length of all data that needs to be printed
+        for (Row eachRow : this._rows) {
+            // init max_length for every column
+            for (int i = 0; i < this.columns(); i++) {
+                max_length = length_index[i];
+                temp_length = eachRow.get(i).length();
+                if (temp_length >= max_length){
+                    max_length = temp_length;
+                    length_index[i] = max_length;
+                }
+            }
         }
 
-        System.out.print(this.getTitle(this.columns() - 1) + '\n');
+        for (int i = 0; i < this.columns(); i++) {
+            max_length = length_index[i];
+            temp_length = this.getTitle(i).length();
+//            System.out.println(this.getTitle(i));
+            if (temp_length >= max_length){
+                max_length = temp_length;
+                length_index[i] = max_length;
+            }
+        }
+
+        // horizontal divide line
+        System.out.print("+");
+        for (int i = 0; i < this.columns(); i++) {
+            int block_size = length_index[i]/8;
+            while(block_size >= 0){
+                System.out.print("-------");
+                block_size -= 1;
+            }
+            System.out.print("+");
+        }
+        System.out.println();
+
+        for (int i = 0; i < this.columns(); i++) {
+            int max_block_number = length_index[i]/8 + 1;
+            int current_block_number = this.getTitle(i).length()/8;
+            if(this.getTitle(i).length()%8 != 0){
+                current_block_number += 1;       // length
+            }
+            int size_diff_block = max_block_number - current_block_number;
+            int size_diff_str = length_index[i] - this.getTitle(i).length();
+
+             System.out.printf("|%-7s", this.getTitle(i));
+            while(size_diff_block != 0){
+                if(this.getTitle(i).length()%8 != 0){
+                    System.out.printf("       ");   //7 empty space
+                }
+                size_diff_block -= 1;
+            }
+
+            if (this.getTitle(i).length() >= 8){
+                int size_offset = 7 - this.getTitle(i).length() % 7;
+                while(size_offset > 0){
+                    System.out.printf(" ");
+                    size_offset -= 1;
+                }
+            }
+        }
+        System.out.println("|");
+
+        // horizontal divide line
+        System.out.print("+");
+        for (int i = 0; i < this.columns(); i++) {
+            int block_size = length_index[i]/8;
+            while(block_size >= 0){
+                System.out.print("-------");
+                block_size -= 1;
+            }
+            System.out.print("+");
+        }
+        System.out.println();
 
         for (Row eachRow : this._rows) {
-            for (int i = 0; i < this.columns() - 1; i++) {
-                System.out.print(eachRow.get(i));
-                System.out.print(',');
+            for (int i = 0; i < this.columns(); i++) {
+                int max_block_number = length_index[i]/8 + 1;
+                int current_block_number = eachRow.get(i).length()/8;
+                if(eachRow.get(i).length()%8 != 0){
+                    current_block_number += 1;       // length
+                }
+                int size_diff_block = max_block_number - current_block_number;
+                int size_diff_str = length_index[i] - eachRow.get(i).length();
+
+                System.out.printf("|%-7s", eachRow.get(i));
+                while(size_diff_block != 0){
+                    if(eachRow.get(i).length()%8 != 0){
+                        System.out.printf("       ");   //7 empty space
+                    }
+                    size_diff_block -= 1;
+                }
+
+                if (eachRow.get(i).length() >= 8){
+                    int size_offset = 7 - eachRow.get(i).length() % 7;
+                    while(size_offset > 0){
+                        System.out.printf(" ");
+                        size_offset -= 1;
+                    }
+                }
             }
-            System.out.print(eachRow.get(this.columns() - 1) + '\n');
+            System.out.println("|");
         }
+
+        // horizontal divide line
+        System.out.print("+");
+        for (int i = 0; i < this.columns(); i++) {
+            int block_size = length_index[i]/8;
+            while(block_size >= 0){
+                System.out.print("-------");
+                block_size -= 1;
+            }
+            System.out.print("+");
+        }
+        System.out.println();
     }
 
     void sortAndPrint(String columnName, boolean order) {
@@ -203,9 +311,15 @@ class Table implements Iterable<Row> {
         int columnNumber = this.findColumn(columnName);
         if (columnNumber == -1) {
             throw error("cannot order by an non-existing column %s\n", columnName);
-            //return;
         }
-        rows.sort(Comparator.comparing(row -> row.get(columnNumber)));
+        rows.sort((row1, row2) -> {
+            Pattern pattern = Pattern.compile("-?\\d+(\\.\\d+)?");
+            if (pattern.matcher(row1.get(columnNumber)).matches()) {
+                return Integer.compare(Integer.parseInt(row1.get(columnNumber)), Integer.parseInt(row2.get(columnNumber)));
+            } else {
+                return row1.get(columnNumber).compareTo(row2.get(columnNumber));
+            }
+        });
 
         if (!order) {
             Collections.reverse(rows);
@@ -215,20 +329,141 @@ class Table implements Iterable<Row> {
     }
 
     void printArray(ArrayList<Row> sortedTable) {
-//      * first output the column title
-        for (int i = 0; i < this.columns() - 1; i++) {
-            System.out.print(this.getTitle(i));
-            System.out.print(',');
+////      * first output the column title
+//        for (int i = 0; i < this.columns() - 1; i++) {
+//            System.out.print(this.getTitle(i));
+//            System.out.print(',');
+//        }
+//        System.out.print(this.getTitle(this.columns() - 1) + '\n');
+//
+//        for (Row eachRow : sortedTable) {
+//            for (int i = 0; i < eachRow.size() - 1; i++) {
+//                System.out.print(eachRow.get(i));
+//                System.out.print(',');
+//            }
+//            System.out.print(eachRow.get(eachRow.size() - 1) + '\n');
+//        }
+        //        TODO FINISH
+
+        // row content, default block size = 8, extend if needed by 8
+        int max_length = 0;
+        int temp_length = 0;
+        int[] length_index = new int[this.columns()];
+
+        //get max length of all data that needs to be printed
+        for (Row eachRow : sortedTable) {
+            // init max_length for every column
+            for (int i = 0; i < this.columns(); i++) {
+                max_length = length_index[i];
+                temp_length = eachRow.get(i).length();
+                if (temp_length >= max_length){
+                    max_length = temp_length;
+                    length_index[i] = max_length;
+                }
+            }
         }
-        System.out.print(this.getTitle(this.columns() - 1) + '\n');
+
+        for (int i = 0; i < this.columns(); i++) {
+            max_length = length_index[i];
+            temp_length = this.getTitle(i).length();
+//            System.out.println(this.getTitle(i));
+            if (temp_length >= max_length){
+                max_length = temp_length;
+                length_index[i] = max_length;
+            }
+        }
+
+        // horizontal divide line
+        System.out.print("+");
+        for (int i = 0; i < this.columns(); i++) {
+            int block_size = length_index[i]/8;
+            while(block_size >= 0){
+                System.out.print("-------");
+                block_size -= 1;
+            }
+            System.out.print("+");
+        }
+        System.out.println();
+
+        for (int i = 0; i < this.columns(); i++) {
+            int max_block_number = length_index[i]/8 + 1;
+            int current_block_number = this.getTitle(i).length()/8;
+            if(this.getTitle(i).length()%8 != 0){
+                current_block_number += 1;       // length
+            }
+            int size_diff_block = max_block_number - current_block_number;
+            int size_diff_str = length_index[i] - this.getTitle(i).length();
+
+            System.out.printf("|%-7s", this.getTitle(i));
+            while(size_diff_block != 0){
+                if(this.getTitle(i).length()%8 != 0){
+                    System.out.printf("       ");   //7 empty space
+                }
+                size_diff_block -= 1;
+            }
+
+            if (this.getTitle(i).length() >= 8){
+                int size_offset = 7 - this.getTitle(i).length() % 7;
+                while(size_offset > 0){
+                    System.out.printf(" ");
+                    size_offset -= 1;
+                }
+            }
+        }
+        System.out.println("|");
+
+        // horizontal divide line
+        System.out.print("+");
+        for (int i = 0; i < this.columns(); i++) {
+            int block_size = length_index[i]/8;
+            while(block_size >= 0){
+                System.out.print("-------");
+                block_size -= 1;
+            }
+            System.out.print("+");
+        }
+        System.out.println();
 
         for (Row eachRow : sortedTable) {
-            for (int i = 0; i < eachRow.size() - 1; i++) {
-                System.out.print(eachRow.get(i));
-                System.out.print(',');
+            for (int i = 0; i < this.columns(); i++) {
+                int max_block_number = length_index[i]/8 + 1;
+                int current_block_number = eachRow.get(i).length()/8;
+                if(eachRow.get(i).length()%8 != 0){
+                    current_block_number += 1;       // length
+                }
+                int size_diff_block = max_block_number - current_block_number;
+                int size_diff_str = length_index[i] - eachRow.get(i).length();
+
+                System.out.printf("|%-7s", eachRow.get(i));
+                while(size_diff_block != 0){
+                    if(eachRow.get(i).length()%8 != 0){
+                        System.out.printf("       ");   //7 empty space
+                    }
+                    size_diff_block -= 1;
+                }
+
+                if (eachRow.get(i).length() >= 8){
+                    int size_offset = 7 - eachRow.get(i).length() % 7;
+                    while(size_offset > 0){
+                        System.out.printf(" ");
+                        size_offset -= 1;
+                    }
+                }
             }
-            System.out.print(eachRow.get(eachRow.size() - 1) + '\n');
+            System.out.println("|");
         }
+
+        // horizontal divide line
+        System.out.print("+");
+        for (int i = 0; i < this.columns(); i++) {
+            int block_size = length_index[i]/8;
+            while(block_size >= 0){
+                System.out.print("-------");
+                block_size -= 1;
+            }
+            System.out.print("+");
+        }
+        System.out.println();
     }
 
     /** Return a new Table whose columns are COLUMNNAMES, selected from
@@ -335,30 +570,6 @@ class Table implements Iterable<Row> {
         return result;
     }
 
-//    Table select(ArrayList<String> funcCall, List<String> columnNames, List<Condition> conditions) {    // call max, min or avg
-//        Table result = this.select(columnNames, conditions);
-//        List<String> funcField = null;     // allocate for function use, e.g. store temporary min or max values;
-//        for (int i=0; i< funcCall.size();i++){
-//            funcField.add(" ");
-//        }
-//        Iterator<Row> it = result.iterator();
-//        while(it.hasNext()){
-//            Row presentRow = it.next();
-//            for (int j=0;j<funcField.size();j++){
-//                if ()
-//
-//            }
-//            funcField.
-//        }
-//        return result;
-//    }
-
-//    Table select(ArrayList<String> funcCall ,Table table2, List<String> columnNames,
-//                 List<Condition> conditions){           // call max, min or avg
-//        Table result = this.select(table2, columnNames, conditions);
-//        return  result;
-//
-//    }
     ArrayList<HashSet<Row>> group(String groupColumnName) {
         ArrayList<HashSet<Row>> groupRow = new ArrayList<HashSet<Row>>();
 
@@ -374,7 +585,7 @@ class Table implements Iterable<Row> {
                 groupRow.get(columnValue.get(rowElement.get(column))).add(rowElement);
             } else {
                 columnValue.put(rowElement.get(column), groupRow.size());
-                HashSet<Row> sameValueRow = new HashSet<>();
+                LinkedHashSet<Row> sameValueRow = new LinkedHashSet<>();
                 sameValueRow.add(rowElement);
                 groupRow.add(sameValueRow);
             }
