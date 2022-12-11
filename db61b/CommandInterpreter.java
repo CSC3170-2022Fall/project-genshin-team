@@ -11,9 +11,12 @@ package db61b;
 import java.io.PrintStream;
 
 import java.util.*;
+import java.util.regex.Pattern;
 
 import static db61b.Utils.*;
 import static db61b.Tokenizer.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import db61b.Tokenizer;
 import db61b.Database;
@@ -270,13 +273,16 @@ class CommandInterpreter {
         System.out.println("Search results:");
 //        selectClause().print();
         Table table = selectClause();
-        ArrayList<HashSet<Row>> groupRow = new ArrayList<HashSet<Row>>();
+        ArrayList<LinkedHashSet<Row>> groupRow = new ArrayList<LinkedHashSet<Row>>();
+        boolean whetherGroup = false;
+        String groupColumnName = "";
         if (_input.nextIf("group")) {
             if (_input.nextIf("by")) {
-                String groupColumnName = _input.next();
+                groupColumnName = _input.next();
+                whetherGroup = true;
                 groupRow = table.group(groupColumnName);
             } else {
-                throw error("The correct syntax should order by <attr>");
+                throw error("The correct syntax should group by <attr>");
             }
         }
 
@@ -284,14 +290,71 @@ class CommandInterpreter {
             if (_input.nextIf("by")) {
                 String columnTitle = _input.next();
                 boolean order = !_input.nextIf("desc");
-                table.sortAndPrint(columnTitle, order);
+                if (whetherGroup) {
+//                    TODO if order and group
+                    for (int i = 0; i < table.columns() - 1; i++) {
+                        System.out.print(table.getTitle(i));
+                        System.out.print(',');
+                    }
+                    System.out.print(table.getTitle(table.columns() - 1) + '\n');
+                    this.sortAndPrint(groupRow, table.findColumn(columnTitle), order, table.findColumn(groupColumnName));
+                } else {
+                    table.sortAndPrint(columnTitle, order);
+                }
             } else {
                 throw error("The correct syntax should order by <attr>");
             }
         } else {
-            table.print();
+            if (whetherGroup) {
+                for (int i = 0; i < table.columns() - 1; i++) {
+                    System.out.print(table.getTitle(i));
+                    System.out.print(',');
+                }
+                System.out.print(table.getTitle(table.columns() - 1) + '\n');
+                this.printArraySet(groupRow);
+            } else {
+                table.print();
+            }
         }
         _input.next(";");
+    }
+
+    private void sortAndPrint(ArrayList<LinkedHashSet<db61b.Row>> groupRow, int columnNumber, boolean order, int groupColumn) {
+        if (columnNumber == groupColumn) {
+//            * thus we need to sort the group column which is defined by included as arrayList
+            groupRow.sort((set1, set2) -> {
+                Pattern pattern = Pattern.compile("-?\\d+(\\.\\d+)?");
+                Iterator<db61b.Row> rowIterator1 = set1.iterator();
+                Iterator<db61b.Row> rowIterator2 = set2.iterator();
+                Row row1 = rowIterator1.next();
+                Row row2 = rowIterator2.next();
+                if (pattern.matcher(row1.get(columnNumber)).matches()) {
+                    return Integer.compare(Integer.parseInt(row1.get(columnNumber)), Integer.parseInt(row2.get(columnNumber)));
+                } else {
+                    return row1.get(columnNumber).compareTo(row2.get(columnNumber));
+                }
+            });
+
+            this.printArraySet(groupRow);
+        } else {
+            for (LinkedHashSet<Row> arrayElement : groupRow) {
+                arrayElement.stream().sorted((row1, row2) -> {
+                    Pattern pattern = Pattern.compile("-?\\d+(\\.\\d+)?");
+                    if (pattern.matcher(row1.get(columnNumber)).matches()) {
+                        return Integer.compare(Integer.parseInt(row1.get(columnNumber)), Integer.parseInt(row2.get(columnNumber)));
+                    } else {
+                        return row1.get(columnNumber).compareTo(row2.get(columnNumber));
+                    }
+                }).forEach(
+                        (eachRow)->{
+                            for (int i = 0; i < eachRow.size() - 1; i++) {
+                                System.out.print(eachRow.get(i));
+                                System.out.print(',');
+                            }
+                        System.out.print(eachRow.get(eachRow.size() - 1) + '\n');
+                });
+            }
+        }
     }
 
 
@@ -332,6 +395,7 @@ class CommandInterpreter {
             arrayColumn.add(this.columnName());
         }
         _input.next("from");
+
         Table table0 = this.tableName(); //第一个table
         Table table1 = null;
         if (_input.nextIf(",")) {//如果有“，” 则有table1
@@ -406,13 +470,23 @@ class CommandInterpreter {
     /** Parse and return a Condition that applies to TABLES from the
      *  token stream. */
     Condition condition(Table... tables) {
-//        TODO
-        Column column_object=new Column(columnName(), tables);
-        String r0 = _input.next(Tokenizer.RELATION);
+//        TODO FINISH
+//        * Here the column name is passed by the this.columnName
+        Column column_object=new Column(this.columnName(), tables);
+        String r0 = "";
+        if (_input.nextIs("not")) {
+            _input.next("in");
+            r0 = "notIn";
+        } else if (_input.nextIs("in")) {
+            r0 = "in";
+        } else {
+            r0 = _input.next(Tokenizer.RELATION);
+        }
+
         if (_input.nextIs(Tokenizer.LITERAL)) {
             return new Condition(column_object, r0, literal());
         } else {
-            Column col2 = new Column(columnName(), tables);
+            Column col2 = new Column(this.columnName(), tables);
             return new Condition(column_object, r0, col2);
         }
     }
@@ -427,6 +501,18 @@ class CommandInterpreter {
                 return;
             } catch (DBException excp) {
                 /* No action */
+            }
+        }
+    }
+
+    void printArraySet(ArrayList<LinkedHashSet<Row>> groupRow) {
+        for (HashSet<Row>arrayElement: groupRow) {
+            for (Row eachRow: arrayElement) {
+                for (int i = 0; i < eachRow.size() - 1; i++) {
+                    System.out.print(eachRow.get(i));
+                    System.out.print(',');
+                }
+                System.out.print(eachRow.get(eachRow.size() - 1) + '\n');
             }
         }
     }

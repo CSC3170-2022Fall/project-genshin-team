@@ -9,6 +9,7 @@ package db61b;
 
 import java.util.List;
 import db61b.Column;
+import db61b.Table;
 import db61b.Row;
 
 /** Represents a single 'where' condition in a 'select' command.
@@ -70,6 +71,12 @@ class Condition {
         }
         if (_relation.equals("!=")) {
             return (result != 0);
+        }
+        if (_relation.equals("notIn")) {
+            return (result != 0);
+        }
+        if (_relation.equals("in")){
+            return (result == 0);
         }
         return false;
     }

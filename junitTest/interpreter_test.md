@@ -19,6 +19,10 @@ since it is hard to write junit for CommandInterpreter.java. We use a markdown f
   + select Firstname, Lastname from students, enrolled2;
   + select Firstname, Lastname from students, enrolled order by Lastname;
   + select Firstname, Lastname from students, enrolled order by Firstname desc;
+  + select SID,Lastname,Firstname,SemEnter,YearEnter,Major from students group by Major;
+  + select SID,Lastname,Firstname,SemEnter,YearEnter,Major from students group by YearEnter;
+  + select SID,Lastname,Firstname,SemEnter,YearEnter,Major from students group by Major order by SID;
+  + select SID,Lastname,Firstname,SemEnter,YearEnter,Major from students group by Major order by Major;
 
 ## Test failed:
   + ~~**select SID, Lastname, from students;**~~ 

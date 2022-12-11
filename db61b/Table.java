@@ -13,6 +13,8 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static db61b.Utils.*;
 import static org.junit.Assert.assertEquals;
@@ -204,7 +206,14 @@ class Table implements Iterable<Row> {
         if (columnNumber == -1) {
             throw error("cannot order by an non-existing column %s\n", columnName);
         }
-        rows.sort(Comparator.comparing(row -> row.get(columnNumber)));
+        rows.sort((row1, row2) -> {
+            Pattern pattern = Pattern.compile("-?\\d+(\\.\\d+)?");
+            if (pattern.matcher(row1.get(columnNumber)).matches()) {
+                return Integer.compare(Integer.parseInt(row1.get(columnNumber)), Integer.parseInt(row2.get(columnNumber)));
+            } else {
+                return row1.get(columnNumber).compareTo(row2.get(columnNumber));
+            }
+        });
 
         if (!order) {
             Collections.reverse(rows);
@@ -334,8 +343,8 @@ class Table implements Iterable<Row> {
         return result;
     }
 
-    ArrayList<HashSet<Row>> group(String groupColumnName) {
-        ArrayList<HashSet<Row>> groupRow = new ArrayList<HashSet<Row>>();
+    ArrayList<LinkedHashSet<Row>> group(String groupColumnName) {
+        ArrayList<LinkedHashSet<Row>> groupRow = new ArrayList<LinkedHashSet<Row>>();
 
         int column = this.findColumn(groupColumnName);
         if (column == -1) {
@@ -349,7 +358,7 @@ class Table implements Iterable<Row> {
                 groupRow.get(columnValue.get(rowElement.get(column))).add(rowElement);
             } else {
                 columnValue.put(rowElement.get(column), groupRow.size());
-                HashSet<Row> sameValueRow = new HashSet<>();
+                LinkedHashSet<Row> sameValueRow = new LinkedHashSet<>();
                 sameValueRow.add(rowElement);
                 groupRow.add(sameValueRow);
             }
