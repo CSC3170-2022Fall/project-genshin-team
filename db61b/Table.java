@@ -178,17 +178,17 @@ class Table implements Iterable<Row> {
     /** Print my contents on the standard output. */
     void print() {
 //        TODO FINISH
+        System.out.println("+");
         for (int i = 0; i < this.columns() - 1; i++) {
-            System.out.print(this.getTitle(i));
-            System.out.print(',');
+            System.out.printf("| %-7s", this.getTitle(i));
         }
 
         System.out.print(this.getTitle(this.columns() - 1) + '\n');
 
         for (Row eachRow : this._rows) {
             for (int i = 0; i < this.columns() - 1; i++) {
-                System.out.print(eachRow.get(i));
-                System.out.print(',');
+                System.out.printf("| %-7s", eachRow.get(i));
+                // System.out.print(',');
             }
             System.out.print(eachRow.get(this.columns() - 1) + '\n');
         }
