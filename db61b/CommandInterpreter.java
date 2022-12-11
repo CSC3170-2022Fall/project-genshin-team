@@ -264,12 +264,12 @@ class CommandInterpreter {
         String tableName = _input.peek();
         Table table_buffer=tableName();
         _input.next(";");
-        System.out.printf("Contents test of %s:%n", tableName);
+        System.out.printf("Contents of %s:%n", tableName);
         table_buffer.print();
     }
 
     /** Parse and execute a select statement from the token stream. */
-    void selectStatement() {//no problem, problem is in selectClause()!
+    void selectStatement() {
         // FILL THIS IN
 //        TODO FINISH
         System.out.println("Search results:");
@@ -331,19 +331,18 @@ class CommandInterpreter {
                 }
             }
         }
+
         if (_input.nextIf("order")){
             if (_input.nextIf("by")) {
                 String columnTitle = _input.next();
                 boolean order = !_input.nextIf("desc");
-                if (whetherGroup) {            // grouped, deal with an arraylist
+                int[] lengthIndex = table.getLengthIndex();
+
+                table.printTitle(lengthIndex);
+                if (whetherGroup) {
 //                    TODO if order and group
-                    for (int i = 0; i < table.columns() - 1; i++) {
-                        System.out.print(table.getTitle(i));
-                        System.out.print(',');
-                    }
-                    System.out.print(table.getTitle(table.columns() - 1) + '\n');
-                    this.sortAndPrint(groupRow, table.findColumn(columnTitle), order, table.findColumn(groupColumnName));
-                } else {        // not grouped, deal with a Table
+                    this.sortAndPrint(groupRow, table.findColumn(columnTitle), order, table.findColumn(groupColumnName), lengthIndex);
+                } else {
                     table.sortAndPrint(columnTitle, order);
                 }
             } else {
@@ -351,12 +350,9 @@ class CommandInterpreter {
             }
         } else {
             if (whetherGroup) {
-                for (int i = 0; i < table.columns() - 1; i++) {
-                    System.out.print(table.getTitle(i));
-                    System.out.print(',');
-                }
-                System.out.print(table.getTitle(table.columns() - 1) + '\n');
-                this.printArraySet(groupRow);
+                int[] lengthIndex = table.getLengthIndex();
+                table.printTitle(lengthIndex);
+                this.printArraySet(groupRow, lengthIndex);
             } else {
                 table.print();
             }
@@ -364,7 +360,7 @@ class CommandInterpreter {
         _input.next(";");
     }
 
-    private void sortAndPrint(ArrayList<LinkedHashSet<db61b.Row>> groupRow, int columnNumber, boolean order, int groupColumn) {
+    private void sortAndPrint(ArrayList<LinkedHashSet<db61b.Row>> groupRow, int columnNumber, boolean order, int groupColumn, int[]lengthIndex) {
         if (columnNumber == groupColumn) {
 //            * thus we need to sort the group column which is defined by included as arrayList
             groupRow.sort((set1, set2) -> {
@@ -374,6 +370,9 @@ class CommandInterpreter {
                 Row row1 = rowIterator1.next();
                 Row row2 = rowIterator2.next();
                 if (pattern.matcher(row1.get(columnNumber)).matches()) {
+                    if (row1.get(columnNumber).contains(".") || row2.get(columnNumber).contains(".")){
+                        return Double.compare(Double.parseDouble(row1.get(columnNumber)), Double.parseDouble(row2.get(columnNumber)));
+                    }
                     return Integer.compare(Integer.parseInt(row1.get(columnNumber)), Integer.parseInt(row2.get(columnNumber)));
                 } else {
                     return row1.get(columnNumber).compareTo(row2.get(columnNumber));
@@ -382,13 +381,19 @@ class CommandInterpreter {
             if (!order) {
                 Collections.reverse(groupRow);
             }
-            this.printArraySet(groupRow);
+            this.printArraySet(groupRow, lengthIndex);
         } else {
+            int rowLength = groupRow.get(0).iterator().next().size();
             for (LinkedHashSet<Row> arrayElement : groupRow) {
                 arrayElement.stream().sorted((row1, row2) -> {
                     Pattern pattern = Pattern.compile("-?\\d+(\\.\\d+)?");
                     if (pattern.matcher(row1.get(columnNumber)).matches()) {
-                        int compareResult = Integer.compare(Integer.parseInt(row1.get(columnNumber)), Integer.parseInt(row2.get(columnNumber)));
+                        int compareResult = -1;
+                        if (row1.get(columnNumber).contains(".") || row2.get(columnNumber).contains(".")){
+                            compareResult = Double.compare(Double.parseDouble(row1.get(columnNumber)), Double.parseDouble(row2.get(columnNumber)));
+                        } else {
+                            compareResult = Integer.compare(Integer.parseInt(row1.get(columnNumber)), Integer.parseInt(row2.get(columnNumber)));
+                        }
                         return (order)? compareResult:(-compareResult);
                     } else {
                         int compareResult =  row1.get(columnNumber).compareTo(row2.get(columnNumber));
@@ -396,13 +401,21 @@ class CommandInterpreter {
                     }
                 }).forEach(
                         (eachRow)->{
-                            for (int i = 0; i < eachRow.size() - 1; i++) {
-                                System.out.print(eachRow.get(i));
-                                System.out.print(',');
-                            }
-                        System.out.print(eachRow.get(eachRow.size() - 1) + '\n');
-                });
+                            eachRow.printRow(lengthIndex);
+                        }
+                );
             }
+
+            System.out.print("+");
+            for (int i = 0; i < rowLength; i++) {
+                int block_size = lengthIndex[i]/7;
+                while(block_size >= 0){
+                    System.out.print("-------");
+                    block_size -= 1;
+                }
+                System.out.print("-+");
+            }
+            System.out.println();
         }
     }
 
@@ -589,138 +602,23 @@ class CommandInterpreter {
         }
     }
 
-    void printArraySet(ArrayList<LinkedHashSet<Row>> groupRow) {
-
-//        int max_length = 0;
-//        int temp_length = 0;
-//        int[] length_index = new int[groupRow.get(0).iterator().next().size()];
-//
-//        //get max length of all data that needs to be printed
-//        for (LinkedHashSet<Row> arrayElement : groupRow) {
-//            for (Row eachRow : arrayElement) {
-//                // init max_length for every column
-//                for (int i = 0; i < eachRow.size(); i++) {
-//                    max_length = length_index[i];
-//                    temp_length = eachRow.get(i).length();
-//                    if (temp_length >= max_length){
-//                        max_length = temp_length;
-//                        length_index[i] = max_length;
-//                    }
-//                }
-//            }
-//        }
-//
-//        for (int i = 0; i < this.columns(); i++) {
-//            max_length = length_index[i];
-//            temp_length = this.getTitle(i).length();
-////            System.out.println(this.getTitle(i));
-//            if (temp_length >= max_length){
-//                max_length = temp_length;
-//                length_index[i] = max_length;
-//            }
-//        }
-//
-//        // horizontal divide line
-//        System.out.print("+");
-//        for (int i = 0; i < this.columns(); i++) {
-//            int block_size = length_index[i]/8;
-//            while(block_size >= 0){
-//                System.out.print("-------");
-//                block_size -= 1;
-//            }
-//            System.out.print("+");
-//        }
-//        System.out.println();
-//
-//        for (int i = 0; i < this.columns(); i++) {
-//            int max_block_number = length_index[i]/8 + 1;
-//            int current_block_number = this.getTitle(i).length()/8;
-//            if(this.getTitle(i).length()%8 != 0){
-//                current_block_number += 1;       // length
-//            }
-//            int size_diff_block = max_block_number - current_block_number;
-//            int size_diff_str = length_index[i] - this.getTitle(i).length();
-//
-//            System.out.printf("|%-7s", this.getTitle(i));
-//            while(size_diff_block != 0){
-//                if(this.getTitle(i).length()%8 != 0){
-//                    System.out.printf("       ");   //7 empty space
-//                }
-//                size_diff_block -= 1;
-//            }
-//
-//            if (this.getTitle(i).length() >= 8){
-//                int size_offset = 7 - this.getTitle(i).length() % 7;
-//                while(size_offset > 0){
-//                    System.out.printf(" ");
-//                    size_offset -= 1;
-//                }
-//            }
-//        }
-//        System.out.println("|");
-//
-//        // horizontal divide line
-//        System.out.print("+");
-//        for (int i = 0; i < this.columns(); i++) {
-//            int block_size = length_index[i]/8;
-//            while(block_size >= 0){
-//                System.out.print("-------");
-//                block_size -= 1;
-//            }
-//            System.out.print("+");
-//        }
-//        System.out.println();
-//
-//        for (Row eachRow : sortedTable) {
-//            for (int i = 0; i < this.columns(); i++) {
-//                int max_block_number = length_index[i]/8 + 1;
-//                int current_block_number = eachRow.get(i).length()/8;
-//                if(eachRow.get(i).length()%8 != 0){
-//                    current_block_number += 1;       // length
-//                }
-//                int size_diff_block = max_block_number - current_block_number;
-//                int size_diff_str = length_index[i] - eachRow.get(i).length();
-//
-//                System.out.printf("|%-7s", eachRow.get(i));
-//                while(size_diff_block != 0){
-//                    if(eachRow.get(i).length()%8 != 0){
-//                        System.out.printf("       ");   //7 empty space
-//                    }
-//                    size_diff_block -= 1;
-//                }
-//
-//                if (eachRow.get(i).length() >= 8){
-//                    int size_offset = 7 - eachRow.get(i).length() % 7;
-//                    while(size_offset > 0){
-//                        System.out.printf(" ");
-//                        size_offset -= 1;
-//                    }
-//                }
-//            }
-//            System.out.println("|");
-//        }
-//
-//        // horizontal divide line
-//        System.out.print("+");
-//        for (int i = 0; i < this.columns(); i++) {
-//            int block_size = length_index[i]/8;
-//            while(block_size >= 0){
-//                System.out.print("-------");
-//                block_size -= 1;
-//            }
-//            System.out.print("+");
-//        }
-//        System.out.println();
-
-        for (HashSet<Row>arrayElement: groupRow) {
-            for (Row eachRow: arrayElement) {
-                for (int i = 0; i < eachRow.size() - 1; i++) {
-                    System.out.print(eachRow.get(i));
-                    System.out.print(',');
-                }
-                System.out.print(eachRow.get(eachRow.size() - 1) + '\n');
+    void printArraySet(ArrayList<LinkedHashSet<Row>> groupRow, int[]lengthIndex) {
+        int rowLength = groupRow.get(0).iterator().next().size();
+        for (LinkedHashSet<Row> arrayElement : groupRow) {
+            for (Row eachRow : arrayElement) {
+                eachRow.printRow(lengthIndex);
             }
         }
+        System.out.print("+");
+        for (int i = 0; i < rowLength; i++) {
+            int block_size = lengthIndex[i]/7;
+            while(block_size >= 0){
+                System.out.print("-------");
+                block_size -= 1;
+            }
+            System.out.print("-+");
+        }
+        System.out.println();
     }
 
     /** The command input source. */

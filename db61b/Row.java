@@ -78,6 +78,36 @@ class Row {
         return _data[k]; // REPLACE WITH SOLUTION
     }
 
+    void printRow (int[] lengthIndex) {
+        for (int i = 0; i < this.size(); i++) {
+            int max_block_number = lengthIndex[i] / 7 + 1;
+            int current_block_number = this.get(i).length() / 7;
+            if (this.get(i).length() % 7 != 0) {
+                current_block_number += 1;       // length
+            }
+            int size_diff_block = max_block_number - current_block_number;
+            System.out.printf("| %-7s", this.get(i));
+
+            while (size_diff_block != 0) {
+                System.out.printf("       ");
+                size_diff_block -= 1;
+            }
+
+            if (this.get(i).length() > 7) {
+                int size_offset = 7 - this.get(i).length() % 7;
+                if (this.get(i).length() % 7 == 0) {
+                    size_offset -= 7;
+                }
+
+                while (size_offset > 0) {
+                    System.out.printf(" ");
+                    size_offset -= 1;
+                }
+            }
+        }
+        System.out.println("|");
+    }
+
     @Override
     public boolean equals(Object obj) {
 //      TODO FINISH
