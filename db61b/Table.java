@@ -248,6 +248,9 @@ class Table implements Iterable<Row> {
         rows.sort((row1, row2) -> {
             Pattern pattern = Pattern.compile("-?\\d+(\\.\\d+)?");
             if (pattern.matcher(row1.get(columnNumber)).matches()) {
+                if (row1.get(columnNumber).contains(".") || row2.get(columnNumber).contains(".")){
+                    return Double.compare(Double.parseDouble(row1.get(columnNumber)), Double.parseDouble(row2.get(columnNumber)));
+                }
                 return Integer.compare(Integer.parseInt(row1.get(columnNumber)), Integer.parseInt(row2.get(columnNumber)));
             } else {
                 return row1.get(columnNumber).compareTo(row2.get(columnNumber));
@@ -307,7 +310,6 @@ class Table implements Iterable<Row> {
                 current_block_number += 1;       // length
             }
             int size_diff_block = max_block_number - current_block_number;
-            int size_diff_str = length_index[i] - this.getTitle(i).length();
 
             System.out.printf("| %-7s", this.getTitle(i));
             while(size_diff_block != 0){
@@ -432,10 +434,7 @@ class Table implements Iterable<Row> {
                         result.add(new Row(temp_columns, temp_row_1, temp_row_2));
                     }
                     else{
-//                        System.out.printf("%s, %s :: %s\n", temp_row_1.get(0), temp_row_1.get(1), temp_row_2.get(0));
-//                        assertEquals(true, Condition.test(conditions, temp_row_1, temp_row_2));
                         if(Condition.test(conditions, temp_row_1, temp_row_2)){
-                            // System.out.println("Ever reach here");
                             result.add(new Row(temp_columns, temp_row_1, temp_row_2));
                         }
                     }
