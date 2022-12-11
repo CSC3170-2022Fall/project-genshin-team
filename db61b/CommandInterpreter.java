@@ -510,6 +510,128 @@ class CommandInterpreter {
     }
 
     void printArraySet(ArrayList<LinkedHashSet<Row>> groupRow) {
+
+//        int max_length = 0;
+//        int temp_length = 0;
+//        int[] length_index = new int[groupRow.get(0).iterator().next().size()];
+//
+//        //get max length of all data that needs to be printed
+//        for (LinkedHashSet<Row> arrayElement : groupRow) {
+//            for (Row eachRow : arrayElement) {
+//                // init max_length for every column
+//                for (int i = 0; i < eachRow.size(); i++) {
+//                    max_length = length_index[i];
+//                    temp_length = eachRow.get(i).length();
+//                    if (temp_length >= max_length){
+//                        max_length = temp_length;
+//                        length_index[i] = max_length;
+//                    }
+//                }
+//            }
+//        }
+//
+//        for (int i = 0; i < this.columns(); i++) {
+//            max_length = length_index[i];
+//            temp_length = this.getTitle(i).length();
+////            System.out.println(this.getTitle(i));
+//            if (temp_length >= max_length){
+//                max_length = temp_length;
+//                length_index[i] = max_length;
+//            }
+//        }
+//
+//        // horizontal divide line
+//        System.out.print("+");
+//        for (int i = 0; i < this.columns(); i++) {
+//            int block_size = length_index[i]/8;
+//            while(block_size >= 0){
+//                System.out.print("-------");
+//                block_size -= 1;
+//            }
+//            System.out.print("+");
+//        }
+//        System.out.println();
+//
+//        for (int i = 0; i < this.columns(); i++) {
+//            int max_block_number = length_index[i]/8 + 1;
+//            int current_block_number = this.getTitle(i).length()/8;
+//            if(this.getTitle(i).length()%8 != 0){
+//                current_block_number += 1;       // length
+//            }
+//            int size_diff_block = max_block_number - current_block_number;
+//            int size_diff_str = length_index[i] - this.getTitle(i).length();
+//
+//            System.out.printf("|%-7s", this.getTitle(i));
+//            while(size_diff_block != 0){
+//                if(this.getTitle(i).length()%8 != 0){
+//                    System.out.printf("       ");   //7 empty space
+//                }
+//                size_diff_block -= 1;
+//            }
+//
+//            if (this.getTitle(i).length() >= 8){
+//                int size_offset = 7 - this.getTitle(i).length() % 7;
+//                while(size_offset > 0){
+//                    System.out.printf(" ");
+//                    size_offset -= 1;
+//                }
+//            }
+//        }
+//        System.out.println("|");
+//
+//        // horizontal divide line
+//        System.out.print("+");
+//        for (int i = 0; i < this.columns(); i++) {
+//            int block_size = length_index[i]/8;
+//            while(block_size >= 0){
+//                System.out.print("-------");
+//                block_size -= 1;
+//            }
+//            System.out.print("+");
+//        }
+//        System.out.println();
+//
+//        for (Row eachRow : sortedTable) {
+//            for (int i = 0; i < this.columns(); i++) {
+//                int max_block_number = length_index[i]/8 + 1;
+//                int current_block_number = eachRow.get(i).length()/8;
+//                if(eachRow.get(i).length()%8 != 0){
+//                    current_block_number += 1;       // length
+//                }
+//                int size_diff_block = max_block_number - current_block_number;
+//                int size_diff_str = length_index[i] - eachRow.get(i).length();
+//
+//                System.out.printf("|%-7s", eachRow.get(i));
+//                while(size_diff_block != 0){
+//                    if(eachRow.get(i).length()%8 != 0){
+//                        System.out.printf("       ");   //7 empty space
+//                    }
+//                    size_diff_block -= 1;
+//                }
+//
+//                if (eachRow.get(i).length() >= 8){
+//                    int size_offset = 7 - eachRow.get(i).length() % 7;
+//                    while(size_offset > 0){
+//                        System.out.printf(" ");
+//                        size_offset -= 1;
+//                    }
+//                }
+//            }
+//            System.out.println("|");
+//        }
+//
+//        // horizontal divide line
+//        System.out.print("+");
+//        for (int i = 0; i < this.columns(); i++) {
+//            int block_size = length_index[i]/8;
+//            while(block_size >= 0){
+//                System.out.print("-------");
+//                block_size -= 1;
+//            }
+//            System.out.print("+");
+//        }
+//        System.out.println();
+
         for (HashSet<Row>arrayElement: groupRow) {
             for (Row eachRow: arrayElement) {
                 for (int i = 0; i < eachRow.size() - 1; i++) {
