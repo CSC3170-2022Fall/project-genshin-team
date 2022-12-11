@@ -1,4 +1,4 @@
- Job_id, Job_title, Min_salary, Max_salary
+Job_id,Job_title,Min_salary,Max_salary
 AD_PRES,President,20000,40000
 AD_VP,Administration Vice President,15000,30000
 AD_ASST,Administration Assistant,3000,6000

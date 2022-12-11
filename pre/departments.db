@@ -1,4 +1,4 @@
- Department_id, Department_name, Manager_id, Location_id
+Department_id,Department_name,Manager_id,Location_id
 10,Administration,200,1700
 20,Marketing,201,1800
 30,Purchasing,114,1700

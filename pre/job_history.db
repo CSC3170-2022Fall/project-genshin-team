@@ -1,4 +1,4 @@
- Employee_id, Start_date, End_date, Job_id, Department_id
+Employee_id,Start_date,End_date,Job_id,Department_id
 102,1993-01-13,1998-07-24,IT_PROG,60
 101,1989-09-21,1993-10-27,AC_ACCOUNT,110
 101,1993-10-28,1997-03-15,AC_MGR,110

@@ -1,4 +1,4 @@
- Country_id, Country_name, Region_id
+Country_id,Country_name,Region_id
 AR,Argentina,2
 AU,Australia,3
 BE,Belgium,1

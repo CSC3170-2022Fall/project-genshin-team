@@ -1,4 +1,4 @@
- Employee_id, First_name, Last_name, Email, Phone_number, Hire_date, Job_id, Salary, Commission_pct, Manager_id, Department_id
+Employee_id,First_name,Last_name,Email,Phone_number,Hire_date,Job_id,Salary,Commission_pct,Manager_id,Department_id
 100,Steven,King,SKING,515.123.4567,1987-06-17,AD_PRES,24000.00,0.00,100,90
 101,Neena,Kochhar,NKOCHHAR,515.123.4568,1987-06-18,AD_VP,17000.00,0.00,100,90
 102,Lex,De Haan,LDEHAAN,515.123.4569,1987-06-19,AD_VP,17000.00,0.00,100,90

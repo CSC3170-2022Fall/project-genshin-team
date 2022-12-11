@@ -229,7 +229,7 @@ class Table implements Iterable<Row> {
             }
             int size_diff_block = max_block_number - current_block_number;
             int size_diff_str = length_index[i] - this.getTitle(i).length();
-            System.out.printf("|%-7s", this.getTitle(i));
+            System.out.printf("| %-7s", this.getTitle(i));
             while(size_diff_block != 0){
                     System.out.printf("       ");   //7 empty space
                 size_diff_block -= 1;
@@ -245,7 +245,6 @@ class Table implements Iterable<Row> {
                     size_offset -= 1;
                 }
             }
-            System.out.print(' ');
         }
         System.out.println("|");
 
@@ -384,7 +383,7 @@ class Table implements Iterable<Row> {
             int size_diff_block = max_block_number - current_block_number;
             int size_diff_str = length_index[i] - this.getTitle(i).length();
 
-            System.out.printf("|%-7s", this.getTitle(i));
+            System.out.printf("| %-7s", this.getTitle(i));
             while(size_diff_block != 0){
                 System.out.printf("       ");   //7 empty space
                 size_diff_block -= 1;
@@ -400,7 +399,6 @@ class Table implements Iterable<Row> {
                     size_offset -= 1;
                 }
             }
-            System.out.print(' ');
         }
         System.out.println("|");
 
