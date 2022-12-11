@@ -262,24 +262,38 @@ class Table implements Iterable<Row> {
 
         for (Row eachRow : this._rows) {
             for (int i = 0; i < this.columns(); i++) {
-                int max_block_number = length_index[i]/8 + 1;
-                int current_block_number = eachRow.get(i).length()/8;
-                if(eachRow.get(i).length()%8 != 0){
+                int max_block_number = length_index[i]/7 + 1;
+                int current_block_number = eachRow.get(i).length()/7;
+                if(eachRow.get(i).length()%7 != 0){
                     current_block_number += 1;       // length
                 }
                 int size_diff_block = max_block_number - current_block_number;
                 int size_diff_str = length_index[i] - eachRow.get(i).length();
 
+                int temp = size_diff_block;
+
                 System.out.printf("|%-7s", eachRow.get(i));
+                // System.out.printf("|%-7s", current_block_number);
+
+//                if (eachRow.get(i).length()%7 == 0){
+//                    size_diff_block -= 1;
+//                }
+
+                // System.out.printf("%d", size_diff_block);
+
                 while(size_diff_block != 0){
-                    if(eachRow.get(i).length()%8 != 0){
-                        System.out.printf("       ");   //7 empty space
-                    }
+                    System.out.printf("       ");
                     size_diff_block -= 1;
                 }
 
-                if (eachRow.get(i).length() >= 8){
+                if (eachRow.get(i).length() > 7){
                     int size_offset = 7 - eachRow.get(i).length() % 7;
+                    if (eachRow.get(i).length() % 7 == 0){
+                        size_offset -= 7;
+                    }
+//                    if (eachRow.get(i).length() % 7 == 1){
+//                        size_offset -= 6;
+//                    }
                     while(size_offset > 0){
                         System.out.printf(" ");
                         size_offset -= 1;
