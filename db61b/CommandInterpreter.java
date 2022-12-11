@@ -29,8 +29,8 @@ import db61b.Column;
 /** An object that reads and interprets a sequence of commands from an
  *  input source.
  *  @author */
-class CommandInterpreter {
 
+class CommandInterpreter {
     /* STRATEGY.
      *
      *   This interpreter parses commands using a technique called
@@ -129,6 +129,18 @@ class CommandInterpreter {
      * course).
      */
 
+//    ArrayList<String> Wrong_array = new ArrayList<String>();
+//        Wrong_array.add("create");
+//        Wrong_array.add("load");
+//        Wrong_array.add("store");
+//        Wrong_array.add("insert");
+//        Wrong_array.add("print");
+//        Wrong_array.add("select");
+//        Wrong_array.add("quit");
+//        Wrong_array.add("exit");
+//        Wrong_array.add("as");
+//        Wrong_array.add("in");
+    //contains()判断是否在list中
 
     /** A new CommandInterpreter executing commands read from INP, writing
      *  prompts on PROMPTER, if it is non-null. */
@@ -136,6 +148,7 @@ class CommandInterpreter {
         _input = new Tokenizer(inp, prompter);
         _database = new Database();
     }
+
 
     /** Parse and execute one statement from the token stream.  Return true
      *  iff the command is something other than quit or exit. */
@@ -174,6 +187,13 @@ class CommandInterpreter {
     void createStatement() {
         _input.next("create");
         _input.next("table");
+        if (_input.nextIs("create") || _input.nextIs("load") || _input.nextIs("store") ||
+                _input.nextIs("insert") || _input.nextIs("print") || _input.nextIs("select") ||
+                _input.nextIs("quit") || _input.nextIs("exit") || _input.nextIs("as") || _input.nextIs("in")) {
+            System.out.println("Input is illegal!");
+            _input.next(";");
+        }
+
         String name = this.name();//name of the newly created table
         Table table = tableDefinition();//the newly created table
 //        TODO FINISH
@@ -196,6 +216,12 @@ class CommandInterpreter {
     void insertStatement() {
         _input.next("insert");
         _input.next("into");
+        if (_input.nextIs("create") || _input.nextIs("load") || _input.nextIs("store") ||
+                _input.nextIs("insert") || _input.nextIs("print") || _input.nextIs("select") ||
+                _input.nextIs("quit") || _input.nextIs("exit") || _input.nextIs("as") || _input.nextIs("in")) {
+            System.out.println("Input is illegal!");
+            _input.next(";");
+        }
         Table table = this.tableName();
         _input.next("values");
 
@@ -210,7 +236,6 @@ class CommandInterpreter {
         } else {
             throw error("the input size should be the same as the column number which is %d", table.columns());
         }
-
         _input.next(";");
     }
 
@@ -219,6 +244,12 @@ class CommandInterpreter {
         // FILL THIS IN
 //        TODO FINISH
         _input.next("load");
+        if (_input.nextIs("create") || _input.nextIs("load") || _input.nextIs("store") ||
+                _input.nextIs("insert") || _input.nextIs("print") || _input.nextIs("select") ||
+                _input.nextIs("quit") || _input.nextIs("exit") || _input.nextIs("as") || _input.nextIs("in")) {
+            System.out.println("Input is illegal!");
+            _input.next(";");
+        }
         String nameOfTable = "";
         String lastNext = _input.peek();
         while (!_input.nextIf(";")) {
@@ -234,6 +265,12 @@ class CommandInterpreter {
     /** Parse and execute a store statement from the token stream. */
     void storeStatement() {
         _input.next("store");
+        if (_input.nextIs("create") || _input.nextIs("load") || _input.nextIs("store") ||
+                _input.nextIs("insert") || _input.nextIs("print") || _input.nextIs("select") ||
+                _input.nextIs("quit") || _input.nextIs("exit") || _input.nextIs("as") || _input.nextIs("in")) {
+            System.out.println("Input is illegal!");
+            _input.next(";");
+        }
         String lastNext = _input.peek();
         String nameOfTable = "";
         Table table;
@@ -259,6 +296,12 @@ class CommandInterpreter {
         // FILL THIS IN
 //        TODO FINISH
         _input.next("print");
+        if (_input.nextIs("create") || _input.nextIs("load") || _input.nextIs("store") ||
+                _input.nextIs("insert") || _input.nextIs("print") || _input.nextIs("select") ||
+                _input.nextIs("quit") || _input.nextIs("exit") || _input.nextIs("as") || _input.nextIs("in")) {
+            System.out.println("Input is illegal!");
+            _input.next(";");
+        }
         String tableName = _input.peek();
         Table table_buffer=tableName();
         _input.next(";");
@@ -399,6 +442,12 @@ class CommandInterpreter {
     Table selectClause() {
 //        TODO
         _input.next("select");
+        if (_input.nextIs("create") || _input.nextIs("load") || _input.nextIs("store") ||
+                _input.nextIs("insert") || _input.nextIs("print") || _input.nextIs("select") ||
+                _input.nextIs("quit") || _input.nextIs("exit") || _input.nextIs("as") || _input.nextIs("in")) {
+            System.out.println("Input is illegal!");
+            _input.next(";");
+        }
         ArrayList<String> arrayColumn=new ArrayList<String>();
 //        TODO The first column should not be started with ","
         /*
