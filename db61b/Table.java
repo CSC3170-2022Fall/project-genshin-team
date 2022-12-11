@@ -335,45 +335,30 @@ class Table implements Iterable<Row> {
         return result;
     }
 
-    Table select(ArrayList<String> funcCall, List<String> columnNames, List<Condition> conditions) {    // call max, min or avg
+//    Table select(ArrayList<String> funcCall, List<String> columnNames, List<Condition> conditions) {    // call max, min or avg
+//        Table result = this.select(columnNames, conditions);
+//        List<String> funcField = null;     // allocate for function use, e.g. store temporary min or max values;
+//        for (int i=0; i< funcCall.size();i++){
+//            funcField.add(" ");
+//        }
+//        Iterator<Row> it = result.iterator();
+//        while(it.hasNext()){
+//            Row presentRow = it.next();
+//            for (int j=0;j<funcField.size();j++){
+//                if ()
+//
+//            }
+//            funcField.
+//        }
+//        return result;
+//    }
 
-        Table result = new Table(columnNames);
-//        TODO FINISH
-
-        // create List<Column> variable
-        List<Column> temp_columns = new ArrayList<Column>();
-        Iterator<String> it_columnNames = columnNames.iterator();
-        while(it_columnNames.hasNext()){
-            String temp_name = it_columnNames.next();
-            temp_columns.add(new Column(temp_name, this));
-        }
-
-        Iterator<Row> it_rows = this.iterator();
-        while(it_rows.hasNext()){
-            /* if the content of certain row achieve the requirement,
-             * add it into the result*/
-            Row temp_row = it_rows.next();
-
-            // if nothing after "where", add all rows of column in result
-            if (conditions.size() == 0){
-                result.add(new Row(temp_columns, temp_row));
-            }
-            else{
-                if(Condition.test(conditions, temp_row)){
-                    result.add(new Row(temp_columns, temp_row));
-                }
-            }
-
-        }
-        return result;
-    }
-
-    Table select(ArrayList<String> funcCall ,Table table2, List<String> columnNames,
-                 List<Condition> conditions){
-        Table result = new Table(columnNames);
-        return  result;
-
-    }
+//    Table select(ArrayList<String> funcCall ,Table table2, List<String> columnNames,
+//                 List<Condition> conditions){           // call max, min or avg
+//        Table result = this.select(table2, columnNames, conditions);
+//        return  result;
+//
+//    }
     ArrayList<HashSet<Row>> group(String groupColumnName) {
         ArrayList<HashSet<Row>> groupRow = new ArrayList<HashSet<Row>>();
 
