@@ -8,4 +8,4 @@ db61b/sentinel
 /TestResult/*
 !TestResult/README
 db61b/*.db
-*.db
+/*.db
