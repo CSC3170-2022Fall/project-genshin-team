@@ -334,16 +334,20 @@ class CommandInterpreter {
                     return row1.get(columnNumber).compareTo(row2.get(columnNumber));
                 }
             });
-
+            if (!order) {
+                Collections.reverse(groupRow);
+            }
             this.printArraySet(groupRow);
         } else {
             for (LinkedHashSet<Row> arrayElement : groupRow) {
                 arrayElement.stream().sorted((row1, row2) -> {
                     Pattern pattern = Pattern.compile("-?\\d+(\\.\\d+)?");
                     if (pattern.matcher(row1.get(columnNumber)).matches()) {
-                        return Integer.compare(Integer.parseInt(row1.get(columnNumber)), Integer.parseInt(row2.get(columnNumber)));
+                        int compareResult = Integer.compare(Integer.parseInt(row1.get(columnNumber)), Integer.parseInt(row2.get(columnNumber)));
+                        return (order)? compareResult:(-compareResult);
                     } else {
-                        return row1.get(columnNumber).compareTo(row2.get(columnNumber));
+                        int compareResult =  row1.get(columnNumber).compareTo(row2.get(columnNumber));
+                        return (order)? compareResult:(-compareResult);
                     }
                 }).forEach(
                         (eachRow)->{
@@ -474,10 +478,10 @@ class CommandInterpreter {
 //        * Here the column name is passed by the this.columnName
         Column column_object=new Column(this.columnName(), tables);
         String r0 = "";
-        if (_input.nextIs("not")) {
+        if (_input.nextIf("not")) {
             _input.next("in");
             r0 = "notIn";
-        } else if (_input.nextIs("in")) {
+        } else if (_input.nextIf("in")) {
             r0 = "in";
         } else {
             r0 = _input.next(Tokenizer.RELATION);
@@ -522,18 +526,4 @@ class CommandInterpreter {
     /** Database containing all tables. */
     private db61b.Database _database;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
