@@ -11,9 +11,12 @@ package db61b;
 import java.io.PrintStream;
 
 import java.util.*;
+import java.util.regex.Pattern;
 
 import static db61b.Utils.*;
 import static db61b.Tokenizer.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import db61b.Tokenizer;
 import db61b.Database;
@@ -270,13 +273,16 @@ class CommandInterpreter {
         System.out.println("Search results:");
 //        selectClause().print();
         Table table = selectClause();
-        ArrayList<HashSet<Row>> groupRow = new ArrayList<HashSet<Row>>();
+        ArrayList<LinkedHashSet<Row>> groupRow = new ArrayList<LinkedHashSet<Row>>();
+        boolean whetherGroup = false;
+        String groupColumnName = "";
         if (_input.nextIf("group")) {
             if (_input.nextIf("by")) {
-                String groupColumnName = _input.next();
+                groupColumnName = _input.next();
+                whetherGroup = true;
                 groupRow = table.group(groupColumnName);
             } else {
-                throw error("The correct syntax should order by <attr>");
+                throw error("The correct syntax should group by <attr>");
             }
         }
 
@@ -284,14 +290,75 @@ class CommandInterpreter {
             if (_input.nextIf("by")) {
                 String columnTitle = _input.next();
                 boolean order = !_input.nextIf("desc");
-                table.sortAndPrint(columnTitle, order);
+                if (whetherGroup) {
+//                    TODO if order and group
+                    for (int i = 0; i < table.columns() - 1; i++) {
+                        System.out.print(table.getTitle(i));
+                        System.out.print(',');
+                    }
+                    System.out.print(table.getTitle(table.columns() - 1) + '\n');
+                    this.sortAndPrint(groupRow, table.findColumn(columnTitle), order, table.findColumn(groupColumnName));
+                } else {
+                    table.sortAndPrint(columnTitle, order);
+                }
             } else {
                 throw error("The correct syntax should order by <attr>");
             }
         } else {
-            table.print();
+            if (whetherGroup) {
+                for (int i = 0; i < table.columns() - 1; i++) {
+                    System.out.print(table.getTitle(i));
+                    System.out.print(',');
+                }
+                System.out.print(table.getTitle(table.columns() - 1) + '\n');
+                this.printArraySet(groupRow);
+            } else {
+                table.print();
+            }
         }
         _input.next(";");
+    }
+
+    private void sortAndPrint(ArrayList<LinkedHashSet<db61b.Row>> groupRow, int columnNumber, boolean order, int groupColumn) {
+        if (columnNumber == groupColumn) {
+//            * thus we need to sort the group column which is defined by included as arrayList
+            groupRow.sort((set1, set2) -> {
+                Pattern pattern = Pattern.compile("-?\\d+(\\.\\d+)?");
+                Iterator<db61b.Row> rowIterator1 = set1.iterator();
+                Iterator<db61b.Row> rowIterator2 = set2.iterator();
+                Row row1 = rowIterator1.next();
+                Row row2 = rowIterator2.next();
+                if (pattern.matcher(row1.get(columnNumber)).matches()) {
+                    return Integer.compare(Integer.parseInt(row1.get(columnNumber)), Integer.parseInt(row2.get(columnNumber)));
+                } else {
+                    return row1.get(columnNumber).compareTo(row2.get(columnNumber));
+                }
+            });
+            if (!order) {
+                Collections.reverse(groupRow);
+            }
+            this.printArraySet(groupRow);
+        } else {
+            for (LinkedHashSet<Row> arrayElement : groupRow) {
+                arrayElement.stream().sorted((row1, row2) -> {
+                    Pattern pattern = Pattern.compile("-?\\d+(\\.\\d+)?");
+                    if (pattern.matcher(row1.get(columnNumber)).matches()) {
+                        int compareResult = Integer.compare(Integer.parseInt(row1.get(columnNumber)), Integer.parseInt(row2.get(columnNumber)));
+                        return (order)? compareResult:(-compareResult);
+                    } else {
+                        int compareResult =  row1.get(columnNumber).compareTo(row2.get(columnNumber));
+                        return (order)? compareResult:(-compareResult);
+                    }
+                }).forEach(
+                        (eachRow)->{
+                            for (int i = 0; i < eachRow.size() - 1; i++) {
+                                System.out.print(eachRow.get(i));
+                                System.out.print(',');
+                            }
+                        System.out.print(eachRow.get(eachRow.size() - 1) + '\n');
+                });
+            }
+        }
     }
 
 
@@ -332,6 +399,7 @@ class CommandInterpreter {
             arrayColumn.add(this.columnName());
         }
         _input.next("from");
+
         Table table0 = this.tableName(); //第一个table
         Table table1 = null;
         if (_input.nextIf(",")) {//如果有“，” 则有table1
@@ -406,13 +474,23 @@ class CommandInterpreter {
     /** Parse and return a Condition that applies to TABLES from the
      *  token stream. */
     Condition condition(Table... tables) {
-//        TODO
-        Column column_object=new Column(columnName(), tables);
-        String r0 = _input.next(Tokenizer.RELATION);
+//        TODO FINISH
+//        * Here the column name is passed by the this.columnName
+        Column column_object=new Column(this.columnName(), tables);
+        String r0 = "";
+        if (_input.nextIf("not")) {
+            _input.next("in");
+            r0 = "notIn";
+        } else if (_input.nextIf("in")) {
+            r0 = "in";
+        } else {
+            r0 = _input.next(Tokenizer.RELATION);
+        }
+
         if (_input.nextIs(Tokenizer.LITERAL)) {
             return new Condition(column_object, r0, literal());
         } else {
-            Column col2 = new Column(columnName(), tables);
+            Column col2 = new Column(this.columnName(), tables);
             return new Condition(column_object, r0, col2);
         }
     }
@@ -431,23 +509,143 @@ class CommandInterpreter {
         }
     }
 
+    void printArraySet(ArrayList<LinkedHashSet<Row>> groupRow) {
+
+//        int max_length = 0;
+//        int temp_length = 0;
+//        int[] length_index = new int[groupRow.get(0).iterator().next().size()];
+//
+//        //get max length of all data that needs to be printed
+//        for (LinkedHashSet<Row> arrayElement : groupRow) {
+//            for (Row eachRow : arrayElement) {
+//                // init max_length for every column
+//                for (int i = 0; i < eachRow.size(); i++) {
+//                    max_length = length_index[i];
+//                    temp_length = eachRow.get(i).length();
+//                    if (temp_length >= max_length){
+//                        max_length = temp_length;
+//                        length_index[i] = max_length;
+//                    }
+//                }
+//            }
+//        }
+//
+//        for (int i = 0; i < this.columns(); i++) {
+//            max_length = length_index[i];
+//            temp_length = this.getTitle(i).length();
+////            System.out.println(this.getTitle(i));
+//            if (temp_length >= max_length){
+//                max_length = temp_length;
+//                length_index[i] = max_length;
+//            }
+//        }
+//
+//        // horizontal divide line
+//        System.out.print("+");
+//        for (int i = 0; i < this.columns(); i++) {
+//            int block_size = length_index[i]/8;
+//            while(block_size >= 0){
+//                System.out.print("-------");
+//                block_size -= 1;
+//            }
+//            System.out.print("+");
+//        }
+//        System.out.println();
+//
+//        for (int i = 0; i < this.columns(); i++) {
+//            int max_block_number = length_index[i]/8 + 1;
+//            int current_block_number = this.getTitle(i).length()/8;
+//            if(this.getTitle(i).length()%8 != 0){
+//                current_block_number += 1;       // length
+//            }
+//            int size_diff_block = max_block_number - current_block_number;
+//            int size_diff_str = length_index[i] - this.getTitle(i).length();
+//
+//            System.out.printf("|%-7s", this.getTitle(i));
+//            while(size_diff_block != 0){
+//                if(this.getTitle(i).length()%8 != 0){
+//                    System.out.printf("       ");   //7 empty space
+//                }
+//                size_diff_block -= 1;
+//            }
+//
+//            if (this.getTitle(i).length() >= 8){
+//                int size_offset = 7 - this.getTitle(i).length() % 7;
+//                while(size_offset > 0){
+//                    System.out.printf(" ");
+//                    size_offset -= 1;
+//                }
+//            }
+//        }
+//        System.out.println("|");
+//
+//        // horizontal divide line
+//        System.out.print("+");
+//        for (int i = 0; i < this.columns(); i++) {
+//            int block_size = length_index[i]/8;
+//            while(block_size >= 0){
+//                System.out.print("-------");
+//                block_size -= 1;
+//            }
+//            System.out.print("+");
+//        }
+//        System.out.println();
+//
+//        for (Row eachRow : sortedTable) {
+//            for (int i = 0; i < this.columns(); i++) {
+//                int max_block_number = length_index[i]/8 + 1;
+//                int current_block_number = eachRow.get(i).length()/8;
+//                if(eachRow.get(i).length()%8 != 0){
+//                    current_block_number += 1;       // length
+//                }
+//                int size_diff_block = max_block_number - current_block_number;
+//                int size_diff_str = length_index[i] - eachRow.get(i).length();
+//
+//                System.out.printf("|%-7s", eachRow.get(i));
+//                while(size_diff_block != 0){
+//                    if(eachRow.get(i).length()%8 != 0){
+//                        System.out.printf("       ");   //7 empty space
+//                    }
+//                    size_diff_block -= 1;
+//                }
+//
+//                if (eachRow.get(i).length() >= 8){
+//                    int size_offset = 7 - eachRow.get(i).length() % 7;
+//                    while(size_offset > 0){
+//                        System.out.printf(" ");
+//                        size_offset -= 1;
+//                    }
+//                }
+//            }
+//            System.out.println("|");
+//        }
+//
+//        // horizontal divide line
+//        System.out.print("+");
+//        for (int i = 0; i < this.columns(); i++) {
+//            int block_size = length_index[i]/8;
+//            while(block_size >= 0){
+//                System.out.print("-------");
+//                block_size -= 1;
+//            }
+//            System.out.print("+");
+//        }
+//        System.out.println();
+
+        for (HashSet<Row>arrayElement: groupRow) {
+            for (Row eachRow: arrayElement) {
+                for (int i = 0; i < eachRow.size() - 1; i++) {
+                    System.out.print(eachRow.get(i));
+                    System.out.print(',');
+                }
+                System.out.print(eachRow.get(eachRow.size() - 1) + '\n');
+            }
+        }
+    }
+
     /** The command input source. */
     private db61b.Tokenizer _input;
     /** Database containing all tables. */
     private db61b.Database _database;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
