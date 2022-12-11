@@ -262,7 +262,7 @@ class CommandInterpreter {
         String tableName = _input.peek();
         Table table_buffer=tableName();
         _input.next(";");
-        System.out.printf("Contents test of %s:%n", tableName);
+        System.out.printf("Contents of %s:%n", tableName);
         table_buffer.print();
     }
 
