@@ -314,16 +314,16 @@ class CommandInterpreter {
                 switch (_funcCalls.get(0)
                 ){
                     case "max":
-                        groupRow = maxCall(groupRow);
+                        table = maxCall(table);
                         break;
                     case "min":
-                        groupRow = minCall(groupRow);
+                        table = minCall(table);
                         break;
                     case "avg":
-//                        groupRow = avgCall(groupRow);
+//                        table = maxCall(table);
                         break;
                     case "count":
-//                        groupRow = countCall(groupRow);
+//                        table = maxCall(table);
                         break;
                     default:
                         throw error("unknown function name!");
