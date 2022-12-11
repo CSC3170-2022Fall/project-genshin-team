@@ -267,11 +267,9 @@ class CommandInterpreter {
     }
 
     /** Parse and execute a select statement from the token stream. */
-    void selectStatement() {//no problem, problem is in selectClause()!
+    void selectStatement() {
         // FILL THIS IN
 //        TODO FINISH
-        System.out.println("Search results:");
-//        selectClause().print();
         Table table = selectClause();
         ArrayList<LinkedHashSet<Row>> groupRow = new ArrayList<LinkedHashSet<Row>>();
         boolean whetherGroup = false;
@@ -286,6 +284,7 @@ class CommandInterpreter {
             }
         }
 
+        System.out.println("Search results:");
         if (_input.nextIf("order")){
             if (_input.nextIf("by")) {
                 String columnTitle = _input.next();
@@ -324,6 +323,9 @@ class CommandInterpreter {
                 Row row1 = rowIterator1.next();
                 Row row2 = rowIterator2.next();
                 if (pattern.matcher(row1.get(columnNumber)).matches()) {
+                    if (row1.get(columnNumber).contains(".") || row2.get(columnNumber).contains(".")){
+                        return Double.compare(Double.parseDouble(row1.get(columnNumber)), Double.parseDouble(row2.get(columnNumber)));
+                    }
                     return Integer.compare(Integer.parseInt(row1.get(columnNumber)), Integer.parseInt(row2.get(columnNumber)));
                 } else {
                     return row1.get(columnNumber).compareTo(row2.get(columnNumber));
@@ -339,7 +341,12 @@ class CommandInterpreter {
                 arrayElement.stream().sorted((row1, row2) -> {
                     Pattern pattern = Pattern.compile("-?\\d+(\\.\\d+)?");
                     if (pattern.matcher(row1.get(columnNumber)).matches()) {
-                        int compareResult = Integer.compare(Integer.parseInt(row1.get(columnNumber)), Integer.parseInt(row2.get(columnNumber)));
+                        int compareResult = -1;
+                        if (row1.get(columnNumber).contains(".") || row2.get(columnNumber).contains(".")){
+                            compareResult = Double.compare(Double.parseDouble(row1.get(columnNumber)), Double.parseDouble(row2.get(columnNumber)));
+                        } else {
+                            compareResult = Integer.compare(Integer.parseInt(row1.get(columnNumber)), Integer.parseInt(row2.get(columnNumber)));
+                        }
                         return (order)? compareResult:(-compareResult);
                     } else {
                         int compareResult =  row1.get(columnNumber).compareTo(row2.get(columnNumber));
