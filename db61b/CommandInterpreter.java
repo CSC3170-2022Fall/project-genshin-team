@@ -286,9 +286,15 @@ class CommandInterpreter {
                 throw error("The correct syntax should group by <attr>");
             }
         }
+
+
         if (_funcCalls.size() != 0){    // need perform function call
             if (whetherGroup){
-                switch (_funcCalls.get(0)
+
+//                ! Here we should loop the functionCalls
+                int i = 0;
+
+                switch (_funcCalls.get(i)
                 ){
                     case "max":
                         groupRow = maxCall(groupRow);
@@ -297,10 +303,13 @@ class CommandInterpreter {
                         groupRow = minCall(groupRow);
                         break;
                     case "avg":
-//                        groupRow = avgCall(groupRow);
+                        groupRow = avgCall(groupRow, i);
+                        break;
+                    case "sum":
+                        groupRow = sumCall(groupRow, i);
                         break;
                     case "count":
-//                        groupRow = countCall(groupRow);
+                        groupRow = countCall(groupRow,i);
                         break;
                     default:
                         throw error("unknown function name!");
@@ -320,10 +329,13 @@ class CommandInterpreter {
                         table = minCall(table);
                         break;
                     case "avg":
-//                        table = maxCall(table);
+//                        table = avgCall(table);
+                        break;
+                    case "sum":
+//                        table = sumCall(table);
                         break;
                     case "count":
-//                        table = maxCall(table);
+//                        table = countCall(table);
                         break;
                     default:
                         throw error("unknown function name!");
@@ -476,6 +488,7 @@ class CommandInterpreter {
             arrayColumn.addAll(readColsAndFunctions());
         }
         else{    // no function call
+            _funcCalls.add("null");
             arrayColumn.addAll(readColNames());
         }
 
@@ -621,12 +634,6 @@ class CommandInterpreter {
         System.out.println();
     }
 
-    /** The command input source. */
-    private db61b.Tokenizer _input;
-    /** Database containing all tables. */
-    private db61b.Database _database;
-
-    private ArrayList<String> _funcCalls;
 
     ArrayList<String> readColNames(){
         ArrayList<String> arrayColumn=new ArrayList<String>();   // array contains column names
@@ -807,7 +814,115 @@ class CommandInterpreter {
         result.add(resultRow);
         return result;
     }
+
+    ArrayList<String> avgCall(ArrayList<LinkedHashSet<Row>> groupedRows, int columnNumber){
+
+        ArrayList<String> result = new ArrayList<String>();
+        // traverse groupedRows. replace each row group with a single row containing max, min or avg
+        Iterator<LinkedHashSet<Row>> it = groupedRows.iterator();
+        while(it.hasNext()){
+            double sum = 0;
+            LinkedHashSet<Row> presentRows = it.next();
+            int count = presentRows.size();
+            String[] funcField = null;      // allocate for function use, e.g. store temporary min or max values;
+            // traverse present row group and update the function field
+            Iterator<Row> rowIt = presentRows.iterator();
+            while(rowIt.hasNext()){       // iterate rows
+                Row presentRow = rowIt.next();
+//                if (funcField == null){
+//                    funcField = new String[presentRow.size()];
+//                    for (int i = 0;i < presentRow.size(); i++){    // initialize funcField
+//                        funcField[i] = presentRow.get(i);
+//                    }
+//                    continue;
+//                }
+//                for (int k = 0; k< presentRow.size(); k++){      // traverse attributes in the row
+                String data = presentRow.get(columnNumber);
+                sum += Double.parseDouble(data);
+//                }
+            }
+            String avgResult = Double.toString(sum / count);
+//            LinkedHashSet<Row> tempSet = new LinkedHashSet<>();
+//            tempSet.add(new Row(funcField));
+            result.add(avgResult);
+
+        }
+        return result;
+
+    }
+
+    ArrayList<String> sumCall(ArrayList<LinkedHashSet<Row>> groupedRows, int columnNumber){
+
+        ArrayList<String> result = new ArrayList<String>();
+        // traverse groupedRows. replace each row group with a single row containing max, min or avg
+        Iterator<LinkedHashSet<Row>> it = groupedRows.iterator();
+        while(it.hasNext()){
+            double sum = 0;
+            LinkedHashSet<Row> presentRows = it.next();
+            String[] funcField = null;      // allocate for function use, e.g. store temporary min or max values;
+            // traverse present row group and update the function field
+            Iterator<Row> rowIt = presentRows.iterator();
+            while(rowIt.hasNext()){       // iterate rows
+                Row presentRow = rowIt.next();
+//                if (funcField == null){
+//                    funcField = new String[presentRow.size()];
+//                    for (int i = 0;i < presentRow.size(); i++){    // initialize funcField
+//                        funcField[i] = presentRow.get(i);
+//                    }
+//                    continue;
+//                }
+//                for (int k = 0; k< presentRow.size(); k++){      // traverse attributes in the row
+                String data = presentRow.get(columnNumber);
+                sum += Double.parseDouble(data);
+//                }
+            }
+            String avgResult = Double.toString(sum);
+//            LinkedHashSet<Row> tempSet = new LinkedHashSet<>();
+//            tempSet.add(new Row(funcField));
+            result.add(avgResult);
+
+        }
+        return result;
+    }
+
+    ArrayList<String> countCall(ArrayList<LinkedHashSet<Row>> groupedRows, int columnNumber){
+
+        ArrayList<String> result = new ArrayList<String>();
+        // traverse groupedRows. replace each row group with a single row containing max, min or avg
+        Iterator<LinkedHashSet<Row>> it = groupedRows.iterator();
+        while(it.hasNext()){
+            LinkedHashSet<Row> presentRows = it.next();
+            int count = presentRows.size();
+            String[] funcField = null;      // allocate for function use, e.g. store temporary min or max values;
+            // traverse present row group and update the function field
+            Iterator<Row> rowIt = presentRows.iterator();
+//            while(rowIt.hasNext()){       // iterate rows
+//                count++;
+//                Row presentRow = rowIt.next();
+////                if (funcField == null){
+////                    funcField = new String[presentRow.size()];
+////                    for (int i = 0;i < presentRow.size(); i++){    // initialize funcField
+////                        funcField[i] = presentRow.get(i);
+////                    }
+////                    continue;
+////                }
+////                for (int k = 0; k< presentRow.size(); k++){      // traverse attributes in the row
+//                String data = presentRow.get(columnNumber);
+////                }
+//            }
+            String avgResult = Integer.toString(count);
+//            LinkedHashSet<Row> tempSet = new LinkedHashSet<>();
+//            tempSet.add(new Row(funcField));
+            result.add(avgResult);
+
+        }
+        return result;
+
+    }
+    /** The command input source. */
+    private db61b.Tokenizer _input;
+    /** Database containing all tables. */
+    private db61b.Database _database;
+
+    private ArrayList<String> _funcCalls;
 }
-
-
-
