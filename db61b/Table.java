@@ -444,6 +444,15 @@ class Table implements Iterable<Row> {
         }
         return result;
     }
+    public db61b.Table union(db61b.Table tableNext) {
+        if (Arrays.equals(this._columnTitle, tableNext._columnTitle)) {
+            throw error ("two table with different column title cannot be unioned");
+        }
+        for (Row eachRow : tableNext._rows) {
+            this.add(eachRow);
+        }
+        return this;
+    }
 
     ArrayList<LinkedHashSet<Row>> group(String groupColumnName) {
         ArrayList<LinkedHashSet<Row>> groupRow = new ArrayList<LinkedHashSet<Row>>();
@@ -501,6 +510,7 @@ class Table implements Iterable<Row> {
     // FILL IN
 //    TODO FINISH
     private String[] _columnTitle;
+
 }
 
 

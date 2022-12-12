@@ -166,10 +166,23 @@ class CommandInterpreter {
             case "store":
                 storeStatement();
                 break;
+            case "union":
+                unionStatement();
+                break;
             default:
                 throw error("unrecognizable command");
         }
         return true;
+    }
+
+    void unionStatement() {
+        _input.next("union");
+        Table table0 = this.tableName();
+        while (_input.nextIf(",")) {
+            Table tableNext = this.tableName();
+            table0 = table0.union(tableNext);
+        }
+        _input.next(";");
     }
 
     /** Parse and execute a create statement from the token stream. */
@@ -303,13 +316,13 @@ class CommandInterpreter {
                         groupRow = minCall(groupRow);
                         break;
                     case "avg":
-                        groupRow = avgCall(groupRow, i);
+//                        groupRow = avgCall(groupRow, i);
                         break;
                     case "sum":
-                        groupRow = sumCall(groupRow, i);
+//                        groupRow = sumCall(groupRow, i);
                         break;
                     case "count":
-                        groupRow = countCall(groupRow,i);
+//                        groupRow = countCall(groupRow,i);
                         break;
                     default:
                         throw error("unknown function name!");
@@ -459,6 +472,7 @@ class CommandInterpreter {
 //        TODO
         _input.next("select");
         ArrayList<String> arrayColumn = new ArrayList<String>();
+        int allColumn = 0;
         if (_input.nextIf("max")){    // perform functions
             if (!_input.nextIf("(")){
                 throw error("illegal column name!");
@@ -488,8 +502,15 @@ class CommandInterpreter {
             arrayColumn.addAll(readColsAndFunctions());
         }
         else{    // no function call
-            _funcCalls.add("null");
-            arrayColumn.addAll(readColNames());
+
+            if (_input.nextIf("*")) {
+                allColumn = 1;
+                _input.next("from");
+            } else {
+                _funcCalls.add("null");
+                arrayColumn.addAll(readColNames());
+            }
+
         }
 
 //        ArrayList<String> arrayColumn=new ArrayList<String>();   // array contains column names
@@ -513,6 +534,11 @@ class CommandInterpreter {
         }
         ArrayList<Condition> arrayCondition;
         if (table1 == null) {
+            if (allColumn == 1) {
+                for (int i = 0; i < table0.columns(); i++) {
+                    arrayColumn.add(table0.getTitle(i));
+                }
+            }
             arrayCondition = conditionClause(table0);
             return table0.select(arrayColumn, arrayCondition);
         } else {
