@@ -25,6 +25,7 @@ since it is hard to write junit for CommandInterpreter.java. We use a markdown f
   + select SID,Lastname,Firstname,SemEnter,YearEnter,Major from students group by Major order by Major;
   + create table schedule2 as select CCN, Num, Dept, Time, Room, Sem, Year from schedule where Dept != 'EECS';
   + select Room, Sem, Year from schedule, schedule2 where CCN in CCN;
+  + union table1, table2;
 
 ## Test failed:
   + ~~**select SID, Lastname, from students;**~~ 
