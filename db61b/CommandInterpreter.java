@@ -811,8 +811,6 @@ class CommandInterpreter {
             }
 
             String avgResult = String.format("%.2f", sum / count).toString();;
-            double avg = sum / count;
-            String avgResult = Double.toString(avg);
             result.add(avgResult);
         }
         return result;
