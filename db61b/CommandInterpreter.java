@@ -177,6 +177,7 @@ class CommandInterpreter {
 
     void unionStatement() {
         _input.next("union");
+        checkKeyword();
         Table table0 = this.tableName();
         while (_input.nextIf(",")) {
             Table tableNext = this.tableName();
@@ -188,6 +189,7 @@ class CommandInterpreter {
     /** Parse and execute a create statement from the token stream. */
     void createStatement() {
         _input.next("create");
+        checkKeyword();
         _input.next("table");
         String name = this.name();//name of the newly created table
         Table table = tableDefinition();//the newly created table
@@ -210,6 +212,7 @@ class CommandInterpreter {
     /** Parse and execute an insert statement from the token stream. */
     void insertStatement() {
         _input.next("insert");
+        checkKeyword();
         _input.next("into");
         Table table = this.tableName();
         _input.next("values");
@@ -234,6 +237,7 @@ class CommandInterpreter {
         // FILL THIS IN
 //        TODO FINISH
         _input.next("load");
+        checkKeyword();
         String nameOfTable = "";
         String lastNext = _input.peek();
         while (!_input.nextIf(";")) {
@@ -249,6 +253,7 @@ class CommandInterpreter {
     /** Parse and execute a store statement from the token stream. */
     void storeStatement() {
         _input.next("store");
+        checkKeyword();
         String lastNext = _input.peek();
         String nameOfTable = "";
         Table table;
@@ -274,6 +279,7 @@ class CommandInterpreter {
         // FILL THIS IN
 //        TODO FINISH
         _input.next("print");
+        checkKeyword();
         String tableName = _input.peek();
         Table table_buffer=tableName();
         _input.next(";");
@@ -495,11 +501,13 @@ class CommandInterpreter {
     Table selectClause() {
 //        TODO Here Need to modify
         _input.next("select");
+        checkKeyword();
         ArrayList<String> arrayColumn = new ArrayList<String>();
         int allColumn = 0;
         if (_input.nextIf("*")) {
             allColumn = 1;
             _input.next("from");
+            checkKeyword();
         } else {
 //            _funcCalls.add("null");
             arrayColumn.addAll(readColNames());
@@ -574,6 +582,7 @@ class CommandInterpreter {
 //        TODO
         ArrayList<Condition> result = new ArrayList<Condition>();//结果
         if (_input.nextIf("where")) {
+            checkKeyword();
             result.add(condition(tables));
             while (_input.nextIf("and")) {
                 result.add(condition(tables));
@@ -885,6 +894,12 @@ class CommandInterpreter {
         return result;
 
     }
+
+    void checkKeyword() {
+        if (_keywordList.contains(this._input.peek())) {
+            throw error("You cannot add another keyword %s after one keyword", this._input.peek());
+        }
+    }
     /** The command input source. */
     private db61b.Tokenizer _input;
     /** Database containing all tables. */
@@ -892,4 +907,6 @@ class CommandInterpreter {
 
     private ArrayList<String> _funcCalls;
     private final ArrayList<Integer> _funcPos = new ArrayList<>();
+    private static final ArrayList<String> _keywordList = new ArrayList<String>(List.of("select", "create", "group",
+            "order", "print", "quit", "insert", "store", "load", "union", "where", "from", "and"));
 }
