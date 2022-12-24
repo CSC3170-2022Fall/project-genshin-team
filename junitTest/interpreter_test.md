@@ -25,6 +25,7 @@ since it is hard to write junit for CommandInterpreter.java. We use a markdown f
   + select SID,Lastname,Firstname,SemEnter,YearEnter,Major from students group by Major order by Major;
   + create table schedule2 as select CCN, Num, Dept, Time, Room, Sem, Year from schedule where Dept != 'EECS';
   + select Room, Sem, Year from schedule, schedule2 where CCN in CCN;
+  + union table1, table2;
 
 ## Test failed:
   + ~~**select SID, Lastname, from students;**~~ 
@@ -38,14 +39,18 @@ since it is hard to write junit for CommandInterpreter.java. We use a markdown f
 
   + **~~select Firstname, Grade from students, enrolled;~~**
 
+     It seems Okay in this case, but the result is still not sure.
   + **~~select Firstname, Lastname, Grade from students, enrolled where CCN = '21001' and SID = SID;~~**
   
-  + ~~**create table enrolled2 as select SID from enrolled, schedule where Dept = 'EECS' and Num = '61A';**~~
+    (Exception in thread "main" java.lang.ArrayIndexOutOfBoundsException: Index 1 out of bounds for length 1
+     Row and condition have bugs.)
+  + **create table enrolled2 as select SID from enrolled, schedule where Dept = 'EECS' and Num = '61A';**
 
+    (The print result should be 101 102 104 105 106 but ours is 101 102 103 104 105 106)
   + ~~**load testing/students**~~
   + ~~**quit;**~~
   + ~~**insert into test values '1', '2', '3';**~~
   + select Room, Sem, Year from schedule, schedule2 where CCN not in CCN;
   + select Room, Sem, Year from schedule, schedule2 where CCN != CCN;
   + select SID from students ... ;
-  + "search result" come out and "..." come next
+  + "search result" come first and "..." come next
