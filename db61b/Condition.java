@@ -8,6 +8,8 @@
 package db61b;
 
 import java.util.List;
+import java.util.regex.Pattern;
+
 import db61b.Column;
 import db61b.Table;
 import db61b.Row;
@@ -53,7 +55,18 @@ class Condition {
             c2 = _val2;
         }
 
-        int result = c1.compareTo(c2);
+        Pattern pattern = Pattern.compile("-?\\d+(\\.\\d+)?");
+        int result = -1;
+        if (pattern.matcher(c1).matches()) {
+            if (c1.contains(".") || c2.contains(".")) {
+                result = Double.compare(Double.parseDouble(c1), Double.parseDouble(c2));
+            } else {
+                result = Integer.compare(Integer.parseInt(c1), Integer.parseInt(c2));
+            }
+        } else {
+            result = c1.compareTo(c2);
+        }
+//        int result = c1.compareTo(c2);
         if (_relation.equals("<")) {
             return (result == -1);
         }

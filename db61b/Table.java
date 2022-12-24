@@ -17,7 +17,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static db61b.Utils.*;
-import static org.junit.Assert.assertEquals;
+//import static org.junit.Assert.assertEquals;
 
 import db61b.Row;
 import db61b.Column;

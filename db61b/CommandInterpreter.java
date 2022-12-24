@@ -390,8 +390,8 @@ class CommandInterpreter {
                 boolean order = !_input.nextIf("desc");
                 int[] lengthIndex = table.getLengthIndex();
 
-                table.printTitle(lengthIndex);
                 if (whetherGroup) {
+                    table.printTitle(lengthIndex);
 //                    TODO if order and group
                     this.sortAndPrint(groupRow, table.findColumn(columnTitle), order, table.findColumn(groupColumnName), lengthIndex);
                 } else {
@@ -416,7 +416,7 @@ class CommandInterpreter {
     }
 
     private void sortAndPrint(ArrayList<LinkedHashSet<db61b.Row>> groupRow, int columnNumber, boolean order, int groupColumn, int[]lengthIndex) {
-        if (columnNumber == groupColumn) {
+        if (columnNumber == groupColumn || _funcPos.size() != 0) {
 //            * thus we need to sort the group column which is defined by included as arrayList
             groupRow.sort((set1, set2) -> {
                 Pattern pattern = Pattern.compile("-?\\d+(\\.\\d+)?");
@@ -789,7 +789,6 @@ class CommandInterpreter {
         while (rowIterator.hasNext()) {
             count++;
             Row presentRow = rowIterator.next();
-            String data = presentRow.get(columnNumber);
         }
         return Integer.toString(count);
     }
@@ -810,29 +809,29 @@ class CommandInterpreter {
                 sum += Double.parseDouble(data);
 //                }
             }
-            String avgResult = Double.toString(sum / count);
+            double avg = sum / count;
+            String avgResult = Double.toString(avg);
             result.add(avgResult);
-
         }
         return result;
     }
 
     ArrayList<String> minCall(ArrayList<LinkedHashSet<Row>> groupedRows, int columnNumber){
 
-            ArrayList<String> result = new ArrayList<String>();
-            Iterator<LinkedHashSet<Row>> it = groupedRows.iterator();
-            while(it.hasNext()){
-                String minValue = "";
-                LinkedHashSet<Row> presentRows = it.next();
-                Iterator<Row> rowIt = presentRows.iterator();
-                while(rowIt.hasNext()){       // iterate rows
-                    Row presentRow = rowIt.next();
-                    String data = presentRow.get(columnNumber);
-                    minValue = selectMin(minValue, data);
-                }
-                result.add(minValue);
-
+        ArrayList<String> result = new ArrayList<String>();
+        Iterator<LinkedHashSet<Row>> it = groupedRows.iterator();
+        while(it.hasNext()){
+            String minValue = "";
+            LinkedHashSet<Row> presentRows = it.next();
+            Iterator<Row> rowIt = presentRows.iterator();
+            while(rowIt.hasNext()){       // iterate rows
+                Row presentRow = rowIt.next();
+                String data = presentRow.get(columnNumber);
+                minValue = selectMin(minValue, data);
             }
+            result.add(minValue);
+
+        }
         return result;
     }
 
