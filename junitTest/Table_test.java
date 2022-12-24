@@ -69,7 +69,7 @@ public class Table_test {
 
     @Test
     public void test_print() {
-        db61b.Table table = db61b.Table.readTable("./pre/job_history");
+        db61b.Table table = db61b.Table.readTable("./pre/employees");
         table.print();
         // assert???
     }
