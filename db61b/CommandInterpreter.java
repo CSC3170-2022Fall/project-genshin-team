@@ -758,7 +758,7 @@ class CommandInterpreter {
             sum += Double.parseDouble(data);
         }
         double result = sum / count;
-        return Double.toString(result);
+        return String.format("%.2f", result).toString();
     }
 
     String sumCall(Table table, int columnNumber){
@@ -801,7 +801,7 @@ class CommandInterpreter {
                 sum += Double.parseDouble(data);
 //                }
             }
-            String avgResult = Double.toString(sum / count);
+            String avgResult = String.format("%.2f", sum / count).toString();;
             result.add(avgResult);
 
         }

@@ -216,6 +216,15 @@ class Table implements Iterable<Row> {
         int[] length_index = new int[this.columns()];
 
         //get max length of all data that needs to be printed
+        for (int i = 0; i < this.columns(); i++) {
+            max_length = length_index[i];
+            temp_length = this.getTitle(i).length();
+            if (temp_length >= max_length){
+                max_length = temp_length;
+                length_index[i] = max_length;
+            }
+        }
+
         for (Row eachRow : this._rows) {
             // init max_length for every column
             for (int i = 0; i < this.columns(); i++) {
@@ -228,6 +237,15 @@ class Table implements Iterable<Row> {
             }
         }
 
+        return length_index;
+    }
+
+    int[] getLengthIndex_group() {
+        int max_length = 0;
+        int temp_length = 0;
+        int[] length_index = new int[this.columns()];
+
+        //get max length of all data that needs to be printed
         for (int i = 0; i < this.columns(); i++) {
             max_length = length_index[i];
             temp_length = this.getTitle(i).length();
@@ -236,6 +254,19 @@ class Table implements Iterable<Row> {
                 length_index[i] = max_length;
             }
         }
+
+        for (Row eachRow : this._rows) {
+            // init max_length for every column
+            for (int i = 0; i < this.columns(); i++) {
+                max_length = length_index[i];
+                temp_length = eachRow.get(i).length();
+                if (temp_length >= max_length){
+                    max_length = temp_length;
+                    length_index[i] = max_length;
+                }
+            }
+        }
+
         return length_index;
     }
 
