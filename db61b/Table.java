@@ -93,6 +93,10 @@ class Table implements Iterable<Row> {
         return this._rows.iterator();
     }
 
+    public void clear() {
+        this._rows.clear();
+    }
+
     /** Add ROW to THIS if no equal row already exists.  Return true if anything
      *  was added, false otherwise. */
     public boolean add(Row row) {

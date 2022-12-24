@@ -301,61 +301,82 @@ class CommandInterpreter {
         }
 
 
-        if (_funcCalls.size() != 0){    // need perform function call
+        if (_funcCalls.size() != 0){
+            ArrayList<ArrayList<String>> groupRowForFunc = new ArrayList<ArrayList<String>>();
             if (whetherGroup){
+//                TODO Here is the problem
+                int rowSize = groupRow.get(0).iterator().next().size();
+                for (int i = 0; i < rowSize; i++) {
+                    if (_funcPos.contains(i)) {
+                        switch (_funcCalls.get(i)) {
+                            case "max":
+                                groupRowForFunc.add(maxCall(groupRow, i));
+                                break;
+                            case "min":
+                                groupRowForFunc.add(minCall(groupRow, i));
+                                break;
+                            case "avg":
+                                groupRowForFunc.add(avgCall(groupRow, i));
+                                break;
+                            case "sum":
+                                groupRowForFunc.add(sumCall(groupRow, i));
+                                break;
+                            case "count":
+                                groupRowForFunc.add(countCall(groupRow, i));
+                                break;
+                        }
+                    } else {
 
-//                ! Here we should loop the functionCalls
-                int i = 0;
+//                        * Here we should consider each group column
+                        String[] groupColumn = new String[groupRow.size()];
+                        for (int j = 0; j < groupRow.size(); j++) {
+                            groupColumn[j] = groupRow.get(j).iterator().next().get(i);
+                        }
 
-                switch (_funcCalls.get(i)
-                ){
-                    case "max":
-                        groupRow = maxCall(groupRow);
-                        break;
-                    case "min":
-                        groupRow = minCall(groupRow);
-                        break;
-                    case "avg":
-//                        groupRow = avgCall(groupRow, i);
-                        break;
-                    case "sum":
-//                        groupRow = sumCall(groupRow, i);
-                        break;
-                    case "count":
-//                        groupRow = countCall(groupRow,i);
-                        break;
-                    default:
-                        throw error("unknown function name!");
-
+                        groupRowForFunc.add(new ArrayList<>(Arrays.asList(groupColumn)));
+//                        Directly add the column
+                    }
                 }
+//                convert the array array to array hashset
+                for (int i = 0; i < groupRow.size(); i++) {
+                    // TODO Here is another problem
+                    String[] rowString = new String[groupRowForFunc.size()];
+                    ArrayList<String> rowArray = new ArrayList<>();
+                    for (int j = 0; j < groupRowForFunc.size(); j++) {
+                        rowArray.add(groupRowForFunc.get(j).get(i));
+                    }
+                    rowArray.toArray(rowString);
 
-
-//                groupRow = maxCall(groupRow);          // return a arraylist
-            }else {
-//                table = maxCall(table);            // return a Table
-                switch (_funcCalls.get(0)
-                ){
-                    case "max":
-                        table = maxCall(table);
-                        break;
-                    case "min":
-                        table = minCall(table);
-                        break;
-                    case "avg":
-//                        table = avgCall(table);
-                        break;
-                    case "sum":
-//                        table = sumCall(table);
-                        break;
-                    case "count":
-//                        table = countCall(table);
-                        break;
-                    default:
-                        throw error("unknown function name!");
-
+                    groupRow.get(i).clear();
+                    groupRow.get(i).add(new Row(rowString));
                 }
+            } else {
+
+//                If the function call is only applied to the whole table
+                String[] rowString = new String[table.columns()];
+                for (int i = 0; i < table.columns(); i++) {
+                    switch (_funcCalls.get(i)) {
+                        case "max":
+                            rowString[i] = maxCall(table, i);
+                            break;
+                        case "min":
+                            rowString[i] = minCall(table, i);
+                            break;
+                        case "avg":
+                            rowString[i] = avgCall(table, i);
+                            break;
+                        case "sum":
+                            rowString[i] = sumCall(table, i);
+                            break;
+                        case "count":
+                            rowString[i] = countCall(table, i);
+                            break;
+                    }
+                }
+                table.clear();
+                table.add(new Row(rowString));
             }
-        }
+        }    // need perform function call
 
         if (_input.nextIf("order")){
             if (_input.nextIf("by")) {
@@ -382,6 +403,9 @@ class CommandInterpreter {
                 table.print();
             }
         }
+
+        _funcCalls.clear();
+        _funcPos.clear();
         _input.next(";");
     }
 
@@ -469,62 +493,17 @@ class CommandInterpreter {
     /** Parse and execute a select clause from the token stream, returning the
      *  resulting table. */
     Table selectClause() {
-//        TODO
+//        TODO Here Need to modify
         _input.next("select");
         ArrayList<String> arrayColumn = new ArrayList<String>();
         int allColumn = 0;
-        if (_input.nextIf("max")){    // perform functions
-            if (!_input.nextIf("(")){
-                throw error("illegal column name!");
-            }
-            _funcCalls.add("max");
-            arrayColumn.addAll(readColsAndFunctions());
-
-        }else if (_input.nextIf("min")){
-            if (!_input.nextIf("(")){
-                throw error("illegal column name!");
-            }
-            _funcCalls.add("min");
-            arrayColumn.addAll(readColsAndFunctions());
-
-        }else if (_input.nextIf("avg")){
-            if (!_input.nextIf("(")){
-                throw error("illegal column name!");
-            }
-            _funcCalls.add("avg");
-            arrayColumn.addAll(readColsAndFunctions());
-
-        }else if (_input.nextIf("count")){
-            if (!_input.nextIf("(")){
-                throw error("illegal column name!");
-            }
-            _funcCalls.add("count");
-            arrayColumn.addAll(readColsAndFunctions());
+        if (_input.nextIf("*")) {
+            allColumn = 1;
+            _input.next("from");
+        } else {
+//            _funcCalls.add("null");
+            arrayColumn.addAll(readColNames());
         }
-        else{    // no function call
-
-            if (_input.nextIf("*")) {
-                allColumn = 1;
-                _input.next("from");
-            } else {
-                _funcCalls.add("null");
-                arrayColumn.addAll(readColNames());
-            }
-
-        }
-
-//        ArrayList<String> arrayColumn=new ArrayList<String>();   // array contains column names
-//        TODO The first column should not be started with ","
-//        /*
-//         * The example is
-//         * select SID, Firstname from students where Lastname ="Chan";
-//         * */
-//        arrayColumn.add(this.columnName());    // read next substring conform to pattern identifier and add it to array
-//        while (_input.nextIf(",")) {    //  if detect ",", perform last row
-//            arrayColumn.add(this.columnName());
-//        }
-//        _input.next("from");  // check if  next token is "from"
-
 
 
         Table table0 = this.tableName();  //   read first table name
@@ -534,6 +513,8 @@ class CommandInterpreter {
         }
         ArrayList<Condition> arrayCondition;
         if (table1 == null) {
+
+//            * here is need to perform the notation of select all
             if (allColumn == 1) {
                 for (int i = 0; i < table0.columns(); i++) {
                     arrayColumn.add(table0.getTitle(i));
@@ -662,98 +643,66 @@ class CommandInterpreter {
 
 
     ArrayList<String> readColNames(){
-        ArrayList<String> arrayColumn=new ArrayList<String>();   // array contains column names
-        arrayColumn.add(this.columnName());    // read next substring conform to pattern identifier and add it to array
-        while (_input.nextIf(",")) {    //  if detect ",", perform last row
-            arrayColumn.add(this.columnName());
+        ArrayList<String> arrayColumn=new ArrayList<String>();
+        // array contains column names
+        int columnNumber = 0;
+        readColAndFunc(arrayColumn, columnNumber);
+        while (_input.nextIf(",")) {
+            //  if detect ",", perform next column
+            columnNumber++;
+            readColAndFunc(arrayColumn, columnNumber);
         }
         _input.next("from");  // check if  next token is "from"
         return arrayColumn;
 
     }
-    ArrayList<String> readColsAndFunctions(){
-        ArrayList<String> arrayColumn=new ArrayList<String>();   // array contains column names
-        arrayColumn.add(this.columnName());    // read next substring conform to pattern identifier and add it to array
-        while (_input.nextIf(",")) {    //  if detect ",", perform last row
+
+    private void readColAndFunc(ArrayList<String> arrayColumn, int columnNumber) throws DBException {
+        String[] functionArr = {"max", "min", "avg", "sum", "count"};
+        if (Arrays.asList(functionArr).contains(_input.peek())) {
+            _funcCalls.add(_input.next());
+            if (_input.nextIf("(")) {
+                _funcPos.add(columnNumber);
+                arrayColumn.add(this.columnName());
+                _input.next(")");
+            } else {
+                throw error("Illegal function format. You should brace the value that you want to perform function");
+            }
+        } else {
             arrayColumn.add(this.columnName());
         }
-        _input.next(")");
-        _input.next("from");  // check if  next token is "from"
-        return arrayColumn;
-
     }
 
-    ArrayList<LinkedHashSet<Row>> maxCall(ArrayList<LinkedHashSet<Row>>  groupedRows){
 
-        ArrayList<LinkedHashSet<Row>> result = new ArrayList<LinkedHashSet<Row>>();
-        // traverse groupedRows. replace each row group with a single row containing max, min or avg
-        Iterator<LinkedHashSet<Row>> it = groupedRows.iterator();
-        while(it.hasNext()){
-            LinkedHashSet<Row> presentRows = it.next();
-            String[] funcField = null;      // allocate for function use, e.g. store temporary min or max values;
-            // traverse present row group and update the function field
-            Iterator<Row> rowIt = presentRows.iterator();
-            while(rowIt.hasNext()){       // iterate rows
-                Row presentRow = rowIt.next();
-                if (funcField == null){
-                    funcField = new String[presentRow.size()];
-                    for (int i =0;i<presentRow.size();i++){    // initialize funcField
-                        funcField[i] = presentRow.get(i);
-                    }
-                    continue;
-                }
-                for (int k=0;k<presentRow.size();k++){      // traverse attributes in the row
-                    String data = presentRow.get(k);
-                    funcField[k] = selectMax(funcField[k],data);
-                }
-            }
-            LinkedHashSet<Row> tempSet = new LinkedHashSet<>();
-            tempSet.add(new Row(funcField));
-            result.add(tempSet);
+    String maxCall(Table table, int columnNumber){
+        String result = "";
+        Iterator<Row> rowIterator = table.iterator();
 
-        }
-        return result;
-
-    }
-
-    Table maxCall(Table p_table){
-        List<String> columnNames = new ArrayList<String>();
-        for (int i=0;i<p_table.columns();i++){         // get column names
-            columnNames.add(p_table.getTitle(i));
-        }
-        Table result = new Table(columnNames);        //create the output table, which will contain only 1 row
-        String[] funcField = null;      // allocate for function use, e.g. store temporary min or max values;
-        Iterator<Row> rowIt = p_table.iterator();
-        while(rowIt.hasNext()){
-            Row tempRow = rowIt.next();
-            if (funcField == null){
-                funcField = new String[tempRow.size()];
-                for (int k=0;k<tempRow.size();k++){      // initialize function field
-                    String data = tempRow.get(k);
-                    funcField[k] = data;
-                }
-                continue;
-            }
-            for (int k=0;k<tempRow.size();k++){      // traverse attributes in the row
-                String data = tempRow.get(k);
-                funcField[k] = selectMax(funcField[k],data);
-            }
+        while (rowIterator.hasNext()) {
+            Row presentRow = rowIterator.next();
+            String data = presentRow.get(columnNumber);
+            result = selectMax(result, data);
         }
 
-        Row resultRow = new Row(funcField);
-        result.add(resultRow);
         return result;
     }
 
     String selectMax(String s1, String s2){
         Pattern pattern = Pattern.compile("-?\\d+(\\.\\d+)?");
         if (pattern.matcher(s1).matches()) {    // s1 is int
-            if (Integer.compare(Integer.parseInt(s1), Integer.parseInt(s2))<0){
+            if (Double.compare(Double.parseDouble(s1), Double.parseDouble(s2)) < 0){
                 return s2;
             }else{
                 return s1;
             }
         } else {     // s1 is string
+
+            if (s1.length() == 0) {
+                return s2;
+            } else if (s2.length() == 0) {
+                return s1;
+            }
+
             if (s1.compareTo(s2)<0){
                 return s2;
             }else{
@@ -765,12 +714,18 @@ class CommandInterpreter {
     String selectMin(String s1, String s2){
         Pattern pattern = Pattern.compile("-?\\d+(\\.\\d+)?");
         if (pattern.matcher(s1).matches()) {    // s1 is int
-            if (Integer.compare(Integer.parseInt(s1), Integer.parseInt(s2))<0){
+            if (Double.compare(Double.parseDouble(s1), Double.parseDouble(s2)) < 0){
                 return s1;
             }else{
                 return s2;
             }
         } else {     // s1 is string
+            if (s1.length() == 0) {
+                return s2;
+            } else if (s2.length() == 0) {
+                return s1;
+            }
+
             if (s1.compareTo(s2)<0){
                 return s1;
             }else{
@@ -779,66 +734,55 @@ class CommandInterpreter {
         }
     }
 
-    ArrayList<LinkedHashSet<Row>> minCall(ArrayList<LinkedHashSet<Row>>  groupedRows){
+    String minCall(Table table, int columnNumber){
+        String result = "";
+        Iterator<Row> rowIterator = table.iterator();
 
-        ArrayList<LinkedHashSet<Row>> result = new ArrayList<LinkedHashSet<Row>>();
-        // traverse groupedRows. replace each row group with a single row containing max, min or avg
-        Iterator<LinkedHashSet<Row>> it = groupedRows.iterator();
-        while(it.hasNext()){
-            LinkedHashSet<Row> presentRows = it.next();
-            String[] funcField = null;      // allocate for function use, e.g. store temporary min or max values;
-            // traverse present row group and update the function field
-            Iterator<Row> rowIt = presentRows.iterator();
-            while(rowIt.hasNext()){       // iterate rows
-                Row presentRow = rowIt.next();
-                if (funcField == null){
-                    funcField = new String[presentRow.size()];
-                    for (int i =0;i<presentRow.size();i++){    // initialize funcField
-                        funcField[i] = presentRow.get(i);
-                    }
-                    continue;
-                }
-                for (int k=0;k<presentRow.size();k++){      // traverse attributes in the row
-                    String data = presentRow.get(k);
-                    funcField[k] = selectMin(funcField[k],data);
-                }
-            }
-            LinkedHashSet<Row> tempSet = new LinkedHashSet<>();
-            tempSet.add(new Row(funcField));
-            result.add(tempSet);
-
+        while (rowIterator.hasNext()) {
+            Row presentRow = rowIterator.next();
+            String data = presentRow.get(columnNumber);
+            result = selectMin(result, data);
         }
         return result;
-
     }
 
-    Table minCall(Table p_table){
-        List<String> columnNames = new ArrayList<String>();
-        for (int i=0;i<p_table.columns();i++){         // get column names
-            columnNames.add(p_table.getTitle(i));
-        }
-        Table result = new Table(columnNames);        //create the output table, which will contain only 1 row
-        String[] funcField = null;      // allocate for function use, e.g. store temporary min or max values;
-        Iterator<Row> rowIt = p_table.iterator();
-        while(rowIt.hasNext()){
-            Row tempRow = rowIt.next();
-            if (funcField == null){
-                funcField = new String[tempRow.size()];
-                for (int k=0;k<tempRow.size();k++){      // initialize function field
-                    String data = tempRow.get(k);
-                    funcField[k] = data;
-                }
-                continue;
-            }
-            for (int k=0;k<tempRow.size();k++){      // traverse attributes in the row
-                String data = tempRow.get(k);
-                funcField[k] = selectMin(funcField[k],data);
-            }
-        }
+    String avgCall(Table table, int columnNumber){
+        Iterator<Row> rowIterator = table.iterator();
 
-        Row resultRow = new Row(funcField);
-        result.add(resultRow);
-        return result;
+        double sum = 0;
+        int count = 0;
+        while (rowIterator.hasNext()) {
+            count++;
+            Row presentRow = rowIterator.next();
+            String data = presentRow.get(columnNumber);
+            sum += Double.parseDouble(data);
+        }
+        double result = sum / count;
+        return Double.toString(result);
+    }
+
+    String sumCall(Table table, int columnNumber){
+        Iterator<Row> rowIterator = table.iterator();
+
+        double sum = 0;
+        while (rowIterator.hasNext()) {
+            Row presentRow = rowIterator.next();
+            String data = presentRow.get(columnNumber);
+            sum += Double.parseDouble(data);
+        }
+        double result = sum;
+        return Double.toString(result);
+    }
+
+    String countCall(Table table, int columnNumber){
+        Iterator<Row> rowIterator = table.iterator();
+        int count = 0;
+        while (rowIterator.hasNext()) {
+            count++;
+            Row presentRow = rowIterator.next();
+            String data = presentRow.get(columnNumber);
+        }
+        return Integer.toString(count);
     }
 
     ArrayList<String> avgCall(ArrayList<LinkedHashSet<Row>> groupedRows, int columnNumber){
@@ -850,31 +794,56 @@ class CommandInterpreter {
             double sum = 0;
             LinkedHashSet<Row> presentRows = it.next();
             int count = presentRows.size();
-            String[] funcField = null;      // allocate for function use, e.g. store temporary min or max values;
-            // traverse present row group and update the function field
             Iterator<Row> rowIt = presentRows.iterator();
             while(rowIt.hasNext()){       // iterate rows
                 Row presentRow = rowIt.next();
-//                if (funcField == null){
-//                    funcField = new String[presentRow.size()];
-//                    for (int i = 0;i < presentRow.size(); i++){    // initialize funcField
-//                        funcField[i] = presentRow.get(i);
-//                    }
-//                    continue;
-//                }
-//                for (int k = 0; k< presentRow.size(); k++){      // traverse attributes in the row
                 String data = presentRow.get(columnNumber);
                 sum += Double.parseDouble(data);
 //                }
             }
             String avgResult = Double.toString(sum / count);
-//            LinkedHashSet<Row> tempSet = new LinkedHashSet<>();
-//            tempSet.add(new Row(funcField));
             result.add(avgResult);
 
         }
         return result;
+    }
 
+    ArrayList<String> minCall(ArrayList<LinkedHashSet<Row>> groupedRows, int columnNumber){
+
+            ArrayList<String> result = new ArrayList<String>();
+            Iterator<LinkedHashSet<Row>> it = groupedRows.iterator();
+            while(it.hasNext()){
+                String minValue = "";
+                LinkedHashSet<Row> presentRows = it.next();
+                Iterator<Row> rowIt = presentRows.iterator();
+                while(rowIt.hasNext()){       // iterate rows
+                    Row presentRow = rowIt.next();
+                    String data = presentRow.get(columnNumber);
+                    minValue = selectMin(minValue, data);
+                }
+                result.add(minValue);
+
+            }
+        return result;
+    }
+
+    ArrayList<String> maxCall(ArrayList<LinkedHashSet<Row>> groupedRows, int columnNumber){
+
+        ArrayList<String> result = new ArrayList<String>();
+        Iterator<LinkedHashSet<Row>> it = groupedRows.iterator();
+        while(it.hasNext()){
+            String maxValue = "";
+            LinkedHashSet<Row> presentRows = it.next();
+            Iterator<Row> rowIt = presentRows.iterator();
+            while(rowIt.hasNext()){       // iterate rows
+                Row presentRow = rowIt.next();
+                String data = presentRow.get(columnNumber);
+                maxValue = selectMax(maxValue, data);
+            }
+            result.add(maxValue);
+
+        }
+        return result;
     }
 
     ArrayList<String> sumCall(ArrayList<LinkedHashSet<Row>> groupedRows, int columnNumber){
@@ -885,26 +854,15 @@ class CommandInterpreter {
         while(it.hasNext()){
             double sum = 0;
             LinkedHashSet<Row> presentRows = it.next();
-            String[] funcField = null;      // allocate for function use, e.g. store temporary min or max values;
-            // traverse present row group and update the function field
+//            String[] funcField = null;      // allocate for function use, e.g. store temporary min or max values;
             Iterator<Row> rowIt = presentRows.iterator();
             while(rowIt.hasNext()){       // iterate rows
                 Row presentRow = rowIt.next();
-//                if (funcField == null){
-//                    funcField = new String[presentRow.size()];
-//                    for (int i = 0;i < presentRow.size(); i++){    // initialize funcField
-//                        funcField[i] = presentRow.get(i);
-//                    }
-//                    continue;
-//                }
-//                for (int k = 0; k< presentRow.size(); k++){      // traverse attributes in the row
                 String data = presentRow.get(columnNumber);
                 sum += Double.parseDouble(data);
 //                }
             }
             String avgResult = Double.toString(sum);
-//            LinkedHashSet<Row> tempSet = new LinkedHashSet<>();
-//            tempSet.add(new Row(funcField));
             result.add(avgResult);
 
         }
@@ -917,28 +875,10 @@ class CommandInterpreter {
         // traverse groupedRows. replace each row group with a single row containing max, min or avg
         Iterator<LinkedHashSet<Row>> it = groupedRows.iterator();
         while(it.hasNext()){
+//            String[] funcField = null;      // allocate for function use, e.g. store temporary min or max values;
             LinkedHashSet<Row> presentRows = it.next();
             int count = presentRows.size();
-            String[] funcField = null;      // allocate for function use, e.g. store temporary min or max values;
-            // traverse present row group and update the function field
-            Iterator<Row> rowIt = presentRows.iterator();
-//            while(rowIt.hasNext()){       // iterate rows
-//                count++;
-//                Row presentRow = rowIt.next();
-////                if (funcField == null){
-////                    funcField = new String[presentRow.size()];
-////                    for (int i = 0;i < presentRow.size(); i++){    // initialize funcField
-////                        funcField[i] = presentRow.get(i);
-////                    }
-////                    continue;
-////                }
-////                for (int k = 0; k< presentRow.size(); k++){      // traverse attributes in the row
-//                String data = presentRow.get(columnNumber);
-////                }
-//            }
             String avgResult = Integer.toString(count);
-//            LinkedHashSet<Row> tempSet = new LinkedHashSet<>();
-//            tempSet.add(new Row(funcField));
             result.add(avgResult);
 
         }
@@ -951,4 +891,5 @@ class CommandInterpreter {
     private db61b.Database _database;
 
     private ArrayList<String> _funcCalls;
+    private final ArrayList<Integer> _funcPos = new ArrayList<>();
 }
