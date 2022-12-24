@@ -1,4 +1,5 @@
 [![Open in Visual Studio Code](https://classroom.github.com/assets/open-in-vscode-c66648af7eb3fe8bc4f294546bfd86ef473780cde1dea487d3c4ff354943c9ae.svg)](https://classroom.github.com/online_ide?assignment_repo_id=9422221&assignment_repo_type=AssignmentRepo)
+
 # CSC3170 Course Project
 
 ## Project Overall Description
@@ -91,9 +92,24 @@ After thorough discussion, our team made the choice and the specification inform
 5. 8 min  2(optional) 4 2  
 6. conclusions, problems and goals  1min
 
-## uncompleted works
-1. find bugs 
-2. fix them/ record them  test in the pre
-3. GUI of table.print()
-4. data preparation (.db) for pre
-5. 
+## Presentation Demo
++ load pre/employees; load pre/regions; load pre/locations; load pre/countries;
++ print employees;
++ select \* from regions;
++ insert into regions values '5', 'China';
++ print regions;
++ select First_name, Last_name, Salary from employees where Salary > '5000';
++ select First_name, Last_name, Salary from employees where Salary > '5000' and Last_name >= 'Russell';
++ select Country_id, Country_name, Location_id from countries, locations where Country_id = Country_id;
++ select Country_id, Country_name, Location_id from countries, locations where Country_id = Country_id and Location_id > '2000';
++ create table locAndCountry as select Country_id, Country_name, Location_id from countries, locations where Country_id = Country_id and Location_id > '2000';
++ select * from locAndCountry;
++ store TestResult/locAndCountry;
++ select * from regions order by Region_id;
++ select Employee_id, Last_name, Phone_number from employees order by Employee_id desc;
++ select Employee_id, Department_id from employees group by Department_id;
++ select Employee_id, Department_id from employees group by Department_id order by Department_id;
++ select Employee_id, Department_id from employees group by Department_id order by Employee_id;
++ select max(Manager_id), count(Employee_id) from employees;
++ select min(Salary), Department_id from employees group by Department_id order by Salary;
++ We also Add support the 
