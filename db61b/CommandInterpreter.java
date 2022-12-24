@@ -326,22 +326,26 @@ class CommandInterpreter {
                                 break;
                         }
                     } else {
+
+//                        * Here we should consider each group column
                         String[] groupColumn = new String[groupRow.size()];
-                        Arrays.fill(groupColumn, groupRow.get(0).iterator().next().get(i));
+                        for (int j = 0; j < groupRow.size(); j++) {
+                            groupColumn[j] = groupRow.get(j).iterator().next().get(i);
+                        }
 
                         groupRowForFunc.add(new ArrayList<>(Arrays.asList(groupColumn)));
 //                        Directly add the column
                     }
                 }
 //                convert the array array to array hashset
-
-                for (int i = 0; i < groupRowForFunc.get(0).size(); i++) {
+                for (int i = 0; i < groupRow.size(); i++) {
+                    // TODO Here is another problem
                     String[] rowString = new String[groupRowForFunc.size()];
+                    ArrayList<String> rowArray = new ArrayList<>();
                     for (int j = 0; j < groupRowForFunc.size(); j++) {
-                        ArrayList<String> rowArray = new ArrayList<>();
                         rowArray.add(groupRowForFunc.get(j).get(i));
-                        rowArray.toArray(rowString);
                     }
+                    rowArray.toArray(rowString);
 
                     groupRow.get(i).clear();
                     groupRow.get(i).add(new Row(rowString));
@@ -430,6 +434,8 @@ class CommandInterpreter {
                 table.print();
             }
         }
+        _funcCalls.clear();
+        _funcPos.clear();
         _input.next(";");
     }
 
@@ -783,6 +789,13 @@ class CommandInterpreter {
                 return s1;
             }
         } else {     // s1 is string
+
+            if (s1.length() == 0) {
+                return s2;
+            } else if (s2.length() == 0) {
+                return s1;
+            }
+
             if (s1.compareTo(s2)<0){
                 return s2;
             }else{
@@ -800,6 +813,12 @@ class CommandInterpreter {
                 return s2;
             }
         } else {     // s1 is string
+            if (s1.length() == 0) {
+                return s2;
+            } else if (s2.length() == 0) {
+                return s1;
+            }
+
             if (s1.compareTo(s2)<0){
                 return s1;
             }else{
@@ -895,20 +914,20 @@ class CommandInterpreter {
 
     ArrayList<String> minCall(ArrayList<LinkedHashSet<Row>> groupedRows, int columnNumber){
 
-        ArrayList<String> result = new ArrayList<String>();
-        Iterator<LinkedHashSet<Row>> it = groupedRows.iterator();
-        while(it.hasNext()){
-            String minValue = "";
-            LinkedHashSet<Row> presentRows = it.next();
-            Iterator<Row> rowIt = presentRows.iterator();
-            while(rowIt.hasNext()){       // iterate rows
-                Row presentRow = rowIt.next();
-                String data = presentRow.get(columnNumber);
-                minValue = selectMin(minValue, data);
-            }
-            result.add(minValue);
+            ArrayList<String> result = new ArrayList<String>();
+            Iterator<LinkedHashSet<Row>> it = groupedRows.iterator();
+            while(it.hasNext()){
+                String minValue = "";
+                LinkedHashSet<Row> presentRows = it.next();
+                Iterator<Row> rowIt = presentRows.iterator();
+                while(rowIt.hasNext()){       // iterate rows
+                    Row presentRow = rowIt.next();
+                    String data = presentRow.get(columnNumber);
+                    minValue = selectMin(minValue, data);
+                }
+                result.add(minValue);
 
-        }
+            }
         return result;
     }
 
