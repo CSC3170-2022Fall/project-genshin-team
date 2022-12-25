@@ -83,14 +83,9 @@ After thorough discussion, our team made the choice and the specification inform
 
    + **GUI** We will try to create a fancy and user-friendly GUI that makes it easy for users to select the features they need, with helpful tips（e.g. Show possible paths as users type).
 
-<!-- This part will be deleted later-->
-## Presentation Format
-1. backgrounds     
-2. introduction divide into systems
-3. functions   - select load print ...
-4. extensions  - select & cmd interpreter
-5. 8 min  2(optional) 4 2  
-6. conclusions, problems and goals  1min
+## Presentation Video
+Our team presentation video is uploaded through Bilibili platform,which can be viewed here:
+Moreover, you can get accessed to the presentation slides in the pre.pdf file.
 
 ## Presentation Demo
 + load pre/employees; load pre/regions; load pre/locations; load pre/countries;
