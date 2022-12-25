@@ -8,7 +8,7 @@ This is our implementation for the course project of CSC3170, 2022 Fall, CUHK(SZ
 
 <!-- Please fill in "x" to replace the blank space between "[]" to tick the todo item; it's ticked on the first one by default. -->
 
-- [ ] **Application with Database System(s)**
+- [x] **Application with Database System(s)**
 - [x] **Implementation of a Database System**
 
 ## Team Members
@@ -85,6 +85,7 @@ After thorough discussion, our team made the choice and the specification inform
 
 ## Presentation Video
 Our team presentation video is uploaded through Bilibili platform,which can be viewed here:
+
 Moreover, you can get accessed to the presentation slides in the pre.pdf file.
 
 ## Presentation Demo
