@@ -84,9 +84,11 @@ After thorough discussion, our team made the choice and the specification inform
    + **GUI** We will try to create a fancy and user-friendly GUI that makes it easy for users to select the features they need, with helpful tips（e.g. Show possible paths as users type).
 
 ## Presentation Video
-Our team presentation video is uploaded through Bilibili platform,which can be viewed here:https://www.bilibili.com/video/BV1ZG4y1J7k9/?vd_source=002be158841360a7c32c6b138889ea4b
+Our team presentation video is uploaded through Bilibili platform,which can be viewed here:
 
-Moreover, you can get accessed to the presentation slides in the pre.pdf file.
+[https://www.bilibili.com/video/BV1ZG4y1J7k9/?vd_source=002be158841360a7c32c6b138889ea4b](https://www.bilibili.com/video/BV1ZG4y1J7k9/?vd_source=002be158841360a7c32c6b138889ea4b)
+
+Moreover, you can get accessed to the presentation slides in the [pre.pdf](pre.pdf) file.
 
 ## Presentation Demo
 + load pre/employees; load pre/regions; load pre/locations; load pre/countries;
