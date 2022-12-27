@@ -22,7 +22,7 @@
 
 STYLEPROG = style61b
 
-JFLAGS = -g -Xlint:unchecked
+JFLAGS = -encoding UTF-8 -g -Xlint:unchecked
 
 # All .java files in this directory.
 SRCS := $(wildcard *.java)
@@ -43,10 +43,10 @@ check:
 
 # 'make clean' will clean up stuff you can reconstruct.
 clean:
-	$(RM) *~ *.class sentinel
+	$(RM) *~ *.class
 
 ### DEPENDENCIES ###
 
 sentinel: $(SRCS)
 	javac $(JFLAGS) -cp ..:$(CLASSPATH) $(SRCS)
-	touch sentinel
+	
