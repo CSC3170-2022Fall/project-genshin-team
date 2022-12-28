@@ -53,9 +53,13 @@ After thorough discussion, our team made the choice and the specification inform
    1. Basic Contents:
       Our project object is a miniature relational database management system (DBMS) that stores tables of data in which we will set some number of labeled columns of data information. Our system will include a very simple query language for extracting information from these tables.
 
+   2. How to run:
+      1. Method 1: Run in terminal.In directory "../project-genshin-team/db61b", type "make". Then, in directory "../project-genshin-team", type "java db61b.Main".
+      2. Method 2: Run in IDEA. Use IDEA to open this project. Then, directly run the Main.java at "../project-genshin-team/db61b".
+
       
 
-   2. Basic Functions:
+   3. Basic Functions:
       We will prepare the following basic functions under the framework of the database system built in the project.
    
       1. **Database** The function first creates an empty database. Then we can use the get function to enter the table name to quickly find the return table or null, or use the put function to legally change the table name.
@@ -70,7 +74,7 @@ After thorough discussion, our team made the choice and the specification inform
 
    
 
-3. Project Extensions
+4. Project Extensions
    We would like to add some extensions of our own ideas to the features required by the project.
 
    + **Basic Mathematical Functions** We will add ”Max”, ”Min”, ”Avg” and other basic mathematical functions to calculate the statistical information of rows and columns
