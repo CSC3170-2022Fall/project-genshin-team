@@ -27,6 +27,9 @@ JFLAGS = -encoding UTF-8 -g -Xlint:unchecked
 # All .java files in this directory.
 SRCS := $(wildcard *.java)
 
+#All .class files in this directory
+MY_CLASSES := $(wildcard *.class)
+
 # As a convenience, you can compile a single Java file X.java in this directory
 # with 'make X.class'
 %.class: %.java
