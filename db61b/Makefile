@@ -46,7 +46,7 @@ check:
 
 # 'make clean' will clean up stuff you can reconstruct.
 clean:
-	$(RM) $(MY_CLASSES)
+	$(RM) *~ *.class sentinel
 
 ### DEPENDENCIES ###
 
