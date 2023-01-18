@@ -115,5 +115,5 @@ Moreover, you can get accessed to the presentation slides in the [pre.pdf](pre.p
 + select max(Manager_id), count(Employee_id) from employees;
 + select min(Salary), Department_id from employees group by Department_id order by Salary;
 
-## Presentation Report
+## Project Report
 Please check this [pdf](CSC3170_Project_Report.pdf) file.
